@@ -7,6 +7,7 @@ int main() {
 	GamesEngineeringBase::Window canvas;
 	canvas.create(1024, 768, "Game");
 	bool running = true;
+	bool debounce = false;
 
 	GamesEngineeringBase::Timer timer;
 
@@ -53,6 +54,28 @@ int main() {
 				movement *= 0.7071;
 
 			camera.Move(movement);
+		}
+
+		if (!debounce)
+		{
+			if (canvas.mouseButtonPressed(GamesEngineeringBase::MouseLeft))
+			{
+				camera.ChangeZoom(1);
+				debounce = true;
+			}
+			else if (canvas.mouseButtonPressed(GamesEngineeringBase::MouseRight))
+			{
+				camera.ChangeZoom(-1);
+				debounce = true;
+			}
+		}
+		else
+		{
+			if (!canvas.mouseButtonPressed(GamesEngineeringBase::MouseLeft)
+				&& !canvas.mouseButtonPressed(GamesEngineeringBase::MouseRight))
+			{
+				debounce = false;
+			}
 		}
 
 		camera.Clear();
