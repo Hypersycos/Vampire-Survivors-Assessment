@@ -49,7 +49,7 @@ int main() {
 
 		if (movement.x != 0 || movement.y != 0)
 		{
-			movement *= 500 * dt;
+			movement *= 100 * dt;
 			if (movement.x != 0 && movement.y != 0)
 				movement *= 0.7071;
 

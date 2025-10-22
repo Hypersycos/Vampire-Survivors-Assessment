@@ -10,6 +10,7 @@ class World
 {
 protected:
 	int enemyCount;
+	int tileSize = 32;
 	Enemy* enemies;
 	Player player;
 	GamesEngineeringBase::Image* tileImages;
@@ -21,9 +22,20 @@ public:
 	}
 	virtual int TileAt(int x, int y) = 0;
 
+	int TileAt(Vector<float> position)
+	{
+		return this->TileAt(position.x, position.y);
+	}
+	virtual int TileAt(float x, float y) = 0;
+
 	GamesEngineeringBase::Image* GetImage(int index)
 	{
 		return &tileImages[index];
+	}
+
+	int GetTileSize()
+	{
+		return tileSize;
 	}
 };
 
@@ -50,6 +62,19 @@ public:
 		{
 			tileImages[i].load(paths[i]);
 		}
+	}
+
+	int TileAt(float x, float y) override
+	{
+		x /= tileSize;
+		y /= tileSize;
+
+		x += 100;
+		y += 100;
+		if (x < 200 && x >= 0 && y < 200 && y >= 0)
+			return tiles[(int)round(x)][(int)round(y)];
+		else
+			return -1;
 	}
 
 	int TileAt(int x, int y) override
