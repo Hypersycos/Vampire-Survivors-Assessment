@@ -5,6 +5,7 @@
 #include "helpers/array.cpp"
 #include "Enums.cpp"
 #include <iostream>
+#include "Canvas.cpp"
 
 #define tilesize world->GetTileSize()
 
@@ -13,16 +14,18 @@ class Camera
 	Vector<int> canvasDimensions;
 	Vector<int> tileDimensions;
 	Vector<float> cameraPosition;
+	Vector<float> cameraTopLeft;
 	Vector<int> tileCentre;
 	RenderMethod renderMethod = RenderMethod::Integer;
-	int zoom;
+	float zoom;
 	Sprite** tiles;
-	GamesEngineeringBase::Window& canvas;
+	Canvas canvas;
 	World* world;
 
 	void Retile()
 	{
-		Vector<int> cameraOffset = Vector<int>(round(cameraPosition.x / tilesize), round(cameraPosition.y / tilesize));
+		Vector<int> cameraOffset = Vector<int>(round(cameraTopLeft.x / tilesize),
+											   round(cameraTopLeft.y / tilesize));
 		tileCentre.x = cameraOffset.x * tilesize;
 		tileCentre.y = cameraOffset.y * tilesize;
 		for (int i = 0; i < tileDimensions.x; i++)
@@ -39,26 +42,27 @@ class Camera
 				else
 				{
 					tiles[i][j].enabled = false;
+					tiles[i][j].SetPosition((cameraOffset + Vector<int>(i, j)) * tilesize);
 				}
 			}
 		}
 	}
 
 public:
-	Camera(World* world, GamesEngineeringBase::Window& canvas) : world(world), canvas(canvas)
+	Camera(World* world, Canvas canvas) : world(world), canvas(canvas)
 	{
 		canvasDimensions = Vector<int>(canvas.getWidth(), canvas.getHeight());
 
 		Rescale(1);
 	}
 
-	void ChangeZoom(int direction)
+	void ChangeZoom(float direction)
 	{
 		if (zoom + direction > 0)
 			Rescale(direction + zoom);
 	}
 
-	void Rescale(int newZoom)
+	void Rescale(float newZoom)
 	{
 		for (int i = 0; i < tileDimensions.x; i++)
 		{
@@ -82,12 +86,20 @@ public:
 			}
 		}
 
+		cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2 / zoom;
+		cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2 / zoom;
+
+		//TODO: Why is this needed?
+		canvas.clear();
+
 		Retile();
 	}
 
 	void Move(Vector<float> movement)
 	{
 		cameraPosition += movement;
+		cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2 / zoom;
+		cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2 / zoom;
 		if (abs(tileCentre.x - cameraPosition.x) >= tilesize / 2 || abs(tileCentre.y - cameraPosition.y) >= tilesize / 2)
 		{
 			Retile();
@@ -96,26 +108,37 @@ public:
 
 	void Clear()
 	{
+#ifdef enableDrawBeyondBounds
 		canvas.clear();
+#endif
+		//canvas.clear();
 		for (int i = 0; i < tileDimensions.x; i++)
 		{
-			Draw(tiles[i], tileDimensions.y);
+			Draw(tiles[i], tileDimensions.y, true);
 		}
+#ifdef enableDrawBeyondBounds
+		canvas.DrawBoxUnsafe(Vector<unsigned int>(0, 0), canvas.GetSize(), 0, 0, 255);
+#endif
 	}
 
-	void Draw(Sprite* sprites, unsigned int count)
+	void Draw(Sprite* sprite)
+	{
+		sprite->Draw(canvas, cameraTopLeft, zoom, renderMethod);
+	}
+
+	void Draw(Sprite* sprites, unsigned int count, bool drawDisabledAsBlank = false)
 	{
 		for (unsigned int i = 0; i < count; i++)
 		{
-			sprites[i].Draw(canvas, cameraPosition, zoom, renderMethod);
+			sprites[i].Draw(canvas, cameraTopLeft, zoom, renderMethod, drawDisabledAsBlank);
 		}
 	}
 
-	void Draw(Sprite** sprites, unsigned int count)
+	void Draw(Sprite** sprites, unsigned int count, bool drawDisabledAsBlank = false)
 	{
 		for (unsigned int i = 0; i < count; i++)
 		{
-			sprites[i]->Draw(canvas, cameraPosition, zoom, renderMethod);
+			sprites[i]->Draw(canvas, cameraTopLeft, zoom, renderMethod, drawDisabledAsBlank);
 		}
 	}
 

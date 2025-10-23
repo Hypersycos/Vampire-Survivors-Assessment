@@ -3,5 +3,6 @@
 enum RenderMethod
 {
 	Integer,
-	Bilinear
+	Bilinear,
+	Blank
 };

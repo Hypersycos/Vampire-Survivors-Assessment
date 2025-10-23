@@ -1,6 +1,7 @@
 #include "GamesEngineeringBase.h"
 #include "Vector.cpp"
 #include "Enums.cpp"
+#include "Canvas.cpp"
 
 class Sprite
 {
@@ -69,38 +70,21 @@ public:
 		position += distance;
 	}
 
-	void DrawPixel(GamesEngineeringBase::Window& canvas, unsigned int x, unsigned int y, unsigned char alpha, unsigned char* rgb)
-	{
-		if (alpha == 0)
-			return;
-		else if (alpha < 255)
-		{
-			//handles partial transparency by adding back buffer and sprite values together
-			//weighted by (255 - alpha) and alpha respectively
-			int bAlpha = 255 - alpha;
-
-			unsigned char* backBuffer = canvas.getBackBuffer();
-			int pixelIndex = ((y * canvas.getWidth()) + x) * 3;
-			unsigned char* pixel = &backBuffer[pixelIndex];
-
-			unsigned char alphaPixel[3];
-			alphaPixel[0] = (pixel[0] * bAlpha) / 255 + (rgb[0] * alpha) / 255;
-			alphaPixel[1] = (pixel[1] * bAlpha) / 255 + (rgb[1] * alpha) / 255;
-			alphaPixel[2] = (pixel[2] * bAlpha) / 255 + (rgb[2] * alpha) / 255;
-			canvas.draw(x, y, alphaPixel);
-		}
-		else
-			canvas.draw(x, y, rgb);
-	}
-
-	void DrawInteger(GamesEngineeringBase::Window& canvas, Vector<float> offset, float zoom)
+	void DrawInteger(Canvas canvas, Vector<float> offset, float zoom)
 	{
 		Vector<float> adjustedPosition = (GetTopLeft() - offset) * zoom;
 
-		int xmax = round(min(size.x * zoom, (int)canvas.getWidth() - adjustedPosition.x));
-		int ymax = round(min(size.y * zoom, (int)canvas.getHeight() - adjustedPosition.y));
+#ifdef enableDrawBeyondBounds
+		int xmax = round(size.x * zoom);
+		int ymax = round(size.y * zoom);
+		int xmin = 0;
+		int ymin = 0;
+#else
+		int xmax = round(min(size.x * zoom, (int)canvas.getWidth() - floor(adjustedPosition.x)));
+		int ymax = round(min(size.y * zoom, (int)canvas.getHeight() - floor(adjustedPosition.y)));
 		int xmin = round(max(0, -adjustedPosition.x));
 		int ymin = round(max(0, -adjustedPosition.y));
+#endif // enableDrawBeyondBounds
 
 		for (int i = xmin; i < xmax; i++)
 		{
@@ -114,33 +98,40 @@ public:
 				int spriteY = j / (scale * zoom);
 
 				unsigned char alpha = image->alphaAtUnchecked(spriteX, spriteY);
-				if (alpha == 0)
-					continue;
-				else if (alpha < 255)
-				{
-					//handles partial transparency by adding back buffer and sprite values together
-					//weighted by (255 - alpha) and alpha respectively
+				unsigned char* rgb = image->atUnchecked(spriteX, spriteY);
 
-					unsigned char* colour = image->atUnchecked(spriteX, spriteY);
-					int bAlpha = 255 - alpha;
-
-					unsigned char* backBuffer = canvas.getBackBuffer();
-					int pixelIndex = ((y * canvas.getWidth()) + x) * 3;
-					unsigned char* pixel = &backBuffer[pixelIndex];
-
-					unsigned char alphaPixel[3];
-					alphaPixel[0] = (pixel[0] * bAlpha) / 255 + (colour[0] * alpha) / 255;
-					alphaPixel[1] = (pixel[1] * bAlpha) / 255 + (colour[1] * alpha) / 255;
-					alphaPixel[2] = (pixel[2] * bAlpha) / 255 + (colour[2] * alpha) / 255;
-					canvas.draw(x, y, alphaPixel);
-				}
-				else
-					canvas.draw(x, y, image->atUnchecked(spriteX, spriteY));
+				canvas.DrawPixelUnsafe(x, y, alpha, rgb);
 			}
 		}
 	}
 
-	void DrawBilinear(GamesEngineeringBase::Window& canvas, Vector<float> offset, float zoom)
+	void DrawBlank(Canvas canvas, Vector<float> offset, float zoom)
+	{
+		Vector<float> adjustedPosition = (GetTopLeft() - offset) * zoom;
+
+		int xmax = round(min(size.x * zoom, (int)canvas.getWidth() - floor(adjustedPosition.x)));
+		int ymax = round(min(size.y * zoom, (int)canvas.getHeight() - floor(adjustedPosition.y)));
+		int xmin = round(max(0, -adjustedPosition.x));
+		int ymin = round(max(0, -adjustedPosition.y));
+
+		unsigned char alpha = 255;
+		unsigned char rgb[3]{ 0, 0, 0 };
+
+		for (int i = xmin; i < xmax; i++)
+		{
+			int x = adjustedPosition.x + i;
+
+			for (int j = ymin; j < ymax; j++)
+			{
+				int y = adjustedPosition.y + j;
+
+				canvas.DrawPixelUnsafe(x, y, alpha, rgb);
+			}
+		}
+	}
+
+	//TODO: Implement bilinear
+	void DrawBilinear(Canvas canvas, Vector<float> offset, float zoom)
 	{
 		Vector<float> adjustedPosition = (GetTopLeft() - offset) * zoom;
 
@@ -158,7 +149,7 @@ public:
 
 				if (spriteX == (int)spriteX && spriteY == (int)spriteY)
 				{
-					DrawPixel(canvas, i, j, image->alphaAtUnchecked(spriteX, spriteY), image->atUnchecked(spriteX, spriteY));
+					canvas.DrawPixelUnsafe(i, j, image->alphaAtUnchecked(spriteX, spriteY), image->atUnchecked(spriteX, spriteY));
 				}
 				else
 				{
@@ -175,15 +166,25 @@ public:
 		}
 	}
 
-	void Draw(GamesEngineeringBase::Window& canvas, Vector<float> offset, float zoom, RenderMethod renderMethod)
+	void Draw(Canvas canvas, Vector<float> offset, float zoom, RenderMethod renderMethod, bool blankIfDisabled = false)
 	{
 		if (!enabled)
+		{
+			if (blankIfDisabled)
+				DrawBlank(canvas, offset, zoom);
 			return;
+		}
 
 		switch (renderMethod)
 		{
 		case Integer:
 			DrawInteger(canvas, offset, zoom);
+			break;
+		case Bilinear:
+			//DrawBilinear(canvas, offset, zoom);
+			break;
+		case Blank:
+			DrawBlank(canvas, offset, zoom);
 			break;
 		default:
 			break;

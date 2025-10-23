@@ -4,23 +4,24 @@
 #include <iostream>
 
 int main() {
-	GamesEngineeringBase::Window canvas;
-	canvas.create(1024, 768, "Game");
+	GamesEngineeringBase::Window window;
+	window.create(1024, 768, "Game");
 	bool running = true;
 	bool debounce = false;
 
 	GamesEngineeringBase::Timer timer;
 
 	World* world = new TestWorld();
+	Canvas canvas = Canvas(window, window.getWidth() / 2, window.getHeight() / 2, window.getWidth() / 4, window.getHeight() / 4);
 	Camera camera = Camera(world, canvas);
 
 	while (running)
 	{
 		// Check for input (key presses or window events)
-		canvas.checkInput();
+		window.checkInput();
 
 		// If the Escape key is pressed, exit the loop and close the window
-		if (canvas.keyPressed(VK_ESCAPE))
+		if (window.keyPressed(VK_ESCAPE))
 		{
 			running = false;
 			break; // Exits the game loop
@@ -30,26 +31,26 @@ int main() {
 
 		Vector<float> movement = Vector<float>();
 
-		if (canvas.keyPressed('W'))
+		if (window.keyPressed('W'))
 		{
 			movement.y -= 1;
 		}
-		if (canvas.keyPressed('A'))
+		if (window.keyPressed('A'))
 		{
 			movement.x -= 1;
 		}
-		if (canvas.keyPressed('S'))
+		if (window.keyPressed('S'))
 		{
 			movement.y += 1;
 		}
-		if (canvas.keyPressed('D'))
+		if (window.keyPressed('D'))
 		{
 			movement.x += 1;
 		}
 
 		if (movement.x != 0 || movement.y != 0)
 		{
-			movement *= 100 * dt;
+			movement *= dt * (window.keyPressed(VK_SHIFT) ? 2000 : 500);
 			if (movement.x != 0 && movement.y != 0)
 				movement *= 0.7071;
 
@@ -58,28 +59,28 @@ int main() {
 
 		if (!debounce)
 		{
-			if (canvas.mouseButtonPressed(GamesEngineeringBase::MouseLeft))
+			if (window.mouseButtonPressed(GamesEngineeringBase::MouseLeft))
 			{
-				camera.ChangeZoom(1);
+				camera.ChangeZoom(0.25);
 				debounce = true;
 			}
-			else if (canvas.mouseButtonPressed(GamesEngineeringBase::MouseRight))
+			else if (window.mouseButtonPressed(GamesEngineeringBase::MouseRight))
 			{
-				camera.ChangeZoom(-1);
+				camera.ChangeZoom(-0.25);
 				debounce = true;
 			}
 		}
 		else
 		{
-			if (!canvas.mouseButtonPressed(GamesEngineeringBase::MouseLeft)
-				&& !canvas.mouseButtonPressed(GamesEngineeringBase::MouseRight))
+			if (!window.mouseButtonPressed(GamesEngineeringBase::MouseLeft)
+				&& !window.mouseButtonPressed(GamesEngineeringBase::MouseRight))
 			{
 				debounce = false;
 			}
 		}
 
 		camera.Clear();
-		canvas.present();
+		window.present();
 	}
 	return 0;
 }
