@@ -1,11 +1,9 @@
-#include "Vector.cpp"
+#include "Vector.h"
 #include "GamesEngineeringBase.h"
-#include "Sprite.cpp"
-#include "World.cpp"
-#include "helpers/array.cpp"
-#include "Enums.cpp"
-#include <iostream>
-#include "Canvas.cpp"
+#include "Sprite.h"
+#include "World.h"
+#include "Enums.h"
+#include "Canvas.h"
 
 #define tilesize world->GetTileSize()
 
@@ -36,7 +34,7 @@ class Camera
 				if (tileType != -1)
 				{
 					tiles[i][j].enabled = true;
-					tiles[i][j].SetImage(world->GetImage(tileType));
+					tiles[i][j].SetImage(world->GetTileImage(tileType));
 					tiles[i][j].SetPosition((cameraOffset + Vector<int>(i, j)) * tilesize);
 				}
 				else

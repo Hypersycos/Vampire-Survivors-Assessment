@@ -1,7 +1,7 @@
 #include "GamesEngineeringBase.h"
-#include "Vector.cpp"
-#include "Enums.cpp"
-#include "Canvas.cpp"
+#include "Vector.h"
+#include "Enums.h"
+#include "Canvas.h"
 
 class Sprite
 {

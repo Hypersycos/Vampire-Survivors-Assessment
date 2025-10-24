@@ -1,6 +1,6 @@
 #include "GamesEngineeringBase.h"
-#include "World.cpp"
-#include "Camera.cpp"
+#include "World.h"
+#include "Camera.h"
 #include <iostream>
 
 int main() {

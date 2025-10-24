@@ -1,8 +1,8 @@
+#include "Vector.h"
+#include <type_traits>
 #include <math.h>
 
-#pragma once
-
-template <typename T> class Vector
+template <typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr> class Vector
 {
 public:
 	T x, y;
@@ -39,52 +39,66 @@ public:
 		return *this;
 	}
 
-	Vector<T> operator+(Vector<T> v2)
+	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	Vector<T> operator+(Vector<U> v2)
 	{
 		return Vector<T>(x + v2.x, y + v2.y);
 	}
 
-	Vector<T>& operator+=(const Vector<T>& v2)
+	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	Vector<T>& operator+=(const Vector<U>& v2)
 	{
 		x += v2.x;
 		y += v2.y;
 		return *this;
 	}
 
-	Vector<T> operator-(Vector<T> v2)
+	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	Vector<T> operator-(Vector<U> v2)
 	{
 		return Vector<T>(x - v2.x, y - v2.y);
 	}
 
-	Vector<T>& operator-=(const Vector<T>& v2)
+	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	Vector<T>& operator-=(const Vector<U>& v2)
 	{
 		x -= v2.x;
 		y -= v2.y;
 		return *this;
 	}
 
-	Vector<T> operator*(double v2)
+	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	Vector<T> operator*(U v2)
 	{
 		return Vector<T>(x * v2, y * v2);
 	}
 
-	Vector<T>& operator*=(const double& v2)
+	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	Vector<T>& operator*=(const U& v2)
 	{
 		x *= v2;
 		y *= v2;
 		return *this;
 	}
 
-	Vector<T> operator/(double v2)
+	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	Vector<T> operator/(U v2)
 	{
 		return Vector<T>(x / v2, y / v2);
 	}
 
-	Vector<T>& operator/=(const double& v2)
+	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	Vector<T>& operator/=(const U& v2)
 	{
 		x /= v2;
 		y /= v2;
 		return *this;
+	}
+
+	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	operator U() const
+	{
+		return Vector<U>((U)x, (U)y);
 	}
 
 	T magnitude()

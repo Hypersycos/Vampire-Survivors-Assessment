@@ -1,7 +1,5 @@
 #include "GamesEngineeringBase.h"
-#include "Vector.cpp"
-
-#pragma once
+#include "Vector.h"
 
 class Canvas
 {

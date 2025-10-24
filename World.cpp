@@ -1,10 +1,8 @@
-#include "Vector.cpp"
-#include "Tile.cpp"
-#include "Player.cpp"
-#include "Enemy.cpp"
+#include "Vector.h"
+#include "Tile.h"
+#include "Player.h"
+#include "Enemy.h"
 #include "GamesEngineeringBase.h"
-
-#pragma once
 
 class World
 {
@@ -28,7 +26,7 @@ public:
 	}
 	virtual int TileAt(float x, float y) = 0;
 
-	GamesEngineeringBase::Image* GetImage(int index)
+	GamesEngineeringBase::Image* GetTileImage(int index)
 	{
 		return &tileImages[index];
 	}
