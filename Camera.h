@@ -9,8 +9,8 @@
 
 class Camera
 {
-	Vector<int> canvasDimensions;
-	Vector<int> tileDimensions;
+	Vector<unsigned int> canvasDimensions;
+	Vector<unsigned int> tileDimensions;
 	Vector<float> cameraPosition;
 	Vector<float> cameraTopLeft;
 	Vector<int> tileCentre;

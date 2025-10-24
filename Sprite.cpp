@@ -70,7 +70,7 @@ public:
 		position += distance;
 	}
 
-	void DrawInteger(Canvas canvas, Vector<float> offset, float zoom)
+	void DrawInteger(Canvas& canvas, Vector<float> offset, float zoom)
 	{
 		Vector<float> adjustedPosition = (GetTopLeft() - offset) * zoom;
 
@@ -105,7 +105,7 @@ public:
 		}
 	}
 
-	void DrawBlank(Canvas canvas, Vector<float> offset, float zoom)
+	void DrawBlank(Canvas& canvas, Vector<float> offset, float zoom)
 	{
 		Vector<float> adjustedPosition = (GetTopLeft() - offset) * zoom;
 
@@ -131,7 +131,7 @@ public:
 	}
 
 	//TODO: Implement bilinear
-	void DrawBilinear(Canvas canvas, Vector<float> offset, float zoom)
+	void DrawBilinear(Canvas& canvas, Vector<float> offset, float zoom)
 	{
 		Vector<float> adjustedPosition = (GetTopLeft() - offset) * zoom;
 
@@ -166,7 +166,7 @@ public:
 		}
 	}
 
-	void Draw(Canvas canvas, Vector<float> offset, float zoom, RenderMethod renderMethod, bool blankIfDisabled = false)
+	void Draw(Canvas& canvas, Vector<float> offset, float zoom, RenderMethod renderMethod, bool blankIfDisabled = false)
 	{
 		if (!enabled)
 		{

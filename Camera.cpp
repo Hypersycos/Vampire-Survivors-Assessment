@@ -9,8 +9,8 @@
 
 class Camera
 {
-	Vector<int> canvasDimensions;
-	Vector<int> tileDimensions;
+	Vector<unsigned int> canvasDimensions;
+	Vector<unsigned int> tileDimensions;
 	Vector<float> cameraPosition;
 	Vector<float> cameraTopLeft;
 	Vector<int> tileCentre;
@@ -49,7 +49,7 @@ class Camera
 public:
 	Camera(World* world, Canvas canvas) : world(world), canvas(canvas)
 	{
-		canvasDimensions = Vector<int>(canvas.getWidth(), canvas.getHeight());
+		canvasDimensions = Vector<unsigned int>(canvas.getWidth(), canvas.getHeight());
 
 		Rescale(1);
 	}
@@ -62,30 +62,30 @@ public:
 
 	void Rescale(float newZoom)
 	{
-		for (int i = 0; i < tileDimensions.x; i++)
+		for (unsigned int i = 0; i < tileDimensions.x; i++)
 		{
 			delete[] tiles[i];
 		}
 		delete[] tiles;
 
 		zoom = newZoom;
-		int zoomedTilesize = zoom * tilesize;
+		unsigned int zoomedTilesize = zoom * tilesize;
 
-		tileDimensions = Vector<int>((canvasDimensions.x + zoomedTilesize - 1) / zoomedTilesize + 1,
+		tileDimensions = Vector<unsigned int>((canvasDimensions.x + zoomedTilesize - 1) / zoomedTilesize + 1,
 									 (canvasDimensions.y + zoomedTilesize - 1) / zoomedTilesize + 1);
 
 		tiles = new Sprite * [tileDimensions.x];
-		for (int i = 0; i < tileDimensions.x; i++)
+		for (unsigned int i = 0; i < tileDimensions.x; i++)
 		{
 			tiles[i] = new Sprite[tileDimensions.y];
-			for (int j = 0; j < tileDimensions.y; j++)
+			for (unsigned int j = 0; j < tileDimensions.y; j++)
 			{
 				tiles[i][j] = Sprite();
 			}
 		}
 
-		cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2 / zoom;
-		cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2 / zoom;
+		cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2.0 / zoom;
+		cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2.0 / zoom;
 
 		//TODO: Why is this needed?
 		canvas.clear();
@@ -96,8 +96,8 @@ public:
 	void Move(Vector<float> movement)
 	{
 		cameraPosition += movement;
-		cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2 / zoom;
-		cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2 / zoom;
+		cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2.0 / zoom;
+		cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2.0 / zoom;
 		if (abs(tileCentre.x - cameraPosition.x) >= tilesize / 2 || abs(tileCentre.y - cameraPosition.y) >= tilesize / 2)
 		{
 			Retile();
@@ -110,7 +110,7 @@ public:
 		canvas.clear();
 #endif
 		//canvas.clear();
-		for (int i = 0; i < tileDimensions.x; i++)
+		for (unsigned int i = 0; i < tileDimensions.x; i++)
 		{
 			Draw(tiles[i], tileDimensions.y, true);
 		}
@@ -142,7 +142,7 @@ public:
 
 	~Camera()
 	{
-		for (int i = 0; i < tileDimensions.x; i++)
+		for (unsigned int i = 0; i < tileDimensions.x; i++)
 		{
 			delete[] tiles[i];
 		}

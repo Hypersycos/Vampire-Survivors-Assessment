@@ -1,7 +1,7 @@
 #pragma once
 #include <type_traits>
 
-template <typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr> class Vector
+template <typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>> class Vector
 {
 public:
 	T x, y;
@@ -18,32 +18,32 @@ public:
 
 	Vector<T>& operator=(const Vector<T>& b);
 
-	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
 	Vector<T> operator+(Vector<U> v2);
 
-	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
 	Vector<T>& operator+=(const Vector<U>& v2);
 
-	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
 	Vector<T> operator-(Vector<U> v2);
 
-	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
 	Vector<T>& operator-=(const Vector<U>& v2);
 
-	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
 	Vector<T> operator*(U v2);
 
-	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
 	Vector<T>& operator*=(const U& v2);
 
-	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
 	Vector<T> operator/(U v2);
 
-	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
 	Vector<T>& operator/=(const U& v2);
 
-	template <typename U, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
-	operator U() const;
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+	explicit operator U() const;
 
 	T magnitude();
 };

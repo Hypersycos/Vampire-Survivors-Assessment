@@ -11,8 +11,8 @@
 class World
 {
 protected:
-	int enemyCount;
-	int tileSize = 32;
+	unsigned int enemyCount;
+	unsigned int tileSize;
 	Enemy* enemies;
 	Player player;
 	GamesEngineeringBase::Image* tileImages;
