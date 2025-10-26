@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Sprite.h"
+#include "CollisionSprite.h"
 
-class Character : Sprite
+class Character : CollisionSprite
 {
-
+public:
+	Character();
 };

@@ -12,9 +12,9 @@ class World
 {
 protected:
 	unsigned int enemyCount;
-	unsigned int tileSize;
+	unsigned int tileSize = 32;
 	Enemy* enemies;
-	Player player;
+	Player* player;
 	GamesEngineeringBase::Image* tileImages;
 
 public:
@@ -24,9 +24,7 @@ public:
 
 	int TileAt(Vector<float> position);
 
-	virtual int TileAt(float x, float y) = 0;
-
 	GamesEngineeringBase::Image* GetTileImage(int index);
 
-	int GetTileSize();
+	int GetTileSize() const;
 };

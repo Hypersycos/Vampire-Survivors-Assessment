@@ -1,4 +1,6 @@
-class Player
+#include "Player.h"
+
+Player::Player()
 {
 
-};
+}

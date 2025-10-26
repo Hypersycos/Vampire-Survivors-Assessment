@@ -1,8 +1,9 @@
 #pragma once
 
-#using "Character.h"
+#include "Character.h"
 
 class Player : Character
 {
-
+public:
+	Player();
 };

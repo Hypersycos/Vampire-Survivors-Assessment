@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ENUMS
+#define ENUMS
 
 enum RenderMethod
 {
@@ -6,3 +8,4 @@ enum RenderMethod
 	Bilinear,
 	Blank
 };
+#endif

@@ -1,12 +1,13 @@
 #pragma once
 
 #include "GamesEngineeringBase.h"
-#include "Vector.cpp"
-#include "Enums.cpp"
-#include "Canvas.cpp"
+#include "Vector.h"
+#include "Enums.h"
+#include "Canvas.h"
 
 class Sprite
 {
+protected:
 	Vector<float> position;
 	Vector<float> size;
 	float scale;
@@ -37,5 +38,5 @@ public:
 
 	void Move(Vector<float> distance);
 
-	void Draw(Canvas canvas, Vector<float> offset, float zoom, RenderMethod renderMethod, bool blankIfDisabled = false);
+	void Draw(Canvas& canvas, Vector<float> offset, float zoom, RenderMethod renderMethod, bool blankIfDisabled = false);
 };

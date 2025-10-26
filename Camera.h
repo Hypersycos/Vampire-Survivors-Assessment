@@ -20,6 +20,8 @@ class Camera
 	Canvas canvas;
 	World* world;
 
+	void Retile();
+
 public:
 	Camera(World* world, Canvas canvas);
 
@@ -29,13 +31,7 @@ public:
 
 	void Move(Vector<float> movement);
 
-	void Clear();
-
-	void Draw(Sprite* sprite);
-
-	void Draw(Sprite* sprites, unsigned int count, bool drawDisabledAsBlank = false);
-
-	void Draw(Sprite** sprites, unsigned int count, bool drawDisabledAsBlank = false);
+	void Redraw();
 
 	~Camera();
 };

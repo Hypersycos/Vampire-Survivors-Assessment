@@ -1,151 +1,117 @@
-#include "Vector.h"
-#include "GamesEngineeringBase.h"
-#include "Sprite.h"
-#include "World.h"
-#include "Enums.h"
-#include "Canvas.h"
+#include "Camera.h"
 
 #define tilesize world->GetTileSize()
 
-class Camera
+void Camera::Retile()
 {
-	Vector<unsigned int> canvasDimensions;
-	Vector<unsigned int> tileDimensions;
-	Vector<float> cameraPosition;
-	Vector<float> cameraTopLeft;
-	Vector<int> tileCentre;
-	RenderMethod renderMethod = RenderMethod::Integer;
-	float zoom;
-	Sprite** tiles;
-	Canvas canvas;
-	World* world;
-
-	void Retile()
+	Vector<int> cameraOffset = Vector<int>((int)round(cameraTopLeft.x / tilesize),
+											(int)round(cameraTopLeft.y / tilesize));
+	tileCentre.x = cameraOffset.x * tilesize;
+	tileCentre.y = cameraOffset.y * tilesize;
+	for (unsigned int i = 0; i < tileDimensions.x; i++)
 	{
-		Vector<int> cameraOffset = Vector<int>(round(cameraTopLeft.x / tilesize),
-											   round(cameraTopLeft.y / tilesize));
-		tileCentre.x = cameraOffset.x * tilesize;
-		tileCentre.y = cameraOffset.y * tilesize;
-		for (int i = 0; i < tileDimensions.x; i++)
+		for (unsigned int j = 0; j < tileDimensions.y; j++)
 		{
-			for (int j = 0; j < tileDimensions.y; j++)
+			int tileType = world->TileAt(Vector<int>(i, j) + cameraOffset);
+			if (tileType != -1)
 			{
-				int tileType = world->TileAt(Vector<int>(i, j) + cameraOffset);
-				if (tileType != -1)
-				{
-					tiles[i][j].enabled = true;
-					tiles[i][j].SetImage(world->GetTileImage(tileType));
-					tiles[i][j].SetPosition((cameraOffset + Vector<int>(i, j)) * tilesize);
-				}
-				else
-				{
-					tiles[i][j].enabled = false;
-					tiles[i][j].SetPosition((cameraOffset + Vector<int>(i, j)) * tilesize);
-				}
+				tiles[i][j].enabled = true;
 			}
-		}
-	}
-
-public:
-	Camera(World* world, Canvas canvas) : world(world), canvas(canvas)
-	{
-		canvasDimensions = Vector<unsigned int>(canvas.getWidth(), canvas.getHeight());
-
-		Rescale(1);
-	}
-
-	void ChangeZoom(float direction)
-	{
-		if (zoom + direction > 0)
-			Rescale(direction + zoom);
-	}
-
-	void Rescale(float newZoom)
-	{
-		for (unsigned int i = 0; i < tileDimensions.x; i++)
-		{
-			delete[] tiles[i];
-		}
-		delete[] tiles;
-
-		zoom = newZoom;
-		unsigned int zoomedTilesize = zoom * tilesize;
-
-		tileDimensions = Vector<unsigned int>((canvasDimensions.x + zoomedTilesize - 1) / zoomedTilesize + 1,
-									 (canvasDimensions.y + zoomedTilesize - 1) / zoomedTilesize + 1);
-
-		tiles = new Sprite * [tileDimensions.x];
-		for (unsigned int i = 0; i < tileDimensions.x; i++)
-		{
-			tiles[i] = new Sprite[tileDimensions.y];
-			for (unsigned int j = 0; j < tileDimensions.y; j++)
+			else
 			{
-				tiles[i][j] = Sprite();
+				tileType = 0;
+				tiles[i][j].enabled = false;
 			}
+			tiles[i][j].SetImage(world->GetTileImage(tileType));
+			tiles[i][j].SetPosition((cameraOffset + Vector<int>(i, j)) * tilesize);
 		}
+	}
+}
 
-		cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2.0 / zoom;
-		cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2.0 / zoom;
+Camera::Camera(World* world, Canvas canvas) : world(world), canvas(canvas)
+{
+	canvasDimensions = Vector<unsigned int>(canvas.getWidth(), canvas.getHeight());
+	cameraPosition.x = 0;
+	cameraPosition.y = 0;
 
-		//TODO: Why is this needed?
-		canvas.clear();
+	Rescale(1);
+}
 
+void Camera::ChangeZoom(float direction)
+{
+	if (zoom + direction > 0)
+		Rescale(direction + zoom);
+}
+
+void Camera::Rescale(float newZoom)
+{
+	for (unsigned int i = 0; i < tileDimensions.x; i++)
+	{
+		delete[] tiles[i];
+	}
+	delete[] tiles;
+
+	zoom = newZoom;
+	unsigned int zoomedTilesize = (unsigned int)(zoom * tilesize);
+
+	tileDimensions = Vector<unsigned int>((canvasDimensions.x + zoomedTilesize - 1) / zoomedTilesize + 1,
+									(canvasDimensions.y + zoomedTilesize - 1) / zoomedTilesize + 1);
+
+	tiles = new Sprite * [tileDimensions.x];
+	for (unsigned int i = 0; i < tileDimensions.x; i++)
+	{
+		tiles[i] = new Sprite[tileDimensions.y];
+		for (unsigned int j = 0; j < tileDimensions.y; j++)
+		{
+			tiles[i][j] = Sprite();
+		}
+	}
+
+	cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2.0f / zoom;
+	cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2.0f / zoom;
+
+	Retile();
+}
+
+void Camera::Move(Vector<float> movement)
+{
+	cameraPosition += movement;
+	cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2.0f / zoom;
+	cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2.0f / zoom;
+	if (renderMethod == Integer)
+	{
+		cameraTopLeft.x = round(cameraTopLeft.x);
+		cameraTopLeft.y = round(cameraTopLeft.y);
+	}
+	if (abs(tileCentre.x - cameraPosition.x) >= tilesize / 2 || abs(tileCentre.y - cameraPosition.y) >= tilesize / 2)
+	{
 		Retile();
 	}
+}
 
-	void Move(Vector<float> movement)
-	{
-		cameraPosition += movement;
-		cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2.0 / zoom;
-		cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2.0 / zoom;
-		if (abs(tileCentre.x - cameraPosition.x) >= tilesize / 2 || abs(tileCentre.y - cameraPosition.y) >= tilesize / 2)
-		{
-			Retile();
-		}
-	}
-
-	void Clear()
-	{
+void Camera::Redraw()
+{
 #ifdef enableDrawBeyondBounds
-		canvas.clear();
+	canvas.clear();
 #endif
-		//canvas.clear();
-		for (unsigned int i = 0; i < tileDimensions.x; i++)
+	//canvas.clear();
+	for (unsigned int i = 0; i < tileDimensions.x; i++)
+	{
+		for (unsigned int j = 0; j < tileDimensions.y; j++)
 		{
-			Draw(tiles[i], tileDimensions.y, true);
+			tiles[i][j].Draw(canvas, cameraTopLeft, zoom, renderMethod, true);
 		}
+	}
 #ifdef enableDrawBeyondBounds
-		canvas.DrawBoxUnsafe(Vector<unsigned int>(0, 0), canvas.GetSize(), 0, 0, 255);
+	canvas.DrawBoxUnsafe(Vector<unsigned int>(0, 0), canvas.GetSize(), 0, 0, 255);
 #endif
-	}
+}
 
-	void Draw(Sprite* sprite)
+Camera::~Camera()
+{
+	for (unsigned int i = 0; i < tileDimensions.x; i++)
 	{
-		sprite->Draw(canvas, cameraTopLeft, zoom, renderMethod);
+		delete[] tiles[i];
 	}
-
-	void Draw(Sprite* sprites, unsigned int count, bool drawDisabledAsBlank = false)
-	{
-		for (unsigned int i = 0; i < count; i++)
-		{
-			sprites[i].Draw(canvas, cameraTopLeft, zoom, renderMethod, drawDisabledAsBlank);
-		}
-	}
-
-	void Draw(Sprite** sprites, unsigned int count, bool drawDisabledAsBlank = false)
-	{
-		for (unsigned int i = 0; i < count; i++)
-		{
-			sprites[i]->Draw(canvas, cameraTopLeft, zoom, renderMethod, drawDisabledAsBlank);
-		}
-	}
-
-	~Camera()
-	{
-		for (unsigned int i = 0; i < tileDimensions.x; i++)
-		{
-			delete[] tiles[i];
-		}
-		delete[] tiles;
-	}
-};
+	delete[] tiles;
+}

@@ -139,11 +139,14 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="CollisionSprite.cpp" />
+    <ClInclude Include="CollisionSprite.h" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="helpers\array.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TestWorld.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="World.cpp" />

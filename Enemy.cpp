@@ -1,6 +1,1 @@
-#include "Character.h"
-
-class Enemy : Character
-{
-
-};
+#include "Enemy.h"

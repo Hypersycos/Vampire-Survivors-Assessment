@@ -1,6 +1,6 @@
-#include "Sprite.h"
+#include "Character.h"
 
-class Character : Sprite
+Character::Character() : CollisionSprite()
 {
 
-};
+}

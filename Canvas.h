@@ -2,6 +2,8 @@
 
 #include "GamesEngineeringBase.h"
 #include "Vector.h"
+#include "Enums.h"
+//#define enableDrawBeyondBounds
 
 #pragma once
 
@@ -18,9 +20,9 @@ public:
 
 	Vector<unsigned int> GetSize();
 
-	unsigned int getWidth();
+	unsigned int getWidth() const;
 
-	unsigned int getHeight();
+	unsigned int getHeight() const;
 
 	void clear();
 
@@ -31,4 +33,16 @@ public:
 	void DrawBoxUnsafe(Vector<unsigned int> topLeft, Vector<unsigned int> botRight, unsigned char r, unsigned char g, unsigned char b);
 
 	void DrawBoxSafe(Vector<unsigned int> topLeft, Vector<unsigned int> botRight, unsigned char r, unsigned char g, unsigned char b);
+
+	void DrawFilledBoxSafe(unsigned char* rgb, unsigned char alpha, Vector<float> position, Vector<float> size);
+
+	void DrawFilledBoxUnsafe(unsigned char* rgb, unsigned char alpha, Vector<float> position, Vector<float> size);
+
+	void GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>& position, Vector<float>& imageOffset, Vector<float>& imageSize, float& scale);
+
+	void Draw(GamesEngineeringBase::Image* image, Vector<float> canvasPosition, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1, RenderMethod render = Integer);
+
+	void DrawInteger(GamesEngineeringBase::Image* image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
+
+	void DrawBilinear(GamesEngineeringBase::Image* image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
 };

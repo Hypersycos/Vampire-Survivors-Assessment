@@ -1,5 +1,5 @@
 #include "GamesEngineeringBase.h"
-#include "World.h"
+#include "TestWorld.cpp"
 #include "Camera.h"
 #include <iostream>
 
@@ -50,7 +50,7 @@ int main() {
 
 		if (movement.x != 0 || movement.y != 0)
 		{
-			movement *= dt * (window.keyPressed(VK_SHIFT) ? 2000 : 500);
+			movement *= dt * (window.keyPressed(VK_SHIFT) ? 2000 : 100);
 			if (movement.x != 0 && movement.y != 0)
 				movement *= 0.7071;
 
@@ -79,7 +79,7 @@ int main() {
 			}
 		}
 
-		camera.Clear();
+		camera.Redraw();
 		window.present();
 	}
 	return 0;
