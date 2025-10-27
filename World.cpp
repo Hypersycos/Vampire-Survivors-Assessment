@@ -42,7 +42,7 @@ Enemy* World::GetNearestEnemy(float maxRange, Vector<float> position)
 
 Enemy* World::GetNearestEnemyToPlayer(float maxRange)
 {
-	return GetNearestEnemy(maxRange, player.GetPosition());
+	return GetNearestEnemy(maxRange, player->GetPosition());
 }
 
 void World::GetNearestNEnemies(float maxRange, Vector<float> position, Array<Enemy*>& arr, Comparer)
@@ -75,5 +75,5 @@ void World::GetNearestNEnemies(float maxRange, Vector<float> position, Array<Ene
 
 void World::GetNearestNEnemiesToPlayer(float maxRange, Array<Enemy*>& arr, Comparer)
 {
-	return GetNearestNEnemies(maxRange, player.GetPosition(), arr, comparer);
+	return GetNearestNEnemies(maxRange, player->GetPosition(), arr, comparer);
 }

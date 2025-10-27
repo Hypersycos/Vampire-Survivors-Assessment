@@ -2,7 +2,7 @@
 
 #include "Character.h"
 
-class Enemy : Character
+class Enemy : public Character
 {
 
 };

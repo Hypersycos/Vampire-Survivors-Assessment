@@ -1,65 +1,55 @@
-#include "GamesEngineeringBase.h"
+#include "InputHandler.h"
 
-#pragma once
-
-class InputHandler
+InputHandler::InputHandler(GamesEngineeringBase::Window& window) : window(window)
 {
-	GamesEngineeringBase::Window& window;
-	bool keysLastState[256];
-	bool mouseLastState[3];
-
-public:
-	InputHandler(GamesEngineeringBase::Window& window) : window(window)
+	for (int i = 0; i < 256; i++)
 	{
-		for (int i = 0; i < 256; i++)
-		{
-			keysLastState[i] = false;
-		}
-		for (int i = 0; i < 3; i++)
-		{
-			mouseLastState[i] = false;
-		}
+		keysLastState[i] = false;
 	}
+	for (int i = 0; i < 3; i++)
+	{
+		mouseLastState[i] = false;
+	}
+}
 	
-	void Update()
+void InputHandler::Update()
+{
+	for (int i = 0; i < 256; i++)
 	{
-		for (int i = 0; i < 256; i++)
-		{
-			keysLastState[i] = window.keyPressed(i);
-		}
-		mouseLastState[GamesEngineeringBase::MouseLeft] = window.mouseButtonPressed(GamesEngineeringBase::MouseLeft);
-		mouseLastState[GamesEngineeringBase::MouseMiddle] = window.mouseButtonPressed(GamesEngineeringBase::MouseMiddle);
-		mouseLastState[GamesEngineeringBase::MouseRight] = window.mouseButtonPressed(GamesEngineeringBase::MouseRight);
-		window.checkInput();
+		keysLastState[i] = window.keyPressed(i);
 	}
+	mouseLastState[GamesEngineeringBase::MouseLeft] = window.mouseButtonPressed(GamesEngineeringBase::MouseLeft);
+	mouseLastState[GamesEngineeringBase::MouseMiddle] = window.mouseButtonPressed(GamesEngineeringBase::MouseMiddle);
+	mouseLastState[GamesEngineeringBase::MouseRight] = window.mouseButtonPressed(GamesEngineeringBase::MouseRight);
+	window.checkInput();
+}
 
-	bool KeyHeld(int i)
-	{
-		return window.keyPressed(i);
-	}
+bool InputHandler::KeyHeld(int i)
+{
+	return window.keyPressed(i);
+}
 
-	bool KeyDown(int i)
-	{
-		return window.keyPressed(i) && !keysLastState[i];
-	}
+bool InputHandler::KeyDown(int i)
+{
+	return window.keyPressed(i) && !keysLastState[i];
+}
 
-	bool KeyUp(int i)
-	{
-		return !window.keyPressed(i) && keysLastState[i];
-	}
+bool InputHandler::KeyUp(int i)
+{
+	return !window.keyPressed(i) && keysLastState[i];
+}
 
-	bool MouseHeld(GamesEngineeringBase::MouseButton i)
-	{
-		return window.mouseButtonPressed(i);
-	}
+bool InputHandler::MouseHeld(GamesEngineeringBase::MouseButton i)
+{
+	return window.mouseButtonPressed(i);
+}
 
-	bool MouseDown(GamesEngineeringBase::MouseButton i)
-	{
-		return window.mouseButtonPressed(i) && !mouseLastState[i];
-	}
+bool InputHandler::MouseDown(GamesEngineeringBase::MouseButton i)
+{
+	return window.mouseButtonPressed(i) && !mouseLastState[i];
+}
 
-	bool MouseUp(GamesEngineeringBase::MouseButton i)
-	{
-		return !window.mouseButtonPressed(i) && mouseLastState[i];
-	}
-};
+bool InputHandler::MouseUp(GamesEngineeringBase::MouseButton i)
+{
+	return !window.mouseButtonPressed(i) && mouseLastState[i];
+}

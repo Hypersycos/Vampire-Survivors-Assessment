@@ -8,11 +8,11 @@ template <typename T> class Array
 public:
 	Array(int size) : size(size)
 	{
-		internal = new T*[size];
-		for (int i = 0; i < size; i++)
-		{
-			internal[i] = default;
-		}
+		internal = new T[size] {};
+		//for (int i = 0; i < size; i++)
+		//{
+		//	internal[i] = default(T);
+		//}
 	}
 
 	~Array()

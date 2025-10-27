@@ -117,4 +117,9 @@ public:
 	{
 		return sqrt(x * x + y * y);
 	}
+
+	T sqrMagnitude()
+	{
+		return x * x + y * y;
+	}
 };

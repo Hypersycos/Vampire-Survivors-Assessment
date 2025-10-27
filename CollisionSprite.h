@@ -1,7 +1,7 @@
 #pragma once
 #include "Sprite.h"
 
-class CollisionSprite : Sprite
+class CollisionSprite : public Sprite
 {
 	float collisionRadius;
 	int layer;

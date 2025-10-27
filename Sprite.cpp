@@ -1,6 +1,6 @@
 #include "Sprite.h"
 
-class Sprite
+Sprite::Sprite() : scale(1), enabled(false), image(NULL)
 {
 }
 
@@ -63,26 +63,14 @@ void Sprite::Draw(Canvas& canvas, Vector<float> offset, float zoom, RenderMethod
 	{
 		if (!blankIfDisabled)
 			return;
-		}
-
-		switch (renderMethod)
-		{
-		case Integer:
-			DrawInteger(canvas, offset, zoom);
-			break;
-		case Bilinear:
-			//DrawBilinear(canvas, offset, zoom);
-			break;
-		case Blank:
-			DrawBlank(canvas, offset, zoom);
-			break;
-		default:
-			break;
-		}
+		else
+			renderMethod = Blank;
 	}
+	Vector<float> adjustedPosition = (GetTopLeft() - offset) * zoom;
+	canvas.Draw(image, adjustedPosition, size * zoom, Vector<float>(0, 0), zoom * scale, renderMethod);
 };
 
-virtual void Sprite::Update(float dt, World* world, InputHandler& input)
-{
-
-}
+//void Sprite::Update(float dt, World* world, InputHandler& input)
+//{
+//
+//}

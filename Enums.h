@@ -5,11 +5,9 @@
 enum RenderMethod
 {
 	Integer,
-	NearestInteger
+	NearestInteger,
 	Bilinear,
 	Blank
-};
-#endif
 };
 
 enum CollisionLayer
@@ -17,3 +15,5 @@ enum CollisionLayer
 	CollidesWithPlayer = 1,
 	CollidesWithEnemies = 2
 };
+
+#endif

@@ -2,7 +2,7 @@
 
 #include "CollisionSprite.h"
 
-class Character : CollisionSprite
+class Character : public CollisionSprite
 {
 public:
 	Character();
