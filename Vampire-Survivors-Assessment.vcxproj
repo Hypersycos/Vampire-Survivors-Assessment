@@ -130,10 +130,14 @@
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enums.cpp" />
+    <ClCompile Include="FixedWorld.cpp" />
     <ClCompile Include="helpers\array.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TestWorld.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="World.cpp" />

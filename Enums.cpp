@@ -6,3 +6,9 @@ enum RenderMethod
 	Bilinear,
 	Blank
 };
+
+enum CollisionLayer
+{
+	CollidesWithPlayer = 1,
+	CollidesWithEnemies = 2
+};

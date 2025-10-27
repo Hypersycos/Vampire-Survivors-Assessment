@@ -1,5 +1,6 @@
 #include "GamesEngineeringBase.h"
 #include "World.cpp"
+#include "TestWorld.cpp"
 #include "Camera.cpp"
 #include <iostream>
 
@@ -15,6 +16,9 @@ int main() {
 	Canvas canvas = Canvas(window, window.getWidth() / 2, window.getHeight() / 2, window.getWidth() / 4, window.getHeight() / 4);
 	Camera camera = Camera(world, canvas);
 
+	float accumulator = 0;
+	int frames = 0;
+
 	while (running)
 	{
 		// Check for input (key presses or window events)
@@ -28,6 +32,15 @@ int main() {
 		}
 
 		float dt = timer.dt();
+		accumulator += dt;
+		frames++;
+
+		if (accumulator >= 1)
+		{
+			std::cout << frames << std::endl;
+			frames = 0;
+			accumulator = 0;
+		}
 
 		Vector<float> movement = Vector<float>();
 

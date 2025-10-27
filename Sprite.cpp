@@ -2,6 +2,9 @@
 #include "Vector.cpp"
 #include "Enums.cpp"
 #include "Canvas.cpp"
+#include "InputHandler.cpp"
+
+#pragma once
 
 class Sprite
 {
@@ -190,4 +193,9 @@ public:
 			break;
 		}
 	}
+
+	//virtual void Update(float dt, World* world, InputHandler& input)
+	//{
+
+	//}
 };
