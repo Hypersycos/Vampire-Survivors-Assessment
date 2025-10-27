@@ -147,7 +147,7 @@ void Canvas::DrawFilledBoxSafe(unsigned char* rgb, unsigned char alpha, Vector<f
 	DrawFilledBoxUnsafe(rgb, alpha, position, size);
 }
 
-void Canvas::GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>& position, Vector<float>& imageOffset, Vector<float>& imageSize, float& scale)
+void Canvas::GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>& position, Vector<float>& imageOffset, Vector<float>& imageSize, float& scale) const
 {
 	position -= imageOffset * scale;
 #ifdef enableDrawBeyondBounds

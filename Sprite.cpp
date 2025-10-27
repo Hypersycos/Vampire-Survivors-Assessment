@@ -1,4 +1,5 @@
 #include "Sprite.h"
+#include "World.h"
 
 Sprite::Sprite() : scale(1), enabled(false), image(NULL)
 {
@@ -70,7 +71,7 @@ void Sprite::Draw(Canvas& canvas, Vector<float> offset, float zoom, RenderMethod
 	canvas.Draw(image, adjustedPosition, size * zoom, Vector<float>(0, 0), zoom * scale, renderMethod);
 };
 
-//void Sprite::Update(float dt, World* world, InputHandler& input)
-//{
-//
-//}
+void Sprite::Update(World* world, InputHandler& input)
+{
+
+}

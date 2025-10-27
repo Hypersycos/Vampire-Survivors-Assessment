@@ -1,5 +1,10 @@
 #include "World.h"
 
+World::World() : enemies(Array<Enemy*>(50)), enemyCount(0)
+{
+
+}
+
 int World::TileAt(Vector<int> position)
 {
 	return this->TileAt(position.x, position.y);
@@ -18,6 +23,14 @@ GamesEngineeringBase::Image* World::GetTileImage(int index)
 int World::GetTileSize() const
 {
 	return tileSize;
+}
+Player* World::GetPlayer() const
+{
+	return player;
+}
+Array<Enemy*> World::GetEnemies() const
+{
+	return enemies;
 }
 Enemy* World::GetNearestEnemy(float maxRange, Vector<float> position)
 {
@@ -45,9 +58,12 @@ Enemy* World::GetNearestEnemyToPlayer(float maxRange)
 	return GetNearestEnemy(maxRange, player->GetPosition());
 }
 
-void World::GetNearestNEnemies(float maxRange, Vector<float> position, Array<Enemy*>& arr, Comparer)
+void World::GetNearestNEnemies(float maxRange, Vector<float> position, Array<Enemy*>& arr, Comparer comparer)
 {
 	int N = arr.GetSize();
+	if (N == 0)
+		return;
+
 	float* distArr = new float[N];
 	for (int i = 0; i < N; i++)
 	{
@@ -60,9 +76,9 @@ void World::GetNearestNEnemies(float maxRange, Vector<float> position, Array<Ene
 		if (enemy != nullptr)
 		{
 			float distance = comparer(enemy);
-			if (distance < distArr[4])
+			if (distance < distArr[N-1])
 			{
-				int i = 4;
+				int i = N-1;
 				while (i >= 0 && distArr[--i] > distance)
 				{
 				}
@@ -73,7 +89,17 @@ void World::GetNearestNEnemies(float maxRange, Vector<float> position, Array<Ene
 	}
 }
 
-void World::GetNearestNEnemiesToPlayer(float maxRange, Array<Enemy*>& arr, Comparer)
+void World::GetNearestNEnemiesToPlayer(float maxRange, Array<Enemy*>& arr, Comparer comparer)
 {
 	return GetNearestNEnemies(maxRange, player->GetPosition(), arr, comparer);
+}
+
+void World::Update(InputHandler& inputHandler)
+{
+	player->Update(this, inputHandler);
+	for (Enemy* e : enemies)
+	{
+		if (e != nullptr)
+			e->Update(this, inputHandler);
+	}
 }

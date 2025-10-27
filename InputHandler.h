@@ -5,23 +5,29 @@
 class InputHandler
 {
 	GamesEngineeringBase::Window& window;
-	bool keysLastState[256];
-	bool mouseLastState[3];
+	GamesEngineeringBase::Timer timer;
+	float dt{ 0 };
+	int index{ 0 };
+	int altIndex{ 1 };
+	bool keysLastState[256][2]{};
+	bool mouseLastState[3][2]{};
 
 public:
 	InputHandler(GamesEngineeringBase::Window& window);
 
 	void Update();
 
-	bool KeyHeld(int i);
+	float GetDT() const;
 
-	bool KeyDown(int i);
+	bool KeyHeld(int i) const;
 
-	bool KeyUp(int i);
+	bool KeyDown(int i) const;
 
-	bool MouseHeld(GamesEngineeringBase::MouseButton i);
+	bool KeyUp(int i) const;
 
-	bool MouseDown(GamesEngineeringBase::MouseButton i);
+	bool MouseHeld(GamesEngineeringBase::MouseButton i) const;
 
-	bool MouseUp(GamesEngineeringBase::MouseButton i);
+	bool MouseDown(GamesEngineeringBase::MouseButton i) const;
+
+	bool MouseUp(GamesEngineeringBase::MouseButton i) const;
 };

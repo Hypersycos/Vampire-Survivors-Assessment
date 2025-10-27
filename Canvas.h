@@ -38,7 +38,7 @@ public:
 
 	void DrawFilledBoxUnsafe(unsigned char* rgb, unsigned char alpha, Vector<float> position, Vector<float> size);
 
-	void GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>& position, Vector<float>& imageOffset, Vector<float>& imageSize, float& scale);
+	void GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>& position, Vector<float>& imageOffset, Vector<float>& imageSize, float& scale) const;
 
 	void Draw(GamesEngineeringBase::Image* image, Vector<float> canvasPosition, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1, RenderMethod render = Integer);
 

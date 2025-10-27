@@ -6,12 +6,13 @@
 #include "World.h"
 #include "Enums.h"
 #include "Canvas.h"
+#include "CameraTarget.h"
 
 class Camera
 {
 	Vector<unsigned int> canvasDimensions;
 	Vector<unsigned int> tileDimensions;
-	Vector<float> cameraPosition;
+	CameraTarget* cameraTarget;
 	Vector<float> cameraTopLeft;
 	Vector<int> tileCentre;
 	RenderMethod renderMethod;
@@ -24,14 +25,15 @@ class Camera
 
 public:
 	Camera(World* world, Canvas canvas);
+	Camera(World* world, Canvas canvas, CameraTarget* target);
 
 	void ChangeZoom(float direction);
 
 	void Rescale(float newZoom);
 
-	void Move(Vector<float> movement);
-
 	void Redraw();
+
+	void UpdatePosition(InputHandler& inputHandler);
 
 	~Camera();
 };

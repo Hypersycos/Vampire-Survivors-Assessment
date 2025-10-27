@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraTarget.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Enemy.h" />
@@ -143,6 +144,8 @@
     <ClCompile Include="CollisionSprite.cpp" />
     <ClInclude Include="CollisionSprite.h" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="FollowCamera.cpp" />
+    <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="helpers\array.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="main.cpp" />

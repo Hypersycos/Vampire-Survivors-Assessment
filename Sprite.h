@@ -1,10 +1,11 @@
 #pragma once
 
+class World;
+
 #include "GamesEngineeringBase.h"
 #include "Vector.h"
 #include "Enums.h"
 #include "Canvas.h"
-//#include "World.h"
 #include "InputHandler.h"
 
 class Sprite
@@ -42,5 +43,5 @@ public:
 
 	void Draw(Canvas& canvas, Vector<float> offset, float zoom, RenderMethod renderMethod, bool blankIfDisabled = false);
 
-	//virtual void Update(float dt, World* world, InputHandler& input);
+	virtual void Update(World* world, InputHandler& input);
 };

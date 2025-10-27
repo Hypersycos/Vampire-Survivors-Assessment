@@ -1,32 +1,67 @@
 #include "Player.h"
+#include "Enemy.h"
+#include "World.h"
 
-//float GetEnemyHealth(Enemy* enemy)
-//{
-//	return enemy->GetHealth();
-//}
+static float GetEnemyHealth(Enemy* enemy)
+{
+	return (float)enemy->GetHealth();
+}
 
-	//void Update(float dt, World* world, InputHandler& input) override
-	//{
-	//	bool doAoE = aoeAttack.ApplyCooldown(dt, input.KeyDown(' '));
+Player::Player() : Character(100, 100, nullptr, Vector<float>(0, 0), 16, CollidesWithEnemies)
+{
+}
 
-	//	Enemy* nearest = world->GetNearestEnemyToPlayer(autoAttack.range);
-	//	bool doAttack = autoAttack.ApplyCooldown(dt, nearest != nullptr);
+void Player::Update(World* world, InputHandler& input)
+{
+	CollisionSprite::Update(world, input);
+	bool doAoE = aoeAttack.ApplyCooldown(input.GetDT(), input.KeyDown(' '));
 
-	//	if (doAttack)
-	//	{
-	//		//spawn projectile
-	//	}
-	// 
-	//	if (doAoE)
-	//	{
-	//		Array<Enemy*> aoeEnemies = Array<Enemy>(aoeAttack.maxCount);
-	//		world->GetNearestNEnemiesToPlayer(aoeAttack.maxCount, aoeEnemies, GetEnemyHealth);
-	//		for (Enemy* e : aoeEnemies)
-	//		{
-	//			if (e != nullptr)
-	//			{
-	//				//damage e
-	//			}
-	//		}
-	//	}
-	//}
+	Enemy* nearest = world->GetNearestEnemyToPlayer(autoAttack.range);
+	bool doAttack = autoAttack.ApplyCooldown(input.GetDT(), nearest != nullptr);
+
+	if (doAttack)
+	{
+		//spawn projectile
+	}
+ 
+	if (doAoE)
+	{
+		Array<Enemy*> aoeEnemies = Array<Enemy*>(aoeAttack.maxCount);
+		world->GetNearestNEnemiesToPlayer(aoeAttack.range, aoeEnemies, GetEnemyHealth);
+		for (Enemy* e : aoeEnemies)
+		{
+			if (e != nullptr)
+			{
+				e->Damage(aoeAttack.damage);
+			}
+		}
+	}
+
+	Vector<float> movement = Vector<float>();
+
+	if (input.KeyHeld('W'))
+	{
+		movement.y -= 1;
+	}
+	if (input.KeyHeld('A'))
+	{
+		movement.x -= 1;
+	}
+	if (input.KeyHeld('S'))
+	{
+		movement.y += 1;
+	}
+	if (input.KeyHeld('D'))
+	{
+		movement.x += 1;
+	}
+
+	if (movement.x != 0 || movement.y != 0)
+	{
+		movement *= input.GetDT() * 100;
+		if (movement.x != 0 && movement.y != 0)
+			movement *= 0.7071;
+
+		Move(movement);
+	}
+}

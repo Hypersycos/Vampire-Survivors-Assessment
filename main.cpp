@@ -1,19 +1,19 @@
 #include "GamesEngineeringBase.h"
 #include "TestWorld.cpp"
 #include "Camera.h"
+#include "InputHandler.h"
+#include "FollowCamera.cpp"
 #include <iostream>
 
 int main() {
 	GamesEngineeringBase::Window window;
 	window.create(1024, 768, "Game");
 	bool running = true;
-	bool debounce = false;
-
-	GamesEngineeringBase::Timer timer;
 
 	World* world = new TestWorld();
-	Canvas canvas = Canvas(window, window.getWidth() / 2, window.getHeight() / 2, window.getWidth() / 4, window.getHeight() / 4);
-	Camera camera = Camera(world, canvas);
+	InputHandler inputHandler = InputHandler(window);
+	Canvas canvas = Canvas(window, window.getWidth(), window.getHeight(), 0, 0);
+	Camera camera = Camera(world, canvas, new FollowCamera(world->GetPlayer()));
 
 	float accumulator = 0;
 	int frames = 0;
@@ -21,17 +21,16 @@ int main() {
 	while (running)
 	{
 		// Check for input (key presses or window events)
-		window.checkInput();
+		inputHandler.Update();
 
 		// If the Escape key is pressed, exit the loop and close the window
-		if (window.keyPressed(VK_ESCAPE))
+		if (inputHandler.KeyHeld(VK_ESCAPE))
 		{
 			running = false;
 			break; // Exits the game loop
 		}
 
-		float dt = timer.dt();
-		accumulator += dt;
+		accumulator += inputHandler.GetDT();
 		frames++;
 
 		if (accumulator >= 1)
@@ -41,56 +40,17 @@ int main() {
 			accumulator = 0;
 		}
 
-		Vector<float> movement = Vector<float>();
-
-		if (window.keyPressed('W'))
+		if (inputHandler.MouseDown(GamesEngineeringBase::MouseLeft))
 		{
-			movement.y -= 1;
+			camera.ChangeZoom(0.25);
 		}
-		if (window.keyPressed('A'))
+		else if (inputHandler.MouseDown(GamesEngineeringBase::MouseRight))
 		{
-			movement.x -= 1;
-		}
-		if (window.keyPressed('S'))
-		{
-			movement.y += 1;
-		}
-		if (window.keyPressed('D'))
-		{
-			movement.x += 1;
+			camera.ChangeZoom(-0.25);
 		}
 
-		if (movement.x != 0 || movement.y != 0)
-		{
-			movement *= dt * (window.keyPressed(VK_SHIFT) ? 2000 : 100);
-			if (movement.x != 0 && movement.y != 0)
-				movement *= 0.7071;
-
-			camera.Move(movement);
-		}
-
-		if (!debounce)
-		{
-			if (window.mouseButtonPressed(GamesEngineeringBase::MouseLeft))
-			{
-				camera.ChangeZoom(0.25);
-				debounce = true;
-			}
-			else if (window.mouseButtonPressed(GamesEngineeringBase::MouseRight))
-			{
-				camera.ChangeZoom(-0.25);
-				debounce = true;
-			}
-		}
-		else
-		{
-			if (!window.mouseButtonPressed(GamesEngineeringBase::MouseLeft)
-				&& !window.mouseButtonPressed(GamesEngineeringBase::MouseRight))
-			{
-				debounce = false;
-			}
-		}
-
+		world->Update(inputHandler);
+		camera.UpdatePosition(inputHandler);
 		camera.Redraw();
 		window.present();
 	}

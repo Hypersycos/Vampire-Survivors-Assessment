@@ -8,7 +8,7 @@ struct AttackData
 	int damage;
 	float range;
 
-	AttackData(float cooldown, int damage, float range) : cooldown(cooldown), damage(damage), range(range)
+	AttackData(float cooldown, int damage, float range) : cooldown(cooldown), damage(damage), range(range), currentCooldown(0)
 	{
 
 	}
@@ -55,4 +55,9 @@ class Player : public Character
 	ProjectileAttack autoAttack{ 1, 5, 32, 64 };
 
 	AoEAttack aoeAttack{ 7, 25, 5, 64 };
+
+public:
+	void Update(World* world, InputHandler& input) override;
+
+	Player();
 };

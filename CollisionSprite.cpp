@@ -1,15 +1,15 @@
 #include "CollisionSprite.h"
 
-CollisionSprite::CollisionSprite() : Sprite(), collisionRadius(0), layer(-1)
+CollisionSprite::CollisionSprite() : Sprite(), collisionRadius(0), layer(Unset)
 {
 
 }
 
-CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, float collisionRadius, int layer) : Sprite(img), collisionRadius(collisionRadius), layer(layer)
+CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer) : Sprite(img), collisionRadius(collisionRadius), layer(layer)
 {
 }
 
-CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, int layer) : Sprite(img, position), collisionRadius(collisionRadius), layer(layer)
+CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer) : Sprite(img, position), collisionRadius(collisionRadius), layer(layer)
 {
 }
 
@@ -22,4 +22,9 @@ bool CollisionSprite::checkCollision(CollisionSprite& other)
 int CollisionSprite::getLayer() const
 {
 	return layer;
+}
+
+void CollisionSprite::Update(World* world, InputHandler& input)
+{
+	lastPos = position;
 }

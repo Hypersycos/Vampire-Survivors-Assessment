@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "FreeCamera.cpp"
 
 #define tilesize world->GetTileSize()
 
@@ -31,8 +32,14 @@ void Camera::Retile()
 Camera::Camera(World* world, Canvas canvas) : world(world), canvas(canvas)
 {
 	canvasDimensions = Vector<unsigned int>(canvas.getWidth(), canvas.getHeight());
-	cameraPosition.x = 0;
-	cameraPosition.y = 0;
+	cameraTarget = new FreeCamera();
+
+	Rescale(1);
+}
+
+Camera::Camera(World* world, Canvas canvas, CameraTarget* target) : cameraTarget(target), world(world), canvas(canvas)
+{
+	canvasDimensions = Vector<unsigned int>(canvas.getWidth(), canvas.getHeight());
 
 	Rescale(1);
 }
@@ -67,15 +74,19 @@ void Camera::Rescale(float newZoom)
 		}
 	}
 
+	Vector<float> cameraPosition = cameraTarget->GetPosition();
+
 	cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2.0f / zoom;
 	cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2.0f / zoom;
 
 	Retile();
 }
 
-void Camera::Move(Vector<float> movement)
+void Camera::UpdatePosition(InputHandler& inputHandler)
 {
-	cameraPosition += movement;
+	cameraTarget->Update(inputHandler);
+	Vector<float> cameraPosition = cameraTarget->GetPosition();
+
 	cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2.0f / zoom;
 	cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2.0f / zoom;
 	if (renderMethod == Integer)

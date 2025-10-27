@@ -4,15 +4,18 @@
 class CollisionSprite : public Sprite
 {
 	float collisionRadius;
-	int layer;
+	Vector<float> lastPos;
+	CollisionLayer layer;
 
 public:
 	CollisionSprite();
 
-	CollisionSprite(GamesEngineeringBase::Image* img, float collisionRadius, int layer);
+	CollisionSprite(GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer);
 
-	CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, int layer);
+	CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer);
 
 	bool checkCollision(CollisionSprite& other);
 	int getLayer() const;
+
+	void Update(World* world, InputHandler& input) override;
 };
