@@ -1,7 +1,6 @@
-#pragma once
+#include "Player.h"
 
-#include "Sprite.cpp"
-#include "InputHandler.cpp"
+Player::Player()
 
 struct AttackData
 {
@@ -75,6 +74,7 @@ class Player : public Sprite
 	//		//spawn projectile
 	//	}
 
+}
 	//	if (doAoE)
 	//	{
 	//		Array<Enemy*> aoeEnemies = Array<Enemy>(aoeAttack.maxCount);

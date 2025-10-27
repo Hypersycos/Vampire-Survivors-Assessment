@@ -1,14 +1,6 @@
 #pragma once
 
-#include "Sprite.cpp"
-
-class Enemy : public Sprite
+class Enemy
 {
-	float health;
 
-public:
-	float GetHealth()
-	{
-		return health;
-	}
 };

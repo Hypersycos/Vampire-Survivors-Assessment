@@ -1,4 +1,4 @@
-#include "World.cpp"
+#include "World.h"
 
 #pragma once
 
@@ -21,19 +21,10 @@ public:
 
 		tileImages = new GamesEngineeringBase::Image[4];
 		const char* paths[] = { "Resources/0.png", "Resources/1.png", "Resources/2.png", "Resources/3.png" };
-	}
-
-	int TileAt(float x, float y) override
-	{
-		x /= tileSize;
-		y /= tileSize;
-
-		x += 100;
-		y += 100;
-		if (x < 200 && x >= 0 && y < 200 && y >= 0)
-			return tiles[(int)round(x)][(int)round(y)];
-		else
-			return -1;
+		for (int i = 0; i < 4; i++)
+		{
+			tileImages[i].load(paths[i]);
+		}
 	}
 
 	int TileAt(int x, int y) override
