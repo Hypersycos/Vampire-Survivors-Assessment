@@ -2,17 +2,19 @@
 
 template <typename T> class Array
 {
+protected:
 	T* internal;
 	unsigned int size;
 
 public:
-	Array(int size) : size(size)
+	Array(unsigned int size) : size(size)
 	{
 		internal = new T[size] {};
-		//for (int i = 0; i < size; i++)
-		//{
-		//	internal[i] = default(T);
-		//}
+	}
+
+	Array(T* items, unsigned int size) : size(size)
+	{
+		internal = items;
 	}
 
 	~Array()
@@ -25,20 +27,12 @@ public:
 		return size;
 	}
 
-	T Free(int i)
-	{
-		if (internal[i] != nullptr)
-		{
-			delete internal[i];
-		}
-	}
-
-	T& operator[](int i)
+	T& operator[](unsigned int i)
 	{
 		return internal[i];
 	}
 
-	T operator[](int i) const
+	T& operator[](unsigned int i) const
 	{
 		return internal[i];
 	}

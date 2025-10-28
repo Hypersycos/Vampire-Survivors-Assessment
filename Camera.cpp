@@ -113,6 +113,9 @@ void Camera::Redraw()
 			tiles[i][j].Draw(canvas, cameraTopLeft, zoom, renderMethod, true);
 		}
 	}
+
+	if (world->GetPlayer() != nullptr)
+		world->GetPlayer()->Draw(canvas, cameraTopLeft, zoom, renderMethod);
 #ifdef enableDrawBeyondBounds
 	canvas.DrawBoxUnsafe(Vector<unsigned int>(0, 0), canvas.GetSize(), 0, 0, 255);
 #endif

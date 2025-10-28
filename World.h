@@ -7,7 +7,7 @@ class Sprite;
 #include "Player.h"
 #include "Enemy.h"
 #include "GamesEngineeringBase.h"
-#include "helpers/array.cpp"
+#include "dynamicArray.cpp"
 
 typedef float(*Comparer)(Enemy*);
 
@@ -18,13 +18,16 @@ class World
 protected:
 	unsigned int enemyCount{ 0 };
 	unsigned int tileSize{ 32 };
-	Array<Enemy*> enemies{0};
-	Player* player = new Player();
-	GamesEngineeringBase::Image* tileImages;
+	DynamicArray<Enemy> enemies{};
+	Player* player = nullptr;
+	Array<GamesEngineeringBase::Image> tileImages;
 
 	World();
+	World(std::string* tiles, unsigned int count);
 
 public:
+	void LoadImages(std::string* tiles, unsigned int count, bool freeTiles = false);
+
 	int TileAt(Vector<int> position);
 
 	virtual int TileAt(int x, int y) = 0;
@@ -37,7 +40,7 @@ public:
 
 	Player* GetPlayer() const;
 
-	Array<Enemy*> GetEnemies() const;
+	DynamicArray<Enemy>& GetEnemies();
 
 	Enemy* GetNearestEnemy(float maxRange, Vector<float> position);
 

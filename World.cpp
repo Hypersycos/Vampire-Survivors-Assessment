@@ -1,8 +1,24 @@
 #include "World.h"
 
-World::World() : enemies(Array<Enemy*>(50)), enemyCount(0)
+World::World() : World(nullptr, 0)
 {
 
+}
+
+World::World(std::string* tiles, unsigned int count) : enemyCount(0), tileImages(Array<GamesEngineeringBase::Image>(count))
+{
+	if (tiles != nullptr)
+		LoadImages(tiles, count, true);
+}
+
+void World::LoadImages(std::string* tiles, unsigned int count, bool freeTiles)
+{
+	for (unsigned int i = 0; i < count; i++)
+	{
+		tileImages[i].load(tiles[i]);
+	}
+	if (freeTiles)
+		delete[] tiles;
 }
 
 int World::TileAt(Vector<int> position)
@@ -28,7 +44,7 @@ Player* World::GetPlayer() const
 {
 	return player;
 }
-Array<Enemy*> World::GetEnemies() const
+DynamicArray<Enemy>& World::GetEnemies()
 {
 	return enemies;
 }

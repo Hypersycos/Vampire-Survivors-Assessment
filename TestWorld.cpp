@@ -5,9 +5,10 @@
 class TestWorld : public World
 {
 	int** tiles;
+	GamesEngineeringBase::Image* playerImage;
 
 public:
-	TestWorld()
+	TestWorld() : World(new std::string[4]{ "Resources/0.png", "Resources/1.png", "Resources/2.png", "Resources/3.png" }, 4)
 	{
 		tiles = new int* [200];
 		for (int i = 0; i < 200; i++)
@@ -19,12 +20,11 @@ public:
 			}
 		}
 
-		tileImages = new GamesEngineeringBase::Image[4];
-		const char* paths[] = { "Resources/0.png", "Resources/1.png", "Resources/2.png", "Resources/3.png" };
-		for (int i = 0; i < 4; i++)
-		{
-			tileImages[i].load(paths[i]);
-		}
+		playerImage = new GamesEngineeringBase::Image;
+		playerImage->load("Resources/L.png");
+		player = new Player();
+		player->SetImage(playerImage);
+		player->enabled = true;
 	}
 
 	int TileAt(int x, int y) override
@@ -35,5 +35,10 @@ public:
 			return tiles[x][y];
 		else
 			return -1;
+	}
+
+	~TestWorld()
+	{
+		delete player;
 	}
 };
