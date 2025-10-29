@@ -75,3 +75,14 @@ void Sprite::Update(World* world, InputHandler& input)
 {
 
 }
+
+void Sprite::Serialize(std::ostream& stream)
+{
+	stream << position << scale;
+}
+
+Sprite::Sprite(std::istream& stream)
+{
+	stream >> position;
+	stream >> scale;
+}

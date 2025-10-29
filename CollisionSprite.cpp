@@ -5,6 +5,10 @@ CollisionSprite::CollisionSprite() : Sprite(), collisionRadius(0), layer(Unset)
 
 }
 
+CollisionSprite::CollisionSprite(std::istream& stream) : Sprite(stream)
+{
+}
+
 CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer) : Sprite(img), collisionRadius(collisionRadius), layer(layer)
 {
 }
@@ -19,7 +23,7 @@ bool CollisionSprite::checkCollision(CollisionSprite& other)
 	return (distance <= collisionRadius + other.collisionRadius);
 }
 
-int CollisionSprite::getLayer() const
+CollisionLayer CollisionSprite::getLayer() const
 {
 	return layer;
 }

@@ -10,12 +10,16 @@ class CollisionSprite : public Sprite
 public:
 	CollisionSprite();
 
+	CollisionSprite(std::istream& stream);
+
 	CollisionSprite(GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer);
 
 	CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer);
 
 	bool checkCollision(CollisionSprite& other);
-	int getLayer() const;
+	CollisionLayer getLayer() const;
 
 	void Update(World* world, InputHandler& input) override;
+
+	virtual void Serialize(std::ostream& stream);
 };

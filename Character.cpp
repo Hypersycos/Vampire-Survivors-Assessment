@@ -6,7 +6,7 @@ Character::Character() : CollisionSprite()
 	currentSpeed = baseSpeed;
 }
 
-Character::Character(int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer) : baseMaxHealth(maxHP), health(maxHP), baseSpeed(baseSpeed), CollisionSprite(image, position, collisionRadius, layer)
+Character::Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer) : baseMaxHealth(maxHP), health(maxHP), baseSpeed(baseSpeed), CollisionSprite(image, position, collisionRadius, layer)
 {
 	currentSpeed = baseSpeed;
 	currentMaxHealth = baseMaxHealth;
@@ -40,4 +40,26 @@ bool Character::Heal(int amount)
 void Character::ChangeHealth(int amount)
 {
 	health += amount;
+}
+
+void Character::SetSpeedScalar(float s)
+{
+	currentSpeed = baseSpeed * s;
+}
+
+void Character::SetHealthScalar(float s)
+{
+	currentMaxHealth = (unsigned int)round(baseMaxHealth * s);
+}
+
+void Character::Serialize(std::ostream& stream)
+{
+	stream << currentMaxHealth << health << currentSpeed;
+}
+
+Character::Character(std::istream& stream) : CollisionSprite(stream)
+{
+	stream >> currentMaxHealth;
+	stream >> health;
+	stream >> currentSpeed;
 }

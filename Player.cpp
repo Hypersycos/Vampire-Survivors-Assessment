@@ -11,6 +11,17 @@ Player::Player() : Character(100, 100, nullptr, Vector<float>(0, 0), 16, Collide
 {
 }
 
+void Player::Serialize(std::ostream& stream)
+{
+	stream << aoeAttack.currentCooldown << autoAttack.currentCooldown;
+}
+
+Player::Player(std::istream& stream) : CollisionSprite(stream)
+{
+	stream >> aoeAttack.currentCooldown;
+	stream >> autoAttack.currentCooldown;
+}
+
 void Player::Update(World* world, InputHandler& input)
 {
 	CollisionSprite::Update(world, input);
@@ -58,7 +69,7 @@ void Player::Update(World* world, InputHandler& input)
 
 	if (movement.x != 0 || movement.y != 0)
 	{
-		movement *= input.GetDT() * 100;
+		movement *= input.GetDT() * currentSpeed;
 		if (movement.x != 0 && movement.y != 0)
 			movement *= 0.7071;
 

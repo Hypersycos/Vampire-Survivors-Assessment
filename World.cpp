@@ -103,11 +103,17 @@ void World::GetNearestNEnemies(float maxRange, Vector<float> position, Array<Ene
 			if (distance < distArr[N-1])
 			{
 				int i = N-1;
-				while (i >= 0 && distArr[--i] > distance)
+				while (i >= 0 && distArr[i] > distance)
 				{
+					if (i < N - 1)
+					{
+						distArr[i+1] = distArr[i];
+						arr[i+1] = arr[i];
+					}
+					
+					distArr[i] = distance;
+					arr[i] = enemy;
 				}
-				arr[++i] = enemy;
-				distArr[i] = distance;
 			}
 		}
 	}

@@ -7,6 +7,7 @@ class World;
 #include "Enums.h"
 #include "Canvas.h"
 #include "InputHandler.h"
+#include <fstream>
 
 class Sprite
 {
@@ -20,6 +21,8 @@ public:
 	bool enabled;
 
 	Sprite();
+
+	Sprite(std::istream& stream);
 
 	Sprite(GamesEngineeringBase::Image* img);
 
@@ -44,4 +47,6 @@ public:
 	void Draw(Canvas& canvas, Vector<float> offset, float zoom, RenderMethod renderMethod, bool blankIfDisabled = false);
 
 	virtual void Update(World* world, InputHandler& input);
+
+	virtual void Serialize(std::ostream& stream);
 };

@@ -42,13 +42,7 @@
     <ClInclude Include="Enums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputHandler.h">
@@ -105,21 +99,15 @@
     <ClInclude Include="EnemyImageHolder.h">
       <Filter>Header Files\Sprites</Filter>
     </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files\WorldHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files\WorldHandling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Canvas.cpp">
@@ -163,6 +151,15 @@
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>Source Files\Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files\WorldHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="TestWorld.cpp">
+      <Filter>Source Files\WorldHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\WorldHandling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -122,4 +122,15 @@ public:
 	{
 		return x * x + y * y;
 	}
+
+	friend std::ostream& operator<<(std::ostream& stream, const Vector<T>& vec)
+	{
+		stream << x << y;
+	}
+
+	friend std::istream& operator>>(std::istream& stream, Vector<T>& vec)
+	{
+		stream >> vec.x;
+		stream >> vec.y;
+	}
 };

@@ -163,7 +163,6 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TestWorld.cpp" />
     <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="Vector.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>

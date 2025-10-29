@@ -60,4 +60,8 @@ public:
 	void Update(World* world, InputHandler& input) override;
 
 	Player();
+
+	Player(std::istream& stream);
+
+	void Serialize(std::ostream& stream) override;
 };

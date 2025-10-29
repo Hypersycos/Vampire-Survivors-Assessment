@@ -8,4 +8,6 @@ class Projectile : CollisionSprite
 	Vector<float> movement;
 
 	void Update(World* world, InputHandler& input) override;
+
+	void Serialize(std::ostream& stream) override;
 };
