@@ -31,18 +31,19 @@ void Canvas::clear()
 #ifdef enableDrawBeyondBounds
 	canvas.clear();
 #else
-	//for (int i = 0; i < size.y; i++)
-	//{
-	//	memset(canvas.backBuffer() + (position.x) * (i + 1) + canvas.getWidth() * i, 0, size.x * 3 * sizeof(unsigned char));
-	//}
-	unsigned char rgb[3]{ 0, 0, 0 };
-	for (unsigned int i = 0; i < size.x; i++)
+	for (unsigned int i = 0; i < size.y; i++)
 	{
-		for (unsigned int j = 0; j < size.y; j++)
-		{
-			DrawPixelUnsafe(i, j, 255, rgb);
-		}
+		memset(canvas.backBuffer() + (position.x + canvas.getWidth() * i) * 3, 0, size.x * 3 * sizeof(unsigned char));
 	}
+
+	//unsigned char rgb[3]{ 0, 0, 0 };
+	//for (unsigned int i = 0; i < size.x; i++)
+	//{
+	//	for (unsigned int j = 0; j < size.y; j++)
+	//	{
+	//		DrawPixelUnsafe(i, j, 255, rgb);
+	//	}
+	//}
 #endif
 }
 

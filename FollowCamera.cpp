@@ -1,26 +1,19 @@
-#include "CameraTarget.h"
-#include "Sprite.h"
+#include "FollowCamera.h"
 
-class FollowCamera : public CameraTarget
+FollowCamera::FollowCamera(Sprite* target) : target(target)
 {
-	Sprite* target{nullptr};
+}
 
-public:
-	FollowCamera(Sprite* target) : target(target)
-	{
-	}
+void FollowCamera::SetTarget(Sprite* _target)
+{
+	target = _target;
+}
 
-	void SetTarget(Sprite* _target)
-	{
-		target = _target;
-	}
+Vector<float> FollowCamera::GetPosition()
+{
+	return target->GetPosition();
+}
 
-	Vector<float> GetPosition() override
-	{
-		return target->GetPosition();
-	}
-
-	void Update(InputHandler& inputHandler) override
-	{
-	}
-};
+void FollowCamera::Update(InputHandler& inputHandler)
+{
+}

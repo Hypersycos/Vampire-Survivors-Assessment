@@ -2,7 +2,7 @@
 #include "TestWorld.cpp"
 #include "Camera.h"
 #include "InputHandler.h"
-#include "FollowCamera.cpp"
+#include "FollowCamera.h"
 #include <iostream>
 
 int main() {

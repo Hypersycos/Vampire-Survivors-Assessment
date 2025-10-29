@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "FreeCamera.cpp"
+#include "FreeCamera.h"
 
 #define tilesize world->GetTileSize()
 
@@ -91,6 +91,8 @@ void Camera::UpdatePosition(InputHandler& inputHandler)
 	cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2.0f / zoom;
 	if (renderMethod == Integer)
 	{
+#pragma warning( push )
+#pragma warning( disable: 4244 )
 		cameraTopLeft.x = round(cameraTopLeft.x);
 		cameraTopLeft.y = round(cameraTopLeft.y);
 	}
@@ -98,6 +100,7 @@ void Camera::UpdatePosition(InputHandler& inputHandler)
 	{
 		Retile();
 	}
+#pragma warning( pop )
 }
 
 void Camera::Redraw()

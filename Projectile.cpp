@@ -1,12 +1,6 @@
-#include "CollisionSprite.h"
+#include "Projectile.h"
 
-class Projectile : CollisionSprite
+void Projectile::Update(World* world, InputHandler& input)
 {
-	int damage;
-	Vector<float> movement;
-
-	void Update(World* world, InputHandler& input)
-	{
-		Move(movement);
-	}
-};
+	Move(movement);
+}

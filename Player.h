@@ -32,9 +32,9 @@ struct AttackData
 struct ProjectileAttack : AttackData
 {
 public:
-	float speed;
+	float baseSpeed;
 
-	ProjectileAttack(float cooldown, int damage, float range, float speed) : speed(speed), AttackData(cooldown, damage, range)
+	ProjectileAttack(float cooldown, int damage, float range, float baseSpeed) : baseSpeed(baseSpeed), AttackData(cooldown, damage, range)
 	{
 
 	}

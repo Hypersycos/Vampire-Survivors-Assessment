@@ -40,14 +40,22 @@ int World::GetTileSize() const
 {
 	return tileSize;
 }
+
 Player* World::GetPlayer() const
 {
 	return player;
 }
+
+void World::SetPlayer(Player* player)
+{
+	this->player = player;
+}
+
 DynamicArray<Enemy>& World::GetEnemies()
 {
 	return enemies;
 }
+
 Enemy* World::GetNearestEnemy(float maxRange, Vector<float> position)
 {
 	Enemy* nearest = nullptr;

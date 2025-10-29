@@ -123,29 +123,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Array.h" />
+    <ClInclude Include="BaseArray.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraTarget.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="DynamicArray.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyImageHolder.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="FixedArray.h" />
+    <ClInclude Include="FollowCamera.h" />
+    <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="GamesEngineeringBase.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="ImageHolder.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="array.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CollisionSprite.cpp" />
     <ClInclude Include="CollisionSprite.h" />
-    <ClCompile Include="dynamicArray.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyImageHolder.cpp" />
     <ClCompile Include="FollowCamera.cpp" />
     <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="InputHandler.cpp" />

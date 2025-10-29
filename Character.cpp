@@ -2,11 +2,14 @@
 
 Character::Character() : CollisionSprite()
 {
-
+	currentMaxHealth = baseMaxHealth;
+	currentSpeed = baseSpeed;
 }
 
-Character::Character(int maxHP, float speed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer) : maxHealth(maxHP), health(maxHP), speed(speed), CollisionSprite(image, position, collisionRadius, layer)
+Character::Character(int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer) : baseMaxHealth(maxHP), health(maxHP), baseSpeed(baseSpeed), CollisionSprite(image, position, collisionRadius, layer)
 {
+	currentSpeed = baseSpeed;
+	currentMaxHealth = baseMaxHealth;
 }
 
 int Character::GetHealth() const
@@ -23,9 +26,9 @@ bool Character::Damage(int amount)
 bool Character::Heal(int amount)
 {
 	health += max(0, amount);
-	if (health >= maxHealth)
+	if (health >= baseMaxHealth)
 	{
-		health = maxHealth;
+		health = baseMaxHealth;
 		return true;
 	}
 	else

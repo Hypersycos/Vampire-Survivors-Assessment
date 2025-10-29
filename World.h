@@ -7,11 +7,11 @@ class Sprite;
 #include "Player.h"
 #include "Enemy.h"
 #include "GamesEngineeringBase.h"
-#include "dynamicArray.cpp"
+#include "DynamicArray.h"
+#include "Array.h"
+#include "Projectile.h"
 
 typedef float(*Comparer)(Enemy*);
-
-//#define Comparer float(*comparer)(Enemy*)
 
 class World
 {
@@ -19,6 +19,8 @@ protected:
 	unsigned int enemyCount{ 0 };
 	unsigned int tileSize{ 32 };
 	DynamicArray<Enemy> enemies{};
+	DynamicArray<Projectile> enemyProjectiles{};
+	DynamicArray<Projectile> playerProjectiles{};
 	Player* player = nullptr;
 	Array<GamesEngineeringBase::Image> tileImages;
 
@@ -39,6 +41,8 @@ public:
 	int GetTileSize() const;
 
 	Player* GetPlayer() const;
+
+	void SetPlayer(Player* player);
 
 	DynamicArray<Enemy>& GetEnemies();
 

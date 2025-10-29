@@ -12,9 +12,11 @@ enum RenderMethod
 
 enum CollisionLayer
 {
-	Unset = 0,
-	CollidesWithPlayer = 1,
-	CollidesWithEnemies = 2
+	Unset = -1,
+	CollidesWithPlayer = 0,
+	CollidesWithEnemies = 1,
+	CollidesWithPlayerProjectiles = 2,
+	CollidesWithEnemyProjectiles = 3
 };
 
 #endif
