@@ -124,6 +124,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Array.h" />
+    <ClInclude Include="Artillery.h" />
+    <ClInclude Include="BasicEnemy.h" />
     <ClInclude Include="BaseArray.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraTarget.h" />
@@ -140,6 +142,7 @@
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="Runner.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="ImageHolder.h" />
     <ClInclude Include="Tile.h" />
@@ -147,6 +150,7 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Artillery.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Character.cpp" />

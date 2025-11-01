@@ -1,6 +1,8 @@
 #pragma once
 #include <type_traits>
 #include <math.h>
+#include <ostream>
+#include <istream>
 
 template <typename T> class Vector
 {
@@ -123,14 +125,25 @@ public:
 		return x * x + y * y;
 	}
 
+	Vector<T> clamped(T magnitude)
+	{
+		if (sqrMagnitude() > magnitude * magnitude)
+		{
+			return *this;
+		}
+		else
+		{
+			return *this * (magnitude / sqrt(sqrMagnitude()));
+		}
+	}
+
 	friend std::ostream& operator<<(std::ostream& stream, const Vector<T>& vec)
 	{
-		stream << x << y;
+		return stream << vec.x << vec.y;
 	}
 
 	friend std::istream& operator>>(std::istream& stream, Vector<T>& vec)
 	{
-		stream >> vec.x;
-		stream >> vec.y;
+		return stream >> vec.x >> vec.y;
 	}
 };

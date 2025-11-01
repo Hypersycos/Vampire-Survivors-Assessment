@@ -20,6 +20,4 @@ public:
 	CollisionLayer getLayer() const;
 
 	void Update(World* world, InputHandler& input) override;
-
-	virtual void Serialize(std::ostream& stream);
 };

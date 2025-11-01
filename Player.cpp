@@ -16,7 +16,7 @@ void Player::Serialize(std::ostream& stream)
 	stream << aoeAttack.currentCooldown << autoAttack.currentCooldown;
 }
 
-Player::Player(std::istream& stream) : CollisionSprite(stream)
+Player::Player(std::istream& stream) : Character(stream)
 {
 	stream >> aoeAttack.currentCooldown;
 	stream >> autoAttack.currentCooldown;

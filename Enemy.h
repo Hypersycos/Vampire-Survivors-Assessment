@@ -7,7 +7,11 @@ class Enemy : public Character
 {
 	static EnemyImageHolder ImageHolder;
 
-	void Serialize(std::ofstream& stream) override;
+protected:
+	Vector<float> Pathfind(World* world, float dt);
 
-	void Deserialize(std::ifstream& stream) override;
+public:
+	Enemy(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer = CollidesWithPlayerProjectiles);
+
+	void Update(World* world, InputHandler& input) override;
 };
