@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(FixedArray<bool, 4> collisionMatrix, FixedArray<float, 2> speedMatrix) : collisionMatrix(collisionMatrix), speedMatrix(speedMatrix)
+Tile::Tile(FixedArray<bool, 4> collisionMatrix, FixedArray<float, 2> speedMatrix)// : collisionMatrix(collisionMatrix), speedMatrix(speedMatrix)
 {
 }
 

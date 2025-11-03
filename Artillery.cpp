@@ -14,17 +14,17 @@ void Artillery::Update(World* world, InputHandler& input)
 		}
 		break;
 	case Artillery::Transforming:
-		if (timer += input.GetDT() >= transformTime)
+		if ((timer += input.GetDT()) >= transformTime)
 		{
 			timer = fireInterval;
 			state = Firing;
 		}
 		break;
 	case Artillery::Firing:
-		if (timer += input.GetDT() >= fireInterval)
+		if ((timer += input.GetDT()) >= fireInterval)
 		{
 			timer -= fireInterval;
-			//fire projectile
+			//TODO: fire projectile
 		}
 		if ((world->GetPlayer()->GetPosition() - position).sqrMagnitude() > detransformDist * detransformDist)
 		{
@@ -33,7 +33,7 @@ void Artillery::Update(World* world, InputHandler& input)
 		}
 		break;
 	case Artillery::Detransforming:
-		if (timer += input.GetDT() >= transformTime)
+		if ((timer += input.GetDT()) >= detransformTime)
 		{
 			state = Chasing;
 		}
@@ -43,6 +43,6 @@ void Artillery::Update(World* world, InputHandler& input)
 	}
 }
 
-Artillery::Artillery(Vector<float> position) : Enemy(maxHP, baseSpeed, nullptr, position, collisionRadius), state(Chasing), timer(0)
+Artillery::Artillery(Vector<float> position) : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(0), position, collisionRadius), state(Chasing), timer(0)
 {
 }

@@ -1,9 +1,6 @@
 #pragma once
 #include "BaseArray.h"
 
-#define internal BaseArray<T>::internal
-#define size BaseArray<T>::size
-
 template <typename T> class Array : public BaseArray<T>
 {
 public:
@@ -13,14 +10,11 @@ public:
 
 	Array(T* items, unsigned int Size) : BaseArray<T>(items, Size)
 	{
-		internal = items;
+		BaseArray<T>::internal = items;
 	}
 
 	T& operator[](unsigned int i)
 	{
-		return internal[i];
+		return BaseArray<T>::internal[i];
 	}
 };
-
-#undef internal
-#undef size

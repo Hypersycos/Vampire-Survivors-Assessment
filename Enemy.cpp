@@ -2,7 +2,7 @@
 #include "World.h"
 #pragma once
 
-Enemy::Enemy(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer = CollidesWithPlayerProjectiles) : Character(maxHP, baseSpeed, img, position, collisionRadius, layer)
+Enemy::Enemy(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer) : Character(maxHP, baseSpeed, img, position, collisionRadius, layer)
 {
 }
 

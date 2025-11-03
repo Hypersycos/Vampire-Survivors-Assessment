@@ -9,7 +9,7 @@ protected:
 public:
 	BaseArray(unsigned int size) : size(size)
 	{
-		internal = new T[size]{};
+		internal = new T[size];
 	}
 
 	BaseArray(T* items, unsigned int size) : size(size)
@@ -17,44 +17,8 @@ public:
 		internal = items;
 	}
 
-	BaseArray(const BaseArray& obj)
-	{
-		size = obj.size;
-		internal = new T[size]();
-		memcpy(internal, obj.internal, size * sizeof(T));
-	}
-
-	BaseArray(BaseArray&& obj) noexcept
-	{
-		size = obj.size;
-		internal = obj.internal;
-		
-		obj.internal = nullptr;
-	}
-
-	BaseArray& operator=(const BaseArray& other)
-	{
-		if (this != &other)
-		{
-			unsigned int newSize = other.size;
-			T* newArr = new T[newSize]();
-			memcpy(internal, other->internal, newSize * sizeof(T));
-
-			delete[] internal;
-			size = newSize;
-			internal = newArr;
-		}
-		return this;
-	}
-
-	BaseArray& operator=(BaseArray&& obj) noexcept
-	{
-		size = obj->size;
-		internal = obj->internal;
-
-		obj->internal = nullptr;
-		return this;
-	}
+	BaseArray(const BaseArray&) = delete;
+	BaseArray& operator= (const BaseArray&) = delete;
 
 	~BaseArray()
 	{
@@ -72,12 +36,12 @@ public:
 		return internal[i];
 	}
 
-	T* begin()
+	virtual T* begin()
 	{
 		return internal;
 	}
 
-	T* end()
+	virtual T* end()
 	{
 		return internal + size;
 	}

@@ -24,7 +24,7 @@ void Sprite::SetImage(GamesEngineeringBase::Image* img)
 void Sprite::SetScale(float s)
 {
 	scale = s;
-	if (image != NULL)
+	if (image != nullptr)
 		size = Vector<float>((float)image->width, (float)image->height) * s;
 }
 

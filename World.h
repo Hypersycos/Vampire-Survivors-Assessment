@@ -18,9 +18,9 @@ class World
 protected:
 	unsigned int enemyCount{ 0 };
 	unsigned int tileSize{ 32 };
-	DynamicArray<Enemy> enemies{};
-	DynamicArray<Projectile> enemyProjectiles{};
-	DynamicArray<Projectile> playerProjectiles{};
+	DynamicArray<Enemy*> enemies{};
+	DynamicArray<Projectile*> enemyProjectiles{};
+	DynamicArray<Projectile*> playerProjectiles{};
 	Player* player = nullptr;
 	Array<GamesEngineeringBase::Image> tileImages;
 
@@ -44,7 +44,7 @@ public:
 
 	void SetPlayer(Player* player);
 
-	DynamicArray<Enemy>& GetEnemies();
+	DynamicArray<Enemy*>& GetEnemies();
 
 	Enemy* GetNearestEnemy(float maxRange, Vector<float> position);
 
@@ -55,4 +55,10 @@ public:
 	void GetNearestNEnemiesToPlayer(float maxRange, Array<Enemy*>& arr, Comparer comparer);
 
 	void Update(InputHandler& inputHandler);
+
+	void SpawnEnemy(Enemy* enemy);
+
+	bool DespawnEnemy(Enemy* enemy);
+
+	bool DespawnEnemy(unsigned int i);
 };

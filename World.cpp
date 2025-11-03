@@ -51,7 +51,7 @@ void World::SetPlayer(Player* player)
 	this->player = player;
 }
 
-DynamicArray<Enemy>& World::GetEnemies()
+DynamicArray<Enemy*>& World::GetEnemies()
 {
 	return enemies;
 }
@@ -129,7 +129,23 @@ void World::Update(InputHandler& inputHandler)
 	player->Update(this, inputHandler);
 	for (Enemy* e : enemies)
 	{
-		if (e != nullptr)
-			e->Update(this, inputHandler);
+		e->Update(this, inputHandler);
 	}
+}
+
+void World::SpawnEnemy(Enemy* enemy)
+{
+	enemies.Add(enemy);
+	enemy->enabled = true;
+}
+
+bool World::DespawnEnemy(Enemy* enemy)
+{
+	return enemies.Remove(enemy);
+	enemy->enabled = false;
+}
+
+bool World::DespawnEnemy(unsigned int enemy)
+{
+	return enemies.Remove(enemy);
 }

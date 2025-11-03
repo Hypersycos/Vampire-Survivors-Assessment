@@ -110,7 +110,7 @@ public:
 	}
 
 	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<U>>>
-	explicit operator U() const
+	explicit operator Vector<U>() const
 	{
 		return Vector<U>((U)x, (U)y);
 	}
@@ -127,7 +127,7 @@ public:
 
 	Vector<T> clamped(T magnitude)
 	{
-		if (sqrMagnitude() > magnitude * magnitude)
+		if (sqrMagnitude() < magnitude * magnitude)
 		{
 			return *this;
 		}
@@ -139,11 +139,12 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& stream, const Vector<T>& vec)
 	{
-		return stream << vec.x << vec.y;
+		return stream << vec.x << ',' << vec.y;
 	}
 
 	friend std::istream& operator>>(std::istream& stream, Vector<T>& vec)
 	{
-		return stream >> vec.x >> vec.y;
+		char delimiter;
+		return stream >> vec.x >> delimiter >> vec.y;
 	}
 };

@@ -22,7 +22,7 @@ public:
 
 		playerImage = new GamesEngineeringBase::Image;
 		playerImage->load("Resources/L.png");
-		player = new Player();
+		player = new Player{};
 		player->SetImage(playerImage);
 		player->enabled = true;
 	}

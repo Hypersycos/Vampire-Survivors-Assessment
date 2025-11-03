@@ -4,6 +4,7 @@
 #include "InputHandler.h"
 #include "FollowCamera.h"
 #include <iostream>
+#include "TimedSurvivalManager.h"
 
 int main() {
 	GamesEngineeringBase::Window window;
@@ -14,6 +15,9 @@ int main() {
 	InputHandler inputHandler = InputHandler(window);
 	Canvas canvas = Canvas(window, window.getWidth(), window.getHeight(), 0, 0);
 	Camera camera = Camera(world, canvas, new FollowCamera(world->GetPlayer()));
+
+	TimedSurvivalManager gameManager;
+	gameManager.Setup(world, 120);
 
 	float accumulator = 0;
 	int frames = 0;
@@ -49,7 +53,7 @@ int main() {
 			camera.ChangeZoom(-0.25);
 		}
 
-		world->Update(inputHandler);
+		gameManager.RunTick(inputHandler, camera);
 		camera.UpdatePosition(inputHandler);
 		camera.Redraw();
 		window.present();

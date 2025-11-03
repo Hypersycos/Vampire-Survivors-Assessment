@@ -1,7 +1,7 @@
 #pragma once
 #include "Enemy.h"
 
-class Artillery : Enemy
+class Artillery : public Enemy
 {
 	enum CharacterState
 	{
@@ -11,22 +11,22 @@ class Artillery : Enemy
 		Detransforming
 	};
 
-	static unsigned int maxHP;
-	static float baseSpeed;
-	static float collisionRadius;
-	static std::string spritePath;
+	inline static const unsigned int maxHP = 15;
+	inline static const float baseSpeed = 60;
+	inline static const float collisionRadius = 60;
 
-	constexpr static float transformDist = 160;
-	constexpr static float transformTime = 1;
-	constexpr static float detransformDist = 300;
-	constexpr static float detransformTime = 1;
-	constexpr static float damage = 10;
-	constexpr static float fireInterval = 2;
+	inline static const float transformDist = 320;
+	inline static const float transformTime = 1;
+	inline static const float detransformDist = 380;
+	inline static const float detransformTime = 1;
+	inline static const unsigned int damage = 10;
+	inline static const float fireInterval = 2;
 
 	float timer;
 	CharacterState state;
 
 	void Update(World* world, InputHandler& input) override;
 
+public:
 	Artillery(Vector<float> position);
 };

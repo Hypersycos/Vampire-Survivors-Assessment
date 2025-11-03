@@ -103,6 +103,16 @@ void Camera::UpdatePosition(InputHandler& inputHandler)
 #pragma warning( pop )
 }
 
+Vector<float> Camera::GetCameraTopLeft()
+{
+	return cameraTopLeft;
+}
+
+Vector<unsigned int> Camera::GetCameraViewSize()
+{
+	return canvasDimensions / zoom;
+}
+
 void Camera::Redraw()
 {
 #ifdef enableDrawBeyondBounds
@@ -119,6 +129,12 @@ void Camera::Redraw()
 
 	if (world->GetPlayer() != nullptr)
 		world->GetPlayer()->Draw(canvas, cameraTopLeft, zoom, renderMethod);
+
+	for (Enemy* e : world->GetEnemies())
+	{
+		if (e != nullptr)
+			e->Draw(canvas, cameraTopLeft, zoom, renderMethod);
+	}
 #ifdef enableDrawBeyondBounds
 	canvas.DrawBoxUnsafe(Vector<unsigned int>(0, 0), canvas.GetSize(), 0, 0, 255);
 #endif

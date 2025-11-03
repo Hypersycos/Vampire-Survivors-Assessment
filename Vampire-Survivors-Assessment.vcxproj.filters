@@ -105,6 +105,18 @@
     <ClInclude Include="World.h">
       <Filter>Header Files\WorldHandling</Filter>
     </ClInclude>
+    <ClInclude Include="Artillery.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicEnemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TimedSurvivalManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -160,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Source Files\WorldHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="Artillery.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TimedSurvivalManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
