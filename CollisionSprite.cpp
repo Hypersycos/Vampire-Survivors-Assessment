@@ -17,10 +17,11 @@ CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, Vector<float>
 {
 }
 
-bool CollisionSprite::checkCollision(CollisionSprite& other)
+bool CollisionSprite::checkCollision(CollisionSprite* other)
 {
-	double distance = (other.GetPosition() - GetPosition()).magnitude();
-	return (distance <= collisionRadius + other.collisionRadius);
+	double distance = (other->GetPosition() - GetPosition()).sqrMagnitude();
+	double collRadius = (collisionRadius + other->collisionRadius) * (collisionRadius + other->collisionRadius);
+	return (distance <= collRadius);
 }
 
 CollisionLayer CollisionSprite::getLayer() const

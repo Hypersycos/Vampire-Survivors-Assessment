@@ -16,7 +16,7 @@ public:
 
 	CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer);
 
-	bool checkCollision(CollisionSprite& other);
+	bool checkCollision(CollisionSprite* other);
 	CollisionLayer getLayer() const;
 
 	void Update(World* world, InputHandler& input) override;

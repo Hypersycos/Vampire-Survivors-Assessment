@@ -56,6 +56,16 @@ DynamicArray<Enemy*>& World::GetEnemies()
 	return enemies;
 }
 
+DynamicArray<Projectile*>& World::GetPlayerProjectiles()
+{
+	return playerProjectiles;
+}
+
+DynamicArray<Projectile*>& World::GetEnemyProjectiles()
+{
+	return enemyProjectiles;
+}
+
 Enemy* World::GetNearestEnemy(float maxRange, Vector<float> position)
 {
 	Enemy* nearest = nullptr;
@@ -88,32 +98,28 @@ void World::GetNearestNEnemies(float maxRange, Vector<float> position, Array<Ene
 	if (N == 0)
 		return;
 
-	float* distArr = new float[N];
+	float* distArr = new float[N] {};
 	for (int i = 0; i < N; i++)
 	{
 		arr[i] = nullptr;
-		distArr[i] = maxRange + 1;
 	}
 
 	for (Enemy* enemy : enemies)
 	{
-		if (enemy != nullptr)
+		if ((enemy->GetPosition() - position).sqrMagnitude() <= maxRange * maxRange)
 		{
 			float distance = comparer(enemy);
-			if (distance < distArr[N-1])
+			int i = N - 1;
+			while (i >= 0 && (arr[i] == nullptr || distArr[i] > distance))
 			{
-				int i = N-1;
-				while (i >= 0 && distArr[i] > distance)
+				if (i < N - 1)
 				{
-					if (i < N - 1)
-					{
-						distArr[i+1] = distArr[i];
-						arr[i+1] = arr[i];
-					}
-					
-					distArr[i] = distance;
-					arr[i] = enemy;
+					distArr[i+1] = distArr[i];
+					arr[i+1] = arr[i];
 				}
+					
+				distArr[i] = distance;
+				arr[i--] = enemy;
 			}
 		}
 	}
@@ -127,9 +133,46 @@ void World::GetNearestNEnemiesToPlayer(float maxRange, Array<Enemy*>& arr, Compa
 void World::Update(InputHandler& inputHandler)
 {
 	player->Update(this, inputHandler);
-	for (Enemy* e : enemies)
+
+	for (Projectile* p : playerProjectiles)
 	{
+		p->Update(this, inputHandler);
+	}
+
+	for (int i = 0; i < enemies.GetCurrentSize(); i++)
+	{
+		Enemy* e = enemies[i];
 		e->Update(this, inputHandler);
+		for (int j = 0; j < playerProjectiles.GetCurrentSize(); j++)
+		{
+			Projectile* p = playerProjectiles[j];
+			if (p->checkCollision(e))
+			{
+				if (e->Damage(p->GetDamage()))
+				{
+					DespawnEnemy(i--, e);
+					delete e;
+					DespawnProjectile(j--, p);
+					delete p;
+					break;
+				}
+				DespawnProjectile(j--, p);
+				delete p;
+			}
+		}
+	}
+
+	for (int i = 0; i < enemyProjectiles.GetCurrentSize(); i++)
+	{
+		Projectile* p = enemyProjectiles[i];
+		p->Update(this, inputHandler);
+		if (p->checkCollision(player))
+		{
+			if (player->Damage(p->GetDamage()))
+				break;
+			DespawnProjectile(i--, p);
+			delete p;
+		}
 	}
 }
 
@@ -139,13 +182,68 @@ void World::SpawnEnemy(Enemy* enemy)
 	enemy->enabled = true;
 }
 
-bool World::DespawnEnemy(Enemy* enemy)
+void World::SpawnProjectile(Projectile* projectile)
 {
-	return enemies.Remove(enemy);
-	enemy->enabled = false;
+	if (projectile->getLayer() == CollidesWithEnemies)
+	{
+		playerProjectiles.Add(projectile);
+	}
+	else
+	{
+		enemyProjectiles.Add(projectile);
+	}
+	projectile->enabled = true;
 }
 
-bool World::DespawnEnemy(unsigned int enemy)
+bool World::DespawnProjectile(Projectile* projectile)
 {
+	projectile->enabled = false;
+	if (projectile->getLayer() == CollidesWithEnemies)
+	{
+		return playerProjectiles.Remove(projectile);
+	}
+	else
+	{
+		return enemyProjectiles.Remove(projectile);
+	}
+}
+
+bool World::DespawnProjectile(unsigned int i, Projectile* projectile)
+{
+	if (projectile->getLayer() == CollidesWithEnemies)
+	{
+		if (playerProjectiles[i] == projectile)
+		{
+			projectile->enabled = false;
+			return playerProjectiles.Remove(projectile);
+		}
+	}
+	else
+	{
+		if (enemyProjectiles[i] == projectile)
+		{
+			projectile->enabled = false;
+			return enemyProjectiles.Remove(projectile);
+		}
+	}
+	return false;
+}
+
+bool World::DespawnEnemy(Enemy* enemy)
+{
+	enemy->enabled = false;
 	return enemies.Remove(enemy);
+}
+
+bool World::DespawnEnemy(unsigned int i, Enemy* enemy)
+{
+	if (enemies[i] == enemy)
+	{
+		enemy->enabled = false;
+		return enemies.Remove(enemy);
+	}
+	else
+	{
+		return false;
+	}
 }

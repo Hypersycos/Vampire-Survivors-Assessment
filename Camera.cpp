@@ -132,9 +132,19 @@ void Camera::Redraw()
 
 	for (Enemy* e : world->GetEnemies())
 	{
-		if (e != nullptr)
-			e->Draw(canvas, cameraTopLeft, zoom, renderMethod);
+		e->Draw(canvas, cameraTopLeft, zoom, renderMethod);
 	}
+
+	for (Projectile* p : world->GetPlayerProjectiles())
+	{
+		p->Draw(canvas, cameraTopLeft, zoom, renderMethod);
+	}
+
+	for (Projectile* p : world->GetEnemyProjectiles())
+	{
+		p->Draw(canvas, cameraTopLeft, zoom, renderMethod);
+	}
+
 #ifdef enableDrawBeyondBounds
 	canvas.DrawBoxUnsafe(Vector<unsigned int>(0, 0), canvas.GetSize(), 0, 0, 255);
 #endif

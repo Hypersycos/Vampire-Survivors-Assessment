@@ -46,6 +46,10 @@ public:
 
 	DynamicArray<Enemy*>& GetEnemies();
 
+	DynamicArray<Projectile*>& GetPlayerProjectiles();
+
+	DynamicArray<Projectile*>& GetEnemyProjectiles();
+
 	Enemy* GetNearestEnemy(float maxRange, Vector<float> position);
 
 	Enemy* GetNearestEnemyToPlayer(float maxRange);
@@ -58,7 +62,13 @@ public:
 
 	void SpawnEnemy(Enemy* enemy);
 
+	void SpawnProjectile(Projectile* projectile);
+
+	bool DespawnProjectile(Projectile* projectile);
+
+	bool DespawnProjectile(unsigned int i, Projectile* projectile);
+
 	bool DespawnEnemy(Enemy* enemy);
 
-	bool DespawnEnemy(unsigned int i);
+	bool DespawnEnemy(unsigned int i, Enemy* enemy);
 };

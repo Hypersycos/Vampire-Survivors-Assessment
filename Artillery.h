@@ -21,6 +21,7 @@ class Artillery : public Enemy
 	inline static const float detransformTime = 1;
 	inline static const unsigned int damage = 10;
 	inline static const float fireInterval = 2;
+	inline static const float projectileSpeed = 12;
 
 	float timer;
 	CharacterState state;

@@ -137,6 +137,12 @@ public:
 		}
 	}
 
+	Vector<T> scaleTo(T _magnitude)
+	{
+		return *this * (_magnitude / magnitude());
+	}
+
+
 	friend std::ostream& operator<<(std::ostream& stream, const Vector<T>& vec)
 	{
 		return stream << vec.x << ',' << vec.y;

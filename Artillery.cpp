@@ -1,5 +1,6 @@
 #include "Artillery.h"
 #include "World.h"
+#include "Projectile.h"
 
 void Artillery::Update(World* world, InputHandler& input)
 {
@@ -25,6 +26,8 @@ void Artillery::Update(World* world, InputHandler& input)
 		{
 			timer -= fireInterval;
 			//TODO: fire projectile
+			Projectile* p = new Projectile(damage, (world->GetPlayer()->GetPosition() - position).scaleTo(projectileSpeed), position, world->GetTileImage(3), 20, CollidesWithPlayer);
+			world->SpawnProjectile(p);
 		}
 		if ((world->GetPlayer()->GetPosition() - position).sqrMagnitude() > detransformDist * detransformDist)
 		{
@@ -45,4 +48,5 @@ void Artillery::Update(World* world, InputHandler& input)
 
 Artillery::Artillery(Vector<float> position) : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(0), position, collisionRadius), state(Chasing), timer(0)
 {
+	SetScale(0.5);
 }

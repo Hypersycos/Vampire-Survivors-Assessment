@@ -25,6 +25,7 @@ public:
 		player = new Player{};
 		player->SetImage(playerImage);
 		player->enabled = true;
+		player->SetScale(0.5);
 	}
 
 	int TileAt(int x, int y) override

@@ -23,6 +23,9 @@ bool TimedSurvivalManager::RunTick(InputHandler& input, Camera& camera)
 {
 	if (timer > duration)
 		return true;
+	if (world->GetPlayer()->GetHealth() <= 0)
+		return true;
+
 	world->Update(input);
 
 	DynamicArray<Enemy*>& enemies = world->GetEnemies();
@@ -32,13 +35,11 @@ bool TimedSurvivalManager::RunTick(InputHandler& input, Camera& camera)
 		if (e != nullptr && e->GetHealth() <= 0)
 		{
 			score += 10;
-			world->DespawnEnemy(i);
+			world->DespawnEnemy(i--, e);
+			delete e;
 		}
 
 	}
-
-	if (world->GetPlayer()->GetHealth() <= 0)
-		return true;
 
 	if (floor(timer) < floor(timer += input.GetDT()))
 		score++;
@@ -69,7 +70,7 @@ bool TimedSurvivalManager::RunTick(InputHandler& input, Camera& camera)
 
 		world->SpawnEnemy(new Artillery(topLeft + pos));
 
-		nextSpawn += (1.2f - (timer / duration)) * 5;
+		nextSpawn += (1.2f - (timer / duration)) * 1;
 	}
 
 	return false;

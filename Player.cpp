@@ -7,7 +7,7 @@ static float GetEnemyHealth(Enemy* enemy)
 	return (float)enemy->GetHealth();
 }
 
-Player::Player() : Character(100, 100, nullptr, Vector<float>(0, 0), 16, CollidesWithEnemies)
+Player::Player() : Character(100, 200, nullptr, Vector<float>(0, 0), 32, CollidesWithEnemyProjectiles)
 {
 }
 
@@ -32,7 +32,8 @@ void Player::Update(World* world, InputHandler& input)
 
 	if (doAttack)
 	{
-		//spawn projectile
+		Projectile* p = new Projectile(autoAttack.damage, (nearest->GetPosition() - position).scaleTo(autoAttack.baseSpeed), position, world->GetTileImage(2), 20, CollidesWithEnemies);
+		world->SpawnProjectile(p);
 	}
  
 	if (doAoE)

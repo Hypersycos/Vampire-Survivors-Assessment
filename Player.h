@@ -52,9 +52,9 @@ struct AoEAttack : AttackData
 
 class Player : public Character
 {
-	ProjectileAttack autoAttack{ 1, 5, 32, 64 };
+	ProjectileAttack autoAttack{ 1, 5, 256, 64 };
 
-	AoEAttack aoeAttack{ 7, 25, 5, 64 };
+	AoEAttack aoeAttack{ 7, 25, 256, 5 };
 
 public:
 	void Update(World* world, InputHandler& input) override;
