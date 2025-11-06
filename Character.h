@@ -16,6 +16,7 @@ public:
 	Character();
 	Character(std::istream& stream);
 	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer);
+	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer);
 	int GetHealth() const;
 	bool Damage(int amount);
 	bool Heal(int amount);

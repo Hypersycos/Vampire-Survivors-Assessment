@@ -30,4 +30,5 @@ class Artillery : public Enemy
 
 public:
 	Artillery(Vector<float> position);
+	Artillery();
 };

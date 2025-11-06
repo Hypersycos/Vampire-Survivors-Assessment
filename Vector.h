@@ -109,6 +109,11 @@ public:
 		return *this;
 	}
 
+	bool operator==(Vector<T>& u2)
+	{
+		return u2.x == x && u2.y == y;
+	}
+
 	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<U>>>
 	explicit operator Vector<U>() const
 	{
@@ -140,6 +145,24 @@ public:
 	Vector<T> scaleTo(T _magnitude)
 	{
 		return *this * (_magnitude / magnitude());
+	}
+
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<U>>>
+	Vector<U> Floor()
+	{
+		return Vector<U>{(U)floor(x), (U)floor(y)};
+	}
+
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<U>>>
+	Vector<U> Ceil()
+	{
+		return Vector<U>{(U)ceil(x), (U)ceil(y)};
+	}
+
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<U>>>
+	Vector<U> Round()
+	{
+		return Vector<U>{(U)round(x), (U)round(y)};
 	}
 
 

@@ -6,6 +6,10 @@ Enemy::Enemy(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* i
 {
 }
 
+Enemy::Enemy(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer) : Character(maxHP, baseSpeed, img, collisionRadius, layer)
+{
+}
+
 void Enemy::Update(World* world, InputHandler& input)
 {
 	Move(Pathfind(world, input.GetDT()));

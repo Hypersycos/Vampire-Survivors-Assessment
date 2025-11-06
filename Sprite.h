@@ -30,7 +30,11 @@ public:
 
 	void SetImage(GamesEngineeringBase::Image* img);
 
+	GamesEngineeringBase::Image* GetImage();
+
 	void SetScale(float s);
+
+	Vector<float> GetSize();
 
 	void SetPosition(Vector<float> pos);
 

@@ -50,3 +50,9 @@ Artillery::Artillery(Vector<float> position) : Enemy(maxHP, baseSpeed, Enemy::Im
 {
 	SetScale(0.5);
 }
+
+Artillery::Artillery() : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(0), collisionRadius), state(Chasing), timer(0)
+{
+	SetScale(0.5);
+}
+

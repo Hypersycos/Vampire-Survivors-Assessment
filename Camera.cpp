@@ -13,7 +13,7 @@ void Camera::Retile()
 	{
 		for (unsigned int j = 0; j < tileDimensions.y; j++)
 		{
-			int tileType = world->TileAt(Vector<int>(i, j) + cameraOffset);
+			int tileType = world->TileAtGrid(Vector<int>(i, j) + cameraOffset);
 			if (tileType != -1)
 			{
 				tiles[i][j].enabled = true;

@@ -7,7 +7,7 @@ static float GetEnemyHealth(Enemy* enemy)
 	return (float)enemy->GetHealth();
 }
 
-Player::Player() : Character(100, 200, nullptr, Vector<float>(0, 0), 32, CollidesWithEnemyProjectiles)
+Player::Player() : Character(100, 200, nullptr, Vector<float>(0, 0), 16, CollidesWithEnemyProjectiles)
 {
 }
 
@@ -74,6 +74,6 @@ void Player::Update(World* world, InputHandler& input)
 		if (movement.x != 0 && movement.y != 0)
 			movement *= 0.7071;
 
-		Move(movement);
+		world->TryMove(this, movement);
 	}
 }

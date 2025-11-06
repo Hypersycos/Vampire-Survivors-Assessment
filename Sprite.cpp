@@ -21,11 +21,21 @@ void Sprite::SetImage(GamesEngineeringBase::Image* img)
 	SetScale(scale);
 }
 
+GamesEngineeringBase::Image* Sprite::GetImage()
+{
+	return image;
+}
+
 void Sprite::SetScale(float s)
 {
 	scale = s;
 	if (image != nullptr)
 		size = Vector<float>((float)image->width, (float)image->height) * s;
+}
+
+Vector<float> Sprite::GetSize()
+{
+	return size;
 }
 
 void Sprite::SetPosition(Vector<float> pos)

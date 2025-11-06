@@ -19,5 +19,7 @@ public:
 	bool checkCollision(CollisionSprite* other);
 	CollisionLayer getLayer() const;
 
+	float GetRadius() const;
+
 	void Update(World* world, InputHandler& input) override;
 };

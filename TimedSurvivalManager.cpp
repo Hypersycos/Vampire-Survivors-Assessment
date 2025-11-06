@@ -44,31 +44,45 @@ bool TimedSurvivalManager::RunTick(InputHandler& input, Camera& camera)
 	if (floor(timer) < floor(timer += input.GetDT()))
 		score++;
 
-	if (timer > nextSpawn)
+	if (false && timer > nextSpawn)
 	{
 		Vector<float> topLeft = camera.GetCameraTopLeft();
-		Vector<unsigned int> cameraSize = camera.GetCameraViewSize();
+		Vector<int> cameraSize = (Vector<int>)camera.GetCameraViewSize();
 
-		int edge = rand() % 4;
+		Enemy* enemy = new Artillery();
+
 		Vector<int> pos;
 
-		switch (edge)
-		{
-		case 0:
-			pos = {rand() % ((int)cameraSize.x + 200) - 100, rand() % 100 - 100 };
-			break;
-		case 1:
-			pos = {rand() % 100 + (int)cameraSize.x , rand() % ((int)cameraSize.x + 200) - 100};
-			break;
-		case 2:
-			pos = { rand() % ((int)cameraSize.x + 200) - 100, rand() % 100 + (int)cameraSize.y };
-			break;
-		case 3:
-			pos = { rand() % 100 - 100 + (int)cameraSize.x , rand() % ((int)cameraSize.x + 200) - 100 };
-			break;
-		}
+		Vector<int> spriteSize = enemy->GetSize().Ceil<int>();
 
-		world->SpawnEnemy(new Artillery(topLeft + pos));
+		const int xVariance = cameraSize.x / 2 - spriteSize.x;
+		const int yVariance = cameraSize.y / 2 - spriteSize.y;
+
+		do
+		{
+			int edge = rand() % 4;
+
+			switch (edge)
+			{
+			case 0:
+				pos = { rand() % (cameraSize.x * 2) - cameraSize.x / 2, - rand() % yVariance - spriteSize.y};
+				break;
+			case 1:
+				pos = { rand() % xVariance + spriteSize.x + cameraSize.x , rand() % (cameraSize.y * 2) - cameraSize.y / 2 };
+				break;
+			case 2:
+				pos = { rand() % (cameraSize.x * 2) - cameraSize.x / 2, rand() % yVariance + cameraSize.y + spriteSize.y };
+				break;
+			case 3:
+				pos = { - rand() % xVariance - spriteSize.x, rand() % (cameraSize.y * 2) - cameraSize.y / 2 };
+				break;
+			}
+			pos += topLeft;
+		} while (world->TileAt(pos) == -1);
+
+		enemy->SetTopLeftPosition(pos);
+
+		world->SpawnEnemy(enemy);
 
 		nextSpawn += (1.2f - (timer / duration)) * 1;
 	}

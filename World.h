@@ -24,13 +24,14 @@ protected:
 	Player* player = nullptr;
 	Array<GamesEngineeringBase::Image> tileImages;
 
-	World();
 	World(std::string* tiles, unsigned int count);
 
 public:
 	void LoadImages(std::string* tiles, unsigned int count, bool freeTiles = false);
 
 	int TileAt(Vector<int> position);
+
+	int TileAtGrid(Vector<int> position);
 
 	virtual int TileAt(int x, int y) = 0;
 
@@ -71,4 +72,6 @@ public:
 	bool DespawnEnemy(Enemy* enemy);
 
 	bool DespawnEnemy(unsigned int i, Enemy* enemy);
+
+	void TryMove(CollisionSprite* sprite, Vector<float> change);
 };

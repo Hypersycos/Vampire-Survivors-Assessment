@@ -29,6 +29,11 @@ CollisionLayer CollisionSprite::getLayer() const
 	return layer;
 }
 
+float CollisionSprite::GetRadius() const
+{
+	return collisionRadius;
+}
+
 void CollisionSprite::Update(World* world, InputHandler& input)
 {
 	lastPos = position;

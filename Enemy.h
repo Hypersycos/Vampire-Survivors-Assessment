@@ -12,6 +12,8 @@ public:
 	inline static EnemyImageHolder ImageHolder;
 
 	Enemy(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer = CollidesWithPlayerProjectiles);
+	Enemy(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer = CollidesWithPlayerProjectiles);
+
 
 	void Update(World* world, InputHandler& input) override;
 };
