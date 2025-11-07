@@ -8,25 +8,8 @@ struct AttackData
 	int damage;
 	float range;
 
-	AttackData(float cooldown, int damage, float range) : cooldown(cooldown), damage(damage), range(range), currentCooldown(0)
-	{
-
-	}
-
-	bool ApplyCooldown(float dt, bool attemptingToUse = false)
-	{
-		currentCooldown -= dt;
-		if (attemptingToUse && currentCooldown <= 0)
-		{
-			currentCooldown += cooldown;
-			return true;
-		}
-		else
-		{
-			currentCooldown = max(0, currentCooldown);
-			return false;
-		}
-	}
+	AttackData(float cooldown, int damage, float range);
+	bool ApplyCooldown(float dt, bool attemptingToUse = false);
 };
 
 struct ProjectileAttack : AttackData
@@ -34,27 +17,23 @@ struct ProjectileAttack : AttackData
 public:
 	float baseSpeed;
 
-	ProjectileAttack(float cooldown, int damage, float range, float baseSpeed) : baseSpeed(baseSpeed), AttackData(cooldown, damage, range)
-	{
-
-	}
+	ProjectileAttack(float cooldown, int damage, float range, float baseSpeed);
+	ProjectileAttack();
 };
 
 struct AoEAttack : AttackData
 {
 	int maxCount;
 
-	AoEAttack(float cooldown, int damage, float range, int maxCount) : maxCount(maxCount), AttackData(cooldown, damage, range)
-	{
-
-	}
+	AoEAttack(float cooldown, int damage, float range, int maxCount);
+	AoEAttack();
 };
 
 class Player : public Character
 {
-	ProjectileAttack autoAttack{ 1, 5, 256, 64 };
+	ProjectileAttack autoAttack;
 
-	AoEAttack aoeAttack{ 7, 25, 256, 5 };
+	AoEAttack aoeAttack;
 
 public:
 	void Update(World* world, InputHandler& input) override;
@@ -64,4 +43,6 @@ public:
 	Player(std::istream& stream);
 
 	void Serialize(std::ostream& stream) override;
+
+	void Powerup();
 };

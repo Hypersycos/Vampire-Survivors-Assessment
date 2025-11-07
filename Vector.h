@@ -165,6 +165,17 @@ public:
 		return Vector<U>{(U)round(x), (U)round(y)};
 	}
 
+	Vector<T> Abs()
+	{
+		return Vector<T>(abs(x), abs(y));
+	}
+
+	template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<U>>,
+			typename V, typename = std::enable_if_t<std::is_arithmetic_v<V>>>
+	U Dot(Vector<V> other)
+	{
+		return (U)other.x * (U)x + (U)other.y * (U)y;
+	}
 
 	friend std::ostream& operator<<(std::ostream& stream, const Vector<T>& vec)
 	{

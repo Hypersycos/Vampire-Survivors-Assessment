@@ -1,4 +1,6 @@
 #include "Character.h"
+#include "Tile.h"
+#include "World.h"
 
 Character::Character() : CollisionSprite()
 {
@@ -6,13 +8,13 @@ Character::Character() : CollisionSprite()
 	currentSpeed = baseSpeed;
 }
 
-Character::Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer) : baseMaxHealth(maxHP), health(maxHP), baseSpeed(baseSpeed), CollisionSprite(img, position, collisionRadius, layer)
+Character::Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer) : baseMaxHealth(maxHP), health(maxHP), baseSpeed(baseSpeed), CollisionSprite(img, position, collisionBox, layer)
 {
 	currentSpeed = baseSpeed;
 	currentMaxHealth = maxHP;
 }
 
-Character::Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer) : baseMaxHealth(maxHP), health(maxHP), baseSpeed(baseSpeed), CollisionSprite(img, collisionRadius, layer)
+Character::Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer) : baseMaxHealth(maxHP), health(maxHP), baseSpeed(baseSpeed), CollisionSprite(img, collisionBox, layer)
 {
 	currentSpeed = baseSpeed;
 	currentMaxHealth = maxHP;
@@ -46,6 +48,22 @@ bool Character::Heal(int amount)
 void Character::ChangeHealth(int amount)
 {
 	health += amount;
+}
+
+void Character::TryMove(World* world, Vector<float> move)
+{
+	if (move.x != 0 || move.y != 0)
+	{
+		Tile* tile = world->TileAt(position);
+		if (tile != nullptr)
+			tile->Unapply(this);
+
+		world->TryMove(this, move);
+
+		tile = world->TileAt(position);
+		if (tile != nullptr)
+			tile->Apply(this);
+	}
 }
 
 void Character::SetSpeedScalar(float s)

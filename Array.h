@@ -10,7 +10,11 @@ public:
 
 	Array(T* items, unsigned int Size) : BaseArray<T>(items, Size)
 	{
-		BaseArray<T>::internal = items;
+	}
+
+	Array(const std::initializer_list<T> items) : BaseArray<T>(items)
+	{
+
 	}
 
 	T& operator[](unsigned int i)

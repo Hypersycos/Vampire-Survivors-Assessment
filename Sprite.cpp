@@ -65,6 +65,10 @@ void Sprite::SetTopLeftPosition(Vector<float> position)
 
 void Sprite::Move(Vector<float> distance)
 {
+	if (std::isnan(distance.x))
+		distance.x = 0;
+	if (std::isnan(distance.y))
+		distance.y = 0;
 	position += distance;
 }
 

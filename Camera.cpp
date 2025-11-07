@@ -13,17 +13,17 @@ void Camera::Retile()
 	{
 		for (unsigned int j = 0; j < tileDimensions.y; j++)
 		{
-			int tileType = world->TileAtGrid(Vector<int>(i, j) + cameraOffset);
-			if (tileType != -1)
+			Tile* tileType = world->TileAtGrid(Vector<int>(i, j) + cameraOffset);
+			if (tileType != nullptr)
 			{
 				tiles[i][j].enabled = true;
 			}
 			else
 			{
-				tileType = 0;
+				tileType = Tile::GetTile(0);
 				tiles[i][j].enabled = false;
 			}
-			tiles[i][j].SetImage(world->GetTileImage(tileType));
+			tiles[i][j].SetImage(&tileType->image);
 			tiles[i][j].SetPosition((cameraOffset + Vector<int>(i, j)) * tilesize);
 		}
 	}
@@ -141,6 +141,11 @@ void Camera::Redraw()
 	}
 
 	for (Projectile* p : world->GetEnemyProjectiles())
+	{
+		p->Draw(canvas, cameraTopLeft, zoom, renderMethod);
+	}
+
+	for (Powerup* p : world->GetPowerups())
 	{
 		p->Draw(canvas, cameraTopLeft, zoom, renderMethod);
 	}

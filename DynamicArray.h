@@ -4,7 +4,7 @@
 
 template <typename T> class DynamicArray : public BaseArray<T>
 {
-	unsigned int firstFree;
+	unsigned int firstFree{ 0 };
 
 	void Reallocate(unsigned int s)
 	{

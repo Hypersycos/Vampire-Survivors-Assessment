@@ -1,43 +1,28 @@
 #include "World.h"
 
-World::World(std::string* tiles, unsigned int count) : enemyCount(0), tileImages(Array<GamesEngineeringBase::Image>(count))
+#define tileSize Tile::tileSize
+
+World::World()
 {
-	if (tiles != nullptr)
-		LoadImages(tiles, count, true);
 }
 
-void World::LoadImages(std::string* tiles, unsigned int count, bool freeTiles)
-{
-	for (unsigned int i = 0; i < count; i++)
-	{
-		tileImages[i].load(tiles[i]);
-	}
-	if (freeTiles)
-		delete[] tiles;
-}
-
-int World::TileAt(Vector<int> position)
+Tile* World::TileAt(Vector<int> position)
 {
 	int X = (int)round(position.x / (float)tileSize);
 	return this->TileAt((int)round(position.x / (float)tileSize), (int)round(position.y / (float)tileSize));
 }
 
-int World::TileAtGrid(Vector<int> position)
+Tile* World::TileAtGrid(Vector<int> position)
 {
 	return TileAt(position.x, position.y);
 }
 
-int World::TileAt(Vector<float> position)
+Tile* World::TileAt(Vector<float> position)
 {
 	return this->TileAt((int)round(position.x / (float)tileSize), (int)round(position.y / (float)tileSize));
 }
 
-GamesEngineeringBase::Image* World::GetTileImage(int index)
-{
-	return &tileImages[index];
-}
-
-int World::GetTileSize() const
+int World::GetTileSize()
 {
 	return tileSize;
 }
@@ -65,6 +50,11 @@ DynamicArray<Projectile*>& World::GetPlayerProjectiles()
 DynamicArray<Projectile*>& World::GetEnemyProjectiles()
 {
 	return enemyProjectiles;
+}
+
+DynamicArray<Powerup*>& World::GetPowerups()
+{
+	return powerups;
 }
 
 Enemy* World::GetNearestEnemy(float maxRange, Vector<float> position)
@@ -135,9 +125,15 @@ void World::Update(InputHandler& inputHandler)
 {
 	player->Update(this, inputHandler);
 
-	for (Projectile* p : playerProjectiles)
+	for (int i = 0; i < playerProjectiles.GetCurrentSize(); i++)
 	{
+		Projectile* p = playerProjectiles[i];
 		p->Update(this, inputHandler);
+		if (p->enabled == false)
+		{
+			DespawnProjectile(i--, p);
+			delete p;
+		}
 	}
 
 	for (int i = 0; i < enemies.GetCurrentSize(); i++)
@@ -167,7 +163,12 @@ void World::Update(InputHandler& inputHandler)
 	{
 		Projectile* p = enemyProjectiles[i];
 		p->Update(this, inputHandler);
-		if (p->checkCollision(player))
+		if (p->enabled == false)
+		{
+			DespawnProjectile(i--, p);
+			delete p;
+		}
+		else if (p->checkCollision(player))
 		{
 			if (player->Damage(p->GetDamage()))
 				break;
@@ -175,12 +176,17 @@ void World::Update(InputHandler& inputHandler)
 			delete p;
 		}
 	}
-}
 
-void World::SpawnEnemy(Enemy* enemy)
-{
-	enemies.Add(enemy);
-	enemy->enabled = true;
+	for (int i = 0; i < powerups.GetCurrentSize(); i++)
+	{
+		Powerup* p = powerups[i];
+		if (p->checkCollision(player))
+		{
+			player->Powerup();
+			DespawnPowerup(i--, p);
+			delete p;
+		}
+	}
 }
 
 void World::SpawnProjectile(Projectile* projectile)
@@ -230,6 +236,12 @@ bool World::DespawnProjectile(unsigned int i, Projectile* projectile)
 	return false;
 }
 
+void World::SpawnEnemy(Enemy* enemy)
+{
+	enemies.Add(enemy);
+	enemy->enabled = true;
+}
+
 bool World::DespawnEnemy(Enemy* enemy)
 {
 	enemy->enabled = false;
@@ -249,270 +261,120 @@ bool World::DespawnEnemy(unsigned int i, Enemy* enemy)
 	}
 }
 
-bool CircleContainsSquare(const Vector<float>& circleCentre, const Vector<int>& squareCentre, const float r, const float s)
+void World::SpawnPowerup(Powerup* Powerup)
 {
-	float xDist = abs(circleCentre.x - squareCentre.x);
-	float yDist = abs(circleCentre.y - squareCentre.y);
-
-	//distance in one direction guarantees no intersection
-	if (xDist > s / 2 + r || yDist > s / 2 + r)
-		return false;
-
-	//too close to not intersect, given restriction from earlier if
-	if (xDist <= s / 2 || yDist <= s / 2)
-		return true;
-
-	//check corner case (literally)
-	float squareDistanceToCorner = (xDist - s / 2) * (xDist - s / 2) + (yDist - s / 2) * (yDist - s / 2);
-
-	return squareDistanceToCorner <= r * r;
+	powerups.Add(Powerup);
+	Powerup->enabled = true;
 }
 
-#include <iostream>
+bool World::DespawnPowerup(Powerup* Powerup)
+{
+	Powerup->enabled = false;
+	return powerups.Remove(Powerup);
+}
+
+bool World::DespawnPowerup(unsigned int i, Powerup* Powerup)
+{
+	if (powerups[i] == Powerup)
+	{
+		Powerup->enabled = false;
+		return powerups.Remove(Powerup);
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool CheckLine(World* world, CollisionSprite* sprite, Vector<int>& start, Vector<int> direction, int& count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		Tile* tile = world->TileAtGrid(start + direction * i);
+
+		if (tile == nullptr || tile->collisionMatrix[sprite->getLayer()])
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 void World::TryMove(CollisionSprite* sprite, Vector<float> change)
 {
+	Vector<float> xPos = sprite->GetPosition();
+	xPos.x += change.x;
+
+	Vector<float> yPos = sprite->GetPosition();
+	yPos.y += change.y;
+
+	int intTileSize = (int)tileSize;
+
+	Vector<float> collBox = sprite->GetCollisionSize() - Vector<float>(0.2, 0.2);
+
+	int xCheck = round((xPos.y + collBox.y / 2) / intTileSize) - round((xPos.y - collBox.y / 2) / intTileSize) + 1;
+	int yCheck = round((yPos.x + collBox.x / 2) / intTileSize) - round((yPos.x - collBox.x / 2) / intTileSize) + 1;
+
 	//horizontal check
-	Vector<unsigned int> ceilSize = (sprite->GetSize() / tileSize).Ceil<unsigned int>() + Vector<int>(1, 1);
-	Vector<float> newPos = sprite->GetPosition() + change;
-
-	Vector<int> firstSquare = (sprite->GetTopLeft() / tileSize).Round<int>();// -Vector<int>(1, 1);
-	Vector<int> newFirstSquare = ((sprite->GetTopLeft() + change) / tileSize).Round<int>();// -Vector<int>(1, 1);
-
-	int iStart = min(0, newFirstSquare.x - firstSquare.x);
-	int iEnd = ceilSize.x + max(0, newFirstSquare.x - firstSquare.x);
-
-	int jStart = min(0, newFirstSquare.y - firstSquare.y);
-	int jEnd = ceilSize.y + max(0, newFirstSquare.y - firstSquare.y);
-
-	float changeScalar = 1;
-	float changeMagnitude = change.magnitude();
-
-	for (int i = iStart; i < iEnd; i++)
+	if (change.x > 0)
 	{
-		for (int j = jStart; j < jEnd; j++)
+		Vector<float> topRight = xPos;
+
+		topRight.x += collBox.x / 2;
+		topRight.y -= collBox.y / 2;
+
+		Vector<int> topRightTile = (topRight / intTileSize).Round<int>();
+
+		if (CheckLine(this, sprite, topRightTile, Vector<int>(0, 1), xCheck))
 		{
-			Vector<int> currentSquare = (firstSquare + Vector<int>(i, j));
+			change.x = (topRightTile.x * intTileSize - intTileSize / 2) - (topRight.x - change.x) - 0.1f;
+		}
+	}
+	else if (change.x < 0)
+	{
+		Vector<float> topLeft = xPos;
 
-			if (TileAtGrid(currentSquare) == -1)
-			{
-				bool wasIn = CircleContainsSquare(sprite->GetPosition(), currentSquare * tileSize, sprite->GetRadius(), tileSize);
-				if (wasIn)
-				{ //if a player is somehow already in an invalid position, allow them to move till that's not true
-					sprite->Move(change);
-				}
+		topLeft.x -= collBox.x / 2;
+		topLeft.y -= collBox.y / 2;
 
-				bool nowIn = CircleContainsSquare(newPos, currentSquare * tileSize, sprite->GetRadius(), tileSize);
-				if (nowIn)
-				{ //reduce move until no longer attempting to move into invalid position
-					do
-					{
-						changeScalar -= 1 / changeMagnitude;
-						if (changeScalar <= 0)
-							return;
-						newPos = sprite->GetPosition() + change * changeScalar;
-					} while (CircleContainsSquare(newPos, currentSquare * tileSize, sprite->GetRadius(), tileSize));
+		Vector<int> topLeftTile = (topLeft / intTileSize).Round<int>();
 
-					//try to allow movement in valid direction (if it exists)
-					if (change.x < 0 && !CircleContainsSquare(newPos + Vector<float>(changeMagnitude * (1 - changeScalar) / 2, 0), currentSquare * tileSize, sprite->GetRadius(), tileSize))
-					{
-						change = change * changeScalar + Vector<float>(changeMagnitude * (1 - changeScalar) / 2, 0);
-						changeScalar = 1;
-						newPos = sprite->GetPosition() + change;
-					}
-					else if (change.x > 0 && !CircleContainsSquare(newPos + Vector<float>(-changeMagnitude * (1 - changeScalar) / 2, 0), currentSquare * tileSize, sprite->GetRadius(), tileSize))
-					{
-						change = change * changeScalar + Vector<float>(-changeMagnitude * (1 - changeScalar) / 2, 0);
-						changeScalar = 1;
-						newPos = sprite->GetPosition() + change;
-					}
-					else if (change.y < 0 && !CircleContainsSquare(newPos + Vector<float>(0, changeMagnitude * (1 - changeScalar) / 2), currentSquare * tileSize, sprite->GetRadius(), tileSize))
-					{
-						change = change * changeScalar + Vector<float>(0, changeMagnitude * (1 - changeScalar) / 2);
-						changeScalar = 1;
-						newPos = sprite->GetPosition() + change;
-					}
-					else if (change.y > 0 && !CircleContainsSquare(newPos + Vector<float>(0, -changeMagnitude * (1 - changeScalar) / 2), currentSquare * tileSize, sprite->GetRadius(), tileSize))
-					{
-						change = change * changeScalar + Vector<float>(0, -changeMagnitude * (1 - changeScalar) / 2);
-						changeScalar = 1;
-						newPos = sprite->GetPosition() + change;
-					}
-				}
-			}
+		if (CheckLine(this, sprite, topLeftTile, Vector<int>(0, 1), xCheck))
+		{
+			change.x = (topLeftTile.x * intTileSize + intTileSize / 2) - (topLeft.x - change.x) + 0.1f;
 		}
 	}
 
-	sprite->Move(change * changeScalar);
+	//vertical check
+	if (change.y < 0)
+	{
+		Vector<float> topLeft = yPos;
+
+		topLeft.x -= collBox.x / 2;
+		topLeft.y -= collBox.y / 2;
+
+		Vector<int> topLeftTile = (topLeft / intTileSize).Round<int>();
+
+		if (CheckLine(this, sprite, topLeftTile, Vector<int>(1, 0), yCheck))
+		{
+			change.y = (topLeftTile.y * intTileSize + intTileSize / 2) - (topLeft.y - change.y) + 0.1f;
+		}
+	}
+	else if (change.y > 0)
+	{
+		Vector<float> bottomLeft = yPos;
+
+		bottomLeft.x -= collBox.x / 2;
+		bottomLeft.y += collBox.y / 2;
+
+		Vector<int> bottomLeftTile = (bottomLeft / intTileSize).Round<int>();
+
+		if (CheckLine(this, sprite, bottomLeftTile, Vector<int>(1, 0), yCheck))
+		{
+			change.y = (bottomLeftTile.y * intTileSize - intTileSize / 2) - (bottomLeft.y - change.y) - 0.1f;
+		}
+	}
+	sprite->Move(change);
 }
 
-//void World::TryMove(CollisionSprite* sprite, Vector<float> change)
-//{
-//	Array<Vector<float>> checks{ 4 };
-//
-//	Vector<float> target = sprite->GetPosition() + change;
-//
-//	for (int i = 0; i < 4; i++)
-//		checks[i] = sprite->GetPosition() + change;
-//
-//	checks[0].x += sprite->GetRadius();
-//	checks[1].y += sprite->GetRadius();
-//	checks[2].x -= sprite->GetRadius();
-//	checks[3].y -= sprite->GetRadius();
-//
-//	for (int i = 0; i < 4; i++)
-//	{
-//		int tile = TileAt(checks[i]);
-//		bool canMove = tile >= 0;//&& tileValues[tile].collisionMatrix[sprite->getLayer()];
-//		if (!canMove)
-//		{
-//			if ((checks[i] - target).x < 0.001)
-//			{
-//				change.x = 0;
-//			}
-//			else
-//			{
-//				change.y = 0;
-//			}
-//		}
-//	}
-//	sprite->Move(change);
-//}
-
-//void World::TryMove(CollisionSprite* sprite, Vector<float> change)
-//{
-//	int tileSize = (int)this->tileSize;
-//	//sprite->SetPosition(Vector<int>(99 * tileSize, 0));
-//
-//	//change = Vector<float>(16, 0);
-//
-//	Array<Vector<int>> grids = { 9 };
-//	grids[4] = (sprite->GetPosition() / (float)tileSize).Round<int>();
-//	Vector<float> currentPos = sprite->GetPosition();
-//	Vector<int> target = (sprite->GetPosition() + change / tileSize).Floor<int>();
-//	int targetIndex;
-//	int k = -1;
-//	for (int i = -1; i <= 1; i++)
-//	{
-//		for (int j = -1; j <= 1; j++)
-//		{
-//			k++;
-//			if (i == 0 && j == 0)
-//				continue;
-//			grids[k] = grids[4] + Vector<int>(i, j);
-//			if (grids[k] == target)
-//				targetIndex = k;
-//		}
-//	}
-//
-//	Array<bool> canMove = { 9 };
-//	bool anyRestrictions = false;
-//	for (int i = 0; i < 9; i++)
-//	{
-//		int tile = TileAtGrid(grids[i]);
-//		canMove[i] = tile >= 0;//&& tileValues[tile].collisionMatrix[sprite->getLayer()];
-//		anyRestrictions = anyRestrictions || !canMove[i];
-//	}
-//
-//	if (!anyRestrictions)
-//		sprite->Move(change);
-//	else
-//	{
-//		for (int i = -1; i <= 1; i++)
-//		{
-//			for (int j = -1; j <= 1; j++)
-//			{
-//				if (i == 0 && j == 0)
-//					continue;
-//				int k = j + 1 + (i + 1) * 3;
-//				if (canMove[k])
-//					continue;
-//
-//				if (i != 0)
-//				{
-//
-//					Vector<float> targetPos = sprite->GetPosition() + change;
-//
-//					float boundaryX = grids[4].x * tileSize + i * tileSize / 2;
-//					float boundaryY1 = grids[4].y * tileSize + tileSize / 2;
-//					float boundaryY2 = grids[4].y * tileSize - tileSize / 2;
-//					float dist = (boundaryX - targetPos.x) * i;
-//					if (dist < sprite->GetRadius())
-//					{					
-//						//y^2 + y * (-2playerY) + (playerY^2 - collR^2 + (boundaryX - playerX)^2) = 0
-//
-//						//y = (-b + / -sqrt(b ^ 2 - 4ac)) / 
-//
-//						float a = 1;
-//						float b = -2 * targetPos.y;
-//						float c = targetPos.y * targetPos.y - sprite->GetRadius() * sprite->GetRadius() + (boundaryX - targetPos.x) * (boundaryX - targetPos.x);
-//
-//
-//						float y1 = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
-//						float y2 = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
-//
-//						bool intersect1 = y1 < boundaryY1 && y1 > boundaryY2;
-//
-//						bool intersect2 = y2 < boundaryY1 && y2 > boundaryY2;
-//
-//						if (intersect1 && intersect2)
-//						{
-//							change.x += (dist - sprite->GetRadius()) * i;
-//						}
-//						else if (intersect1)
-//						{
-//							change += Vector<float>(boundaryX, y1) - targetPos;
-//						}
-//						else if (intersect2)
-//						{
-//							change += Vector<float>(boundaryX, y2) - targetPos;
-//						}
-//					}
-//				}
-//
-//				if (j != 0)
-//				{
-//
-//					Vector<float> targetPos = sprite->GetPosition() + change;
-//
-//					float boundaryY = grids[4].y * tileSize + j * tileSize / 2;
-//					float boundaryX1 = grids[4].x * tileSize + tileSize / 2;
-//					float boundaryX2 = grids[4].x * tileSize - tileSize / 2;
-//					float dist = (boundaryY - targetPos.y) * j;
-//					if (dist < sprite->GetRadius())
-//					{
-//						//y^2 + y * (-2playerY) + (playerY^2 - collR^2 + (boundaryX - playerX)^2) = 0
-//
-//						//y = (-b + / -sqrt(b ^ 2 - 4ac)) / 
-//
-//						float a = 1;
-//						float b = -2 * targetPos.x;
-//						float c = targetPos.x * targetPos.x - sprite->GetRadius() * sprite->GetRadius() + (boundaryY - targetPos.y) * (boundaryY - targetPos.y);
-//
-//
-//						float x1 = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
-//						float x2 = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
-//
-//						bool intersect1 = x1 < boundaryX1 && x1 > boundaryX2;
-//
-//						bool intersect2 = x2 < boundaryX1 && x2 > boundaryX2;
-//
-//						if (intersect1 && intersect2)
-//						{
-//							change.y += (dist - sprite->GetRadius() + 1) * j;
-//						}
-//						else if (intersect1)
-//						{
-//							change += Vector<float>(x1, boundaryY) - targetPos;
-//						}
-//						else if (intersect2)
-//						{
-//							change += Vector<float>(x2, boundaryY) - targetPos;
-//						}
-//					}
-//				}
-//			}
-//		}
-//		sprite->Move(change);
-//	}
-//}
+#undef tileSize

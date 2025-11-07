@@ -34,6 +34,12 @@
     <Filter Include="Header Files\WorldHandling">
       <UniqueIdentifier>{3176b67c-18ef-4c55-9dba-ebf863b4e1de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Sprites\Enemies">
+      <UniqueIdentifier>{30c94e0c-0ea1-43a4-b2b0-da457afcc2fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sprites\Enemies">
+      <UniqueIdentifier>{11c45398-484b-4742-88fb-977675076e57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GamesEngineeringBase.h">
@@ -105,17 +111,23 @@
     <ClInclude Include="World.h">
       <Filter>Header Files\WorldHandling</Filter>
     </ClInclude>
-    <ClInclude Include="Artillery.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicEnemy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Runner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TimedSurvivalManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Artillery.h">
+      <Filter>Header Files\Sprites\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicEnemy.h">
+      <Filter>Header Files\Sprites\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Runner.h">
+      <Filter>Header Files\Sprites\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyFactory.h">
+      <Filter>Header Files\WorldHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="Powerup.h">
+      <Filter>Header Files\Sprites</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,11 +185,23 @@
     <ClCompile Include="World.cpp">
       <Filter>Source Files\WorldHandling</Filter>
     </ClCompile>
-    <ClCompile Include="Artillery.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TimedSurvivalManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Artillery.cpp">
+      <Filter>Source Files\Sprites\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicEnemy.cpp">
+      <Filter>Source Files\Sprites\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Runner.cpp">
+      <Filter>Source Files\Sprites\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyFactory.cpp">
+      <Filter>Source Files\WorldHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="Powerup.cpp">
+      <Filter>Source Files\Sprites</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -257,6 +281,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Resources\L2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\24.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

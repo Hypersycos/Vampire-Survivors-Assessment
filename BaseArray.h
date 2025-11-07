@@ -1,4 +1,6 @@
 #pragma once
+#include <initializer_list>
+#include <algorithm>
 
 template <typename T> class BaseArray
 {
@@ -15,6 +17,12 @@ public:
 	BaseArray(T* items, unsigned int size) : size(size)
 	{
 		internal = items;
+	}
+
+	BaseArray(const std::initializer_list<T> items) : size(items.size())
+	{
+		internal = new T[size];
+		std::copy(items.begin(), items.end(), internal);
 	}
 
 	BaseArray(const BaseArray&) = delete;

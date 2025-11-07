@@ -10,6 +10,7 @@ class Sprite;
 #include "DynamicArray.h"
 #include "Array.h"
 #include "Projectile.h"
+#include "Powerup.h"
 
 typedef float(*Comparer)(Enemy*);
 
@@ -17,29 +18,25 @@ class World
 {
 protected:
 	unsigned int enemyCount{ 0 };
-	unsigned int tileSize{ 32 };
 	DynamicArray<Enemy*> enemies{};
 	DynamicArray<Projectile*> enemyProjectiles{};
 	DynamicArray<Projectile*> playerProjectiles{};
+	DynamicArray<Powerup*> powerups{};
 	Player* player = nullptr;
-	Array<GamesEngineeringBase::Image> tileImages;
 
-	World(std::string* tiles, unsigned int count);
+	World();
 
 public:
-	void LoadImages(std::string* tiles, unsigned int count, bool freeTiles = false);
 
-	int TileAt(Vector<int> position);
+	Tile* TileAt(Vector<int> position);
 
-	int TileAtGrid(Vector<int> position);
+	Tile* TileAtGrid(Vector<int> position);
 
-	virtual int TileAt(int x, int y) = 0;
+	virtual Tile* TileAt(int x, int y) = 0;
 
-	int TileAt(Vector<float> position);
+	Tile* TileAt(Vector<float> position);
 
-	GamesEngineeringBase::Image* GetTileImage(int index);
-
-	int GetTileSize() const;
+	static int GetTileSize();
 
 	Player* GetPlayer() const;
 
@@ -51,6 +48,8 @@ public:
 
 	DynamicArray<Projectile*>& GetEnemyProjectiles();
 
+	DynamicArray<Powerup*>& GetPowerups();
+
 	Enemy* GetNearestEnemy(float maxRange, Vector<float> position);
 
 	Enemy* GetNearestEnemyToPlayer(float maxRange);
@@ -61,17 +60,23 @@ public:
 
 	void Update(InputHandler& inputHandler);
 
-	void SpawnEnemy(Enemy* enemy);
-
 	void SpawnProjectile(Projectile* projectile);
 
 	bool DespawnProjectile(Projectile* projectile);
 
 	bool DespawnProjectile(unsigned int i, Projectile* projectile);
 
+	void SpawnEnemy(Enemy* enemy);
+
 	bool DespawnEnemy(Enemy* enemy);
 
 	bool DespawnEnemy(unsigned int i, Enemy* enemy);
+
+	void SpawnPowerup(Powerup* powerup);
+
+	bool DespawnPowerup(Powerup* enemy);
+
+	bool DespawnPowerup(unsigned int i, Powerup* enemy);
 
 	void TryMove(CollisionSprite* sprite, Vector<float> change);
 };

@@ -1,27 +1,28 @@
 #include "CollisionSprite.h"
 
-CollisionSprite::CollisionSprite() : Sprite(), collisionRadius(0), layer(Unset)
+CollisionSprite::CollisionSprite() : Sprite(), collisionBox(Vector<float>{}), layer(Unset)
 {
 
 }
 
-CollisionSprite::CollisionSprite(std::istream& stream) : Sprite(stream)
+CollisionSprite::CollisionSprite(std::istream& stream) : Sprite(stream), layer(Unset)
 {
 }
 
-CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer) : Sprite(img), collisionRadius(collisionRadius), layer(layer)
+CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer) : Sprite(img), collisionBox(collisionBox), layer(layer)
 {
 }
 
-CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer) : Sprite(img, position), collisionRadius(collisionRadius), layer(layer)
+CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer) : Sprite(img, position), collisionBox(collisionBox), layer(layer)
 {
 }
+
+#include <iostream>
 
 bool CollisionSprite::checkCollision(CollisionSprite* other)
 {
-	double distance = (other->GetPosition() - GetPosition()).sqrMagnitude();
-	double collRadius = (collisionRadius + other->collisionRadius) * (collisionRadius + other->collisionRadius);
-	return (distance <= collRadius);
+	Vector<float> distance = (other->GetPosition() - GetPosition()).Abs();
+	return distance.x < (other->collisionBox.x + collisionBox.x) / 2 && distance.y < (other->collisionBox.y + collisionBox.y) / 2;
 }
 
 CollisionLayer CollisionSprite::getLayer() const
@@ -29,9 +30,9 @@ CollisionLayer CollisionSprite::getLayer() const
 	return layer;
 }
 
-float CollisionSprite::GetRadius() const
+Vector<float> CollisionSprite::GetCollisionSize() const
 {
-	return collisionRadius;
+	return collisionBox;
 }
 
 void CollisionSprite::Update(World* world, InputHandler& input)

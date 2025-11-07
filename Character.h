@@ -15,12 +15,13 @@ protected:
 public:
 	Character();
 	Character(std::istream& stream);
-	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer);
-	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer);
+	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer);
+	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer);
 	int GetHealth() const;
 	bool Damage(int amount);
 	bool Heal(int amount);
 	void ChangeHealth(int amount);
+	void TryMove(World* world, Vector<float> move);
 
 	void SetSpeedScalar(float s);
 	void SetHealthScalar(float s);

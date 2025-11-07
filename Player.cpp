@@ -2,12 +2,50 @@
 #include "Enemy.h"
 #include "World.h"
 
+AttackData::AttackData(float cooldown, int damage, float range) : cooldown(cooldown), damage(damage), range(range), currentCooldown(0)
+{
+
+}
+
+bool AttackData::ApplyCooldown(float dt, bool attemptingToUse)
+{
+	currentCooldown -= dt;
+	if (attemptingToUse && currentCooldown <= 0)
+	{
+		currentCooldown += cooldown;
+		return true;
+	}
+	else
+	{
+		currentCooldown = max(0, currentCooldown);
+		return false;
+	}
+}
+
+ProjectileAttack::ProjectileAttack(float cooldown, int damage, float range, float baseSpeed) : baseSpeed(baseSpeed), AttackData(cooldown, damage, range)
+{
+
+}
+
+ProjectileAttack::ProjectileAttack() : ProjectileAttack{ 1, 5, 384, 512 }
+{
+}
+
+AoEAttack::AoEAttack(float cooldown, int damage, float range, int maxCount) : maxCount(maxCount), AttackData(cooldown, damage, range)
+{
+
+}
+
+AoEAttack::AoEAttack() : AoEAttack{ 4, 15, 256, 3 }
+{
+}
+
 static float GetEnemyHealth(Enemy* enemy)
 {
 	return (float)enemy->GetHealth();
 }
 
-Player::Player() : Character(100, 200, nullptr, Vector<float>(0, 0), 16, CollidesWithEnemyProjectiles)
+Player::Player() : Character(100, 200, nullptr, Vector<float>(0, 0), Vector<float>(32, 32), CollidesWithEnemyProjectiles)
 {
 }
 
@@ -32,7 +70,7 @@ void Player::Update(World* world, InputHandler& input)
 
 	if (doAttack)
 	{
-		Projectile* p = new Projectile(autoAttack.damage, (nearest->GetPosition() - position).scaleTo(autoAttack.baseSpeed), position, world->GetTileImage(2), 20, CollidesWithEnemies);
+		Projectile* p = new Projectile(autoAttack.damage, (nearest->GetPosition() - position).scaleTo(autoAttack.baseSpeed), position, &Tile::GetTile(2)->image, Vector<float>(32, 32), CollidesWithEnemies, 3);
 		world->SpawnProjectile(p);
 	}
  
@@ -74,6 +112,15 @@ void Player::Update(World* world, InputHandler& input)
 		if (movement.x != 0 && movement.y != 0)
 			movement *= 0.7071;
 
-		world->TryMove(this, movement);
+		TryMove(world, movement);
 	}
+}
+
+void Player::Powerup()
+{
+	Heal(10);
+	aoeAttack.currentCooldown = 0;
+	aoeAttack.maxCount += 1;
+	
+	autoAttack.cooldown *= 0.9;
 }

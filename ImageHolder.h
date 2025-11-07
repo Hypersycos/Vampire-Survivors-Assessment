@@ -42,7 +42,7 @@ public:
 	{
 		for (GamesEngineeringBase::Image* img : images)
 		{
-			delete img;
+			//delete img;
 		}
 	}
 };

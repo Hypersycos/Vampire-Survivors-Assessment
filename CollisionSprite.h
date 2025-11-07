@@ -3,7 +3,7 @@
 
 class CollisionSprite : public Sprite
 {
-	float collisionRadius;
+	Vector<float> collisionBox;
 	Vector<float> lastPos;
 	CollisionLayer layer;
 
@@ -12,14 +12,14 @@ public:
 
 	CollisionSprite(std::istream& stream);
 
-	CollisionSprite(GamesEngineeringBase::Image* img, float collisionRadius, CollisionLayer layer);
+	CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer);
 
-	CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, float collisionRadius, CollisionLayer layer);
+	CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer);
 
 	bool checkCollision(CollisionSprite* other);
 	CollisionLayer getLayer() const;
 
-	float GetRadius() const;
+	Vector<float> GetCollisionSize() const;
 
 	void Update(World* world, InputHandler& input) override;
 };

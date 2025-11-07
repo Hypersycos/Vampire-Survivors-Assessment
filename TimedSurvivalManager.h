@@ -2,13 +2,16 @@
 #include "World.h"
 #include "InputHandler.h"
 #include "Camera.h"
+#include "EnemyFactory.h"
 
 class TimedSurvivalManager
 {
 	World* world{};
+	EnemyFactory factory;
 	float duration{};
 	unsigned int score{};
 	float nextSpawn{};
+	float nextPowerup{};
 	float timer{};
 
 public:
