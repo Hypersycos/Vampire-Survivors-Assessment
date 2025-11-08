@@ -15,5 +15,7 @@ public:
 
 	void Serialize(std::ostream& stream) override;
 
+	void Deserialize(std::istream& stream) override;
+
 	unsigned int GetDamage();
 };

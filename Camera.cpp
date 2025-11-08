@@ -5,6 +5,9 @@
 
 void Camera::Retile()
 {
+	if (world == nullptr)
+		return;
+
 	Vector<int> cameraOffset = Vector<int>((int)round(cameraTopLeft.x / tilesize),
 											(int)round(cameraTopLeft.y / tilesize));
 	tileCentre.x = cameraOffset.x * tilesize;
@@ -29,7 +32,7 @@ void Camera::Retile()
 	}
 }
 
-Camera::Camera(World* world, Canvas canvas) : world(world), canvas(canvas)
+Camera::Camera(World* world, Canvas& canvas) : world(world), canvas(canvas)
 {
 	canvasDimensions = Vector<unsigned int>(canvas.getWidth(), canvas.getHeight());
 	cameraTarget = new FreeCamera();
@@ -37,11 +40,17 @@ Camera::Camera(World* world, Canvas canvas) : world(world), canvas(canvas)
 	Rescale(1);
 }
 
-Camera::Camera(World* world, Canvas canvas, CameraTarget* target) : cameraTarget(target), world(world), canvas(canvas)
+Camera::Camera(World* world, Canvas& canvas, CameraTarget* target) : cameraTarget(target), world(world), canvas(canvas)
 {
 	canvasDimensions = Vector<unsigned int>(canvas.getWidth(), canvas.getHeight());
 
 	Rescale(1);
+}
+
+void Camera::SetWorld(World* world)
+{
+	this->world = world;
+	Rescale(zoom);
 }
 
 void Camera::ChangeZoom(float direction)
@@ -52,6 +61,9 @@ void Camera::ChangeZoom(float direction)
 
 void Camera::Rescale(float newZoom)
 {
+	if (world == nullptr)
+		return;
+
 	for (unsigned int i = 0; i < tileDimensions.x; i++)
 	{
 		delete[] tiles[i];
@@ -84,12 +96,25 @@ void Camera::Rescale(float newZoom)
 
 void Camera::UpdatePosition(InputHandler& inputHandler)
 {
+	if (inputHandler.MouseWheel() != 0)
+	{
+		if (inputHandler.MouseWheel() > 0 && zoomAccumulator < 0 ||
+			inputHandler.MouseWheel() < 0 && zoomAccumulator > 0)
+			zoomAccumulator = 0;
+		zoomAccumulator += inputHandler.MouseWheel();
+		if (abs(zoomAccumulator) > 100)
+		{
+			ChangeZoom(0.25 * (zoomAccumulator / 100));
+			zoomAccumulator -= (zoomAccumulator / 100) * 100;
+		}
+	}
+
 	cameraTarget->Update(inputHandler);
 	Vector<float> cameraPosition = cameraTarget->GetPosition();
 
 	cameraTopLeft.x = cameraPosition.x - canvas.getWidth() / 2.0f / zoom;
 	cameraTopLeft.y = cameraPosition.y - canvas.getHeight() / 2.0f / zoom;
-	if (renderMethod == Integer)
+	if (renderMethod == Canvas::Integer)
 	{
 #pragma warning( push )
 #pragma warning( disable: 4244 )
@@ -105,12 +130,15 @@ void Camera::UpdatePosition(InputHandler& inputHandler)
 
 Vector<float> Camera::GetCameraTopLeft()
 {
-	return cameraTopLeft;
+	if (zoom == 1)
+		return cameraTopLeft;
+	else
+		return cameraTarget->GetPosition() - Vector<float>(canvas.getWidth() / 2, canvas.getHeight() / 2);
 }
 
 Vector<unsigned int> Camera::GetCameraViewSize()
 {
-	return canvasDimensions / zoom;
+	return canvasDimensions;
 }
 
 void Camera::Redraw()
@@ -126,9 +154,6 @@ void Camera::Redraw()
 			tiles[i][j].Draw(canvas, cameraTopLeft, zoom, renderMethod, true);
 		}
 	}
-
-	if (world->GetPlayer() != nullptr)
-		world->GetPlayer()->Draw(canvas, cameraTopLeft, zoom, renderMethod);
 
 	for (Enemy* e : world->GetEnemies())
 	{
@@ -149,6 +174,9 @@ void Camera::Redraw()
 	{
 		p->Draw(canvas, cameraTopLeft, zoom, renderMethod);
 	}
+
+	if (world->GetPlayer() != nullptr)
+		world->GetPlayer()->Draw(canvas, cameraTopLeft, zoom, renderMethod);
 
 #ifdef enableDrawBeyondBounds
 	canvas.DrawBoxUnsafe(Vector<unsigned int>(0, 0), canvas.GetSize(), 0, 0, 255);

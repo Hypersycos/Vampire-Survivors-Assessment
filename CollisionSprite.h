@@ -3,14 +3,23 @@
 
 class CollisionSprite : public Sprite
 {
+public:
+	enum CollisionLayer
+	{
+		Unset = -1,
+		CollidesWithPlayer = 0,
+		CollidesWithEnemies = 1,
+		CollidesWithPlayerProjectiles = 2,
+		CollidesWithEnemyProjectiles = 3
+	};
+
+
+private:
 	Vector<float> collisionBox;
-	Vector<float> lastPos;
 	CollisionLayer layer;
 
 public:
 	CollisionSprite();
-
-	CollisionSprite(std::istream& stream);
 
 	CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer);
 
@@ -20,6 +29,4 @@ public:
 	CollisionLayer getLayer() const;
 
 	Vector<float> GetCollisionSize() const;
-
-	void Update(World* world, InputHandler& input) override;
 };

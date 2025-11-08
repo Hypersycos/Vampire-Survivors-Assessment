@@ -2,6 +2,8 @@
 #include "Enemy.h"
 #include "World.h"
 
+#include "PlayerProjectile.h"
+
 AttackData::AttackData(float cooldown, int damage, float range) : cooldown(cooldown), damage(damage), range(range), currentCooldown(0)
 {
 
@@ -36,7 +38,7 @@ AoEAttack::AoEAttack(float cooldown, int damage, float range, int maxCount) : ma
 
 }
 
-AoEAttack::AoEAttack() : AoEAttack{ 4, 15, 256, 3 }
+AoEAttack::AoEAttack() : AoEAttack{ 4, 25, 256, 3 }
 {
 }
 
@@ -45,19 +47,38 @@ static float GetEnemyHealth(Enemy* enemy)
 	return (float)enemy->GetHealth();
 }
 
-Player::Player() : Character(100, 200, nullptr, Vector<float>(0, 0), Vector<float>(32, 32), CollidesWithEnemyProjectiles)
+Player::Player() : Character(100, 200, GetPlayerImage(), Vector<float>(0, 0), Vector<float>(32, 32), CollidesWithEnemyProjectiles)
 {
+	enabled = true;
+	SetScale(0.5f);
 }
 
 void Player::Serialize(std::ostream& stream)
 {
-	stream << aoeAttack.currentCooldown << autoAttack.currentCooldown;
+	Character::Serialize(stream);
+	stream.write(reinterpret_cast<char*>(&aoeAttack.currentCooldown), sizeof(aoeAttack.currentCooldown));
+	stream.write(reinterpret_cast<char*>(&autoAttack.currentCooldown), sizeof(autoAttack.currentCooldown));
+	stream.write(reinterpret_cast<char*>(&autoAttack.cooldown), sizeof(autoAttack.cooldown));
+	stream.write(reinterpret_cast<char*>(&aoeAttack.maxCount), sizeof(aoeAttack.maxCount));
 }
 
-Player::Player(std::istream& stream) : Character(stream)
+void Player::Deserialize(std::istream& stream)
 {
-	stream >> aoeAttack.currentCooldown;
-	stream >> autoAttack.currentCooldown;
+	Character::Deserialize(stream);
+	stream.read(reinterpret_cast<char*>(&aoeAttack.currentCooldown), sizeof(aoeAttack.currentCooldown));
+	stream.read(reinterpret_cast<char*>(&autoAttack.currentCooldown), sizeof(autoAttack.currentCooldown));
+	stream.read(reinterpret_cast<char*>(&autoAttack.cooldown), sizeof(autoAttack.cooldown));
+	stream.read(reinterpret_cast<char*>(&aoeAttack.maxCount), sizeof(aoeAttack.maxCount));
+}
+
+GamesEngineeringBase::Image* Player::GetPlayerImage()
+{
+	if (!imageLoaded)
+	{
+		playerImage.load("Resources/L.png");
+		imageLoaded = true;
+	}
+	return &playerImage;
 }
 
 void Player::Update(World* world, InputHandler& input)
@@ -70,7 +91,7 @@ void Player::Update(World* world, InputHandler& input)
 
 	if (doAttack)
 	{
-		Projectile* p = new Projectile(autoAttack.damage, (nearest->GetPosition() - position).scaleTo(autoAttack.baseSpeed), position, &Tile::GetTile(2)->image, Vector<float>(32, 32), CollidesWithEnemies, 3);
+		Projectile* p = new PlayerProjectile(autoAttack.damage, (nearest->GetPosition() - position).scaleTo(autoAttack.baseSpeed), position, 5);
 		world->SpawnProjectile(p);
 	}
  

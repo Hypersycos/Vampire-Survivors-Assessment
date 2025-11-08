@@ -14,10 +14,10 @@ protected:
 	float currentSpeed;
 public:
 	Character();
-	Character(std::istream& stream);
 	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer);
 	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer);
 	int GetHealth() const;
+	int GetMaxHealth() const;
 	bool Damage(int amount);
 	bool Heal(int amount);
 	void ChangeHealth(int amount);
@@ -27,4 +27,5 @@ public:
 	void SetHealthScalar(float s);
 
 	void Serialize(std::ostream& stream) override;
+	void Deserialize(std::istream& stream) override;
 };

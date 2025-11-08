@@ -19,4 +19,10 @@ class Runner : public Enemy
 public:
 	Runner(Vector<float> position);
 	Runner();
+
+	void Serialize(std::ostream& stream) override;
+	void Deserialize(std::istream& stream) override;
+
+	// Inherited via Enemy
+	Enemies GetType() override;
 };

@@ -15,6 +15,8 @@ Enemy* SpawnHelper(int i)
 		return new Artillery();
 	case 3:
 		return new BasicEnemy();
+	default:
+		return new BasicEnemy();
 	}
 }
 

@@ -11,6 +11,8 @@ class InputHandler
 	int altIndex{ 1 };
 	bool keysLastState[256][2]{};
 	bool mouseLastState[3][2]{};
+	int lastWheel{ 0 };
+	int wheelState{ 0 };
 
 public:
 	InputHandler(GamesEngineeringBase::Window& window);
@@ -30,4 +32,10 @@ public:
 	bool MouseDown(GamesEngineeringBase::MouseButton i) const;
 
 	bool MouseUp(GamesEngineeringBase::MouseButton i) const;
+
+	int MouseWheel() const;
+
+	int MouseX() const;
+
+	int MouseY() const;
 };

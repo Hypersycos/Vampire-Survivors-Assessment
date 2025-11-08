@@ -25,6 +25,11 @@ int Character::GetHealth() const
 	return health;
 }
 
+int Character::GetMaxHealth() const
+{
+	return currentMaxHealth;
+}
+
 bool Character::Damage(int amount)
 {
 	health -= max(0, amount);
@@ -34,9 +39,9 @@ bool Character::Damage(int amount)
 bool Character::Heal(int amount)
 {
 	health += max(0, amount);
-	if (health >= baseMaxHealth)
+	if (health >= currentMaxHealth)
 	{
-		health = baseMaxHealth;
+		health = currentMaxHealth;
 		return true;
 	}
 	else
@@ -78,12 +83,16 @@ void Character::SetHealthScalar(float s)
 
 void Character::Serialize(std::ostream& stream)
 {
-	stream << currentMaxHealth << health << currentSpeed;
+	CollisionSprite::Serialize(stream);
+	stream.write(reinterpret_cast<char*>(&currentMaxHealth), sizeof(currentMaxHealth));
+	stream.write(reinterpret_cast<char*>(&health), sizeof(health));
+	stream.write(reinterpret_cast<char*>(&currentSpeed), sizeof(currentSpeed));
 }
 
-Character::Character(std::istream& stream) : CollisionSprite(stream)
+void Character::Deserialize(std::istream& stream)
 {
-	stream >> currentMaxHealth;
-	stream >> health;
-	stream >> currentSpeed;
+	CollisionSprite::Deserialize(stream);
+	stream.read(reinterpret_cast<char*>(&currentMaxHealth), sizeof(currentMaxHealth));
+	stream.read(reinterpret_cast<char*>(&health), sizeof(health));
+	stream.read(reinterpret_cast<char*>(&currentSpeed), sizeof(currentSpeed));
 }

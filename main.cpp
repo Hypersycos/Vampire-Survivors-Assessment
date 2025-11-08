@@ -1,5 +1,7 @@
 #include "GamesEngineeringBase.h"
-#include "TestWorld.cpp"
+#include "FixedWorld.h"
+#include "InfiniteWorld.h"
+#include "RepeatingFixedWorld.h"
 #include "Camera.h"
 #include "InputHandler.h"
 #include "FollowCamera.h"
@@ -11,16 +13,16 @@ int main() {
 	window.create(1024, 768, "Game");
 	bool running = true;
 
-	World* world = new TestWorld();
+	RepeatingFixedWorld* world = new RepeatingFixedWorld(50, 50, 0);
+
+	GamesEngineeringBase::Image font;
+
+	//world->SaveWorld("Saves/World1.dat");
 	InputHandler inputHandler = InputHandler(window);
 	Canvas canvas = Canvas(window, window.getWidth(), window.getHeight(), 0, 0);
-	Camera camera = Camera(world, canvas, new FollowCamera(world->GetPlayer()));
 
-	TimedSurvivalManager gameManager;
+	TimedSurvivalManager gameManager{ canvas };
 	gameManager.Setup(world, 120);
-
-	float accumulator = 0;
-	int frames = 0;
 
 	while (running)
 	{
@@ -34,28 +36,19 @@ int main() {
 			break; // Exits the game loop
 		}
 
-		accumulator += inputHandler.GetDT();
-		frames++;
-
-		if (accumulator >= 1)
+		if (inputHandler.KeyHeld('P'))
 		{
-			std::cout << frames << std::endl;
-			frames = 0;
-			accumulator = 0;
+			gameManager.Save("Saves/test.dat");
+		}
+		else if (inputHandler.KeyHeld('L'))
+		{
+			gameManager.Load("Saves/test.dat");
 		}
 
-		if (inputHandler.MouseDown(GamesEngineeringBase::MouseLeft))
-		{
-			camera.ChangeZoom(0.25);
-		}
-		else if (inputHandler.MouseDown(GamesEngineeringBase::MouseRight))
-		{
-			camera.ChangeZoom(-0.25);
-		}
-
-		gameManager.RunTick(inputHandler, camera);
-		camera.UpdatePosition(inputHandler);
-		camera.Redraw();
+		gameManager.RunTick(inputHandler);
+		gameManager.Draw(inputHandler);
+		
+		canvas.DrawFont(std::to_string((int)round(1 / inputHandler.GetDT())), { 0, 0 });
 		window.present();
 	}
 	return 0;

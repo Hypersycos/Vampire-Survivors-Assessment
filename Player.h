@@ -31,6 +31,12 @@ struct AoEAttack : AttackData
 
 class Player : public Character
 {
+	static inline GamesEngineeringBase::Image playerImage{};
+
+	static inline bool imageLoaded = false;
+
+	static GamesEngineeringBase::Image* GetPlayerImage();
+
 	ProjectileAttack autoAttack;
 
 	AoEAttack aoeAttack;
@@ -40,9 +46,9 @@ public:
 
 	Player();
 
-	Player(std::istream& stream);
-
 	void Serialize(std::ostream& stream) override;
+
+	void Deserialize(std::istream& stream) override;
 
 	void Powerup();
 };

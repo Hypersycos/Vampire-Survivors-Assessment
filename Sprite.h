@@ -4,7 +4,6 @@ class World;
 
 #include "GamesEngineeringBase.h"
 #include "Vector.h"
-#include "Enums.h"
 #include "Canvas.h"
 #include "InputHandler.h"
 #include <fstream>
@@ -21,8 +20,6 @@ public:
 	bool enabled;
 
 	Sprite();
-
-	Sprite(std::istream& stream);
 
 	Sprite(GamesEngineeringBase::Image* img);
 
@@ -48,9 +45,10 @@ public:
 
 	void Move(Vector<float> distance);
 
-	void Draw(Canvas& canvas, Vector<float> offset, float zoom, RenderMethod renderMethod, bool blankIfDisabled = false);
+	void Draw(Canvas& canvas, Vector<float> offset, float zoom, Canvas::RenderMethod renderMethod, bool blankIfDisabled = false);
 
 	virtual void Update(World* world, InputHandler& input);
 
 	virtual void Serialize(std::ostream& stream);
+	virtual void Deserialize(std::istream& stream);
 };

@@ -8,6 +8,8 @@ class FollowCamera : public CameraTarget
 	Sprite* target{ nullptr };
 
 public:
+	FollowCamera();
+
 	FollowCamera(Sprite* target);
 
 	void SetTarget(Sprite* _target);

@@ -72,14 +72,14 @@ void Sprite::Move(Vector<float> distance)
 	position += distance;
 }
 
-void Sprite::Draw(Canvas& canvas, Vector<float> offset, float zoom, RenderMethod renderMethod, bool blankIfDisabled)
+void Sprite::Draw(Canvas& canvas, Vector<float> offset, float zoom, Canvas::RenderMethod renderMethod, bool blankIfDisabled)
 {
 	if (!enabled)
 	{
 		if (!blankIfDisabled)
 			return;
 		else
-			renderMethod = Blank;
+			renderMethod = Canvas::Blank;
 	}
 	Vector<float> adjustedPosition = (GetTopLeft() - offset) * zoom;
 	canvas.Draw(image, adjustedPosition, size * zoom, Vector<float>(0, 0), zoom * scale, renderMethod);
@@ -92,11 +92,13 @@ void Sprite::Update(World* world, InputHandler& input)
 
 void Sprite::Serialize(std::ostream& stream)
 {
-	stream << position << scale;
+	stream.write(reinterpret_cast<char*>(&position), sizeof(position));
+	stream.write(reinterpret_cast<char*>(&scale), sizeof(scale));
 }
 
-Sprite::Sprite(std::istream& stream)
+void Sprite::Deserialize(std::istream& stream)
 {
-	stream >> position;
-	stream >> scale;
+	stream.read(reinterpret_cast<char*>(&position), sizeof(position));
+	stream.read(reinterpret_cast<char*>(&scale), sizeof(scale));
+	SetScale(scale);
 }

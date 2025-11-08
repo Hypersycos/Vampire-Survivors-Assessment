@@ -6,7 +6,7 @@
 #define acceleration 75
 #define collisionBox Vector<float>{ 30, 30 }
 
-#define damagePer10 1
+#define damagePer10 0.5
 #define turningRecovery 1
 #define attackRecovery 1
 
@@ -23,8 +23,8 @@ void Runner::Update(World* world, InputHandler& input)
 
 		float dot = TargetDir.Dot<float>(direction);
 
-		baseSpeed = baseSpeed * dot;
 		baseSpeed += input.GetDT() * acceleration;
+		baseSpeed = baseSpeed * dot * dot;
 
 		if (baseSpeed < startingSpeed + acceleration)
 		{
@@ -67,3 +67,25 @@ Runner::Runner() : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(1), c
 	SetScale(0.5);
 }
 
+void Runner::Deserialize(std::istream& stream)
+{
+	Enemy::Deserialize(stream);
+	stream.read(reinterpret_cast<char*>(&timer), sizeof(timer));
+	stream.read(reinterpret_cast<char*>(&state), sizeof(state));
+	stream.read(reinterpret_cast<char*>(&baseSpeed), sizeof(baseSpeed));
+}
+
+Enemy::Enemies Runner::GetType()
+{
+	return Enemy::Runner;
+}
+
+void Runner::Serialize(std::ostream& stream)
+{
+	Enemy::Enemies type = Enemy::Runner;
+	stream.write(reinterpret_cast<char*>(&type), sizeof(type));
+	Enemy::Serialize(stream);
+	stream.write(reinterpret_cast<char*>(&timer), sizeof(timer));
+	stream.write(reinterpret_cast<char*>(&state), sizeof(state));
+	stream.write(reinterpret_cast<char*>(&baseSpeed), sizeof(baseSpeed));
+}

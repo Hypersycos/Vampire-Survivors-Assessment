@@ -16,6 +16,8 @@ void InputHandler::Update()
 	mouseLastState[GamesEngineeringBase::MouseLeft][index] = window.mouseButtonPressed(GamesEngineeringBase::MouseLeft);
 	mouseLastState[GamesEngineeringBase::MouseMiddle][index] = window.mouseButtonPressed(GamesEngineeringBase::MouseMiddle);
 	mouseLastState[GamesEngineeringBase::MouseRight][index] = window.mouseButtonPressed(GamesEngineeringBase::MouseRight);
+	wheelState = window.getMouseWheel() - lastWheel;
+	lastWheel = window.getMouseWheel();
 	dt = timer.dt();
 }
 
@@ -52,4 +54,19 @@ bool InputHandler::MouseDown(GamesEngineeringBase::MouseButton i) const
 bool InputHandler::MouseUp(GamesEngineeringBase::MouseButton i) const
 {
 	return !window.mouseButtonPressed(i) && mouseLastState[i][altIndex];
+}
+
+int InputHandler::MouseWheel() const
+{
+	return wheelState;
+}
+
+int InputHandler::MouseX() const
+{
+	return window.getMouseX();
+}
+
+int InputHandler::MouseY() const
+{
+	return window.getMouseY();
 }

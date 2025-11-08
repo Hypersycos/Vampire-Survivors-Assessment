@@ -1,9 +1,138 @@
 #include "World.h"
+#include "BasicEnemy.h"
+#include "Artillery.h"
+#include "Runner.h"
+#include "EnemyProjectile.h"
+#include "PlayerProjectile.h"
 
 #define tileSize Tile::tileSize
 
-World::World()
+World::World() : player(new Player())
 {
+}
+
+World::~World()
+{
+	Free();
+}
+
+void World::Free()
+{
+	int i = enemies.GetCurrentSize() - 1;
+	while (i >= 0)
+	{
+		Enemy* e = enemies[i];
+		enemies.Remove(i--);
+		delete e;
+	}
+
+	i = enemyProjectiles.GetCurrentSize() - 1;
+	while (i >= 0)
+	{
+		Projectile* p = enemyProjectiles[i];
+		enemyProjectiles.Remove(i--);
+		delete p;
+	}
+
+	i = playerProjectiles.GetCurrentSize() - 1;
+	while (i >= 0)
+	{
+		Projectile* p = playerProjectiles[i];
+		playerProjectiles.Remove(i--);
+		delete p;
+	}
+
+	i = powerups.GetCurrentSize() - 1;
+	while (i >= 0)
+	{
+		Powerup* p = powerups[i];
+		powerups.Remove(i--);
+		delete p;
+	}
+
+	if (player != nullptr)
+		delete player;
+}
+
+void World::Load(std::istream& stream)
+{
+	Player* temp = player;
+	player = nullptr;
+	Free();
+
+	player = temp;
+	player->Deserialize(stream);
+
+	unsigned int count;
+	stream.read(reinterpret_cast<char*>(&count), sizeof(count));
+	Enemy::Enemies enemyType;
+	for (int i = 0; i < count; i++)
+	{
+		stream.read(reinterpret_cast<char*>(&enemyType), sizeof(enemyType));
+		Enemy* e;
+		switch (enemyType)
+		{
+		case Enemy::Artillery:
+			e = new Artillery();
+			break;
+		case Enemy::Runner:
+			e = new Runner();
+			break;
+		case Enemy::Basic:
+		default:
+			e = new BasicEnemy();
+			break;
+		}
+		e->Deserialize(stream);
+		SpawnEnemy(e);
+	}
+
+	stream.read(reinterpret_cast<char*>(&count), sizeof(count));
+	for (int i = 0; i < count; i++)
+	{
+		Projectile* p = new EnemyProjectile(stream);
+		SpawnProjectile(p);
+	}
+
+	stream.read(reinterpret_cast<char*>(&count), sizeof(count));
+	for (int i = 0; i < count; i++)
+	{
+		Projectile* p = new PlayerProjectile(stream);
+		SpawnProjectile(p);
+	}
+
+	stream.read(reinterpret_cast<char*>(&count), sizeof(count));
+	for (int i = 0; i < count; i++)
+	{
+		Powerup* p = new Powerup();
+		p->Deserialize(stream);
+		SpawnPowerup(p);
+	}
+}
+
+void World::Save(std::ostream& stream)
+{
+	player->Serialize(stream);
+
+	unsigned int count = enemies.GetCurrentSize();
+	stream.write(reinterpret_cast<char*>(&count), sizeof(count));
+	for (Enemy* enemy : enemies)
+		enemy->Serialize(stream);
+
+	count = enemyProjectiles.GetCurrentSize();
+	stream.write(reinterpret_cast<char*>(&count), sizeof(count));
+	for (Projectile* p : enemyProjectiles)
+		p->Serialize(stream);
+
+	count = playerProjectiles.GetCurrentSize();
+	stream.write(reinterpret_cast<char*>(&count), sizeof(count));
+	for (Projectile* p : playerProjectiles)
+		p->Serialize(stream);
+
+	count = powerups.GetCurrentSize();
+	stream.write(reinterpret_cast<char*>(&count), sizeof(count));
+	for (Powerup* p : powerups)
+		p->Serialize(stream);
 }
 
 Tile* World::TileAt(Vector<int> position)
@@ -147,8 +276,6 @@ void World::Update(InputHandler& inputHandler)
 			{
 				if (e->Damage(p->GetDamage()))
 				{
-					DespawnEnemy(i--, e);
-					delete e;
 					DespawnProjectile(j--, p);
 					delete p;
 					break;
@@ -191,7 +318,7 @@ void World::Update(InputHandler& inputHandler)
 
 void World::SpawnProjectile(Projectile* projectile)
 {
-	if (projectile->getLayer() == CollidesWithEnemies)
+	if (projectile->getLayer() == CollisionSprite::CollidesWithEnemies)
 	{
 		playerProjectiles.Add(projectile);
 	}
@@ -205,7 +332,7 @@ void World::SpawnProjectile(Projectile* projectile)
 bool World::DespawnProjectile(Projectile* projectile)
 {
 	projectile->enabled = false;
-	if (projectile->getLayer() == CollidesWithEnemies)
+	if (projectile->getLayer() == CollisionSprite::CollidesWithEnemies)
 	{
 		return playerProjectiles.Remove(projectile);
 	}
@@ -217,7 +344,7 @@ bool World::DespawnProjectile(Projectile* projectile)
 
 bool World::DespawnProjectile(unsigned int i, Projectile* projectile)
 {
-	if (projectile->getLayer() == CollidesWithEnemies)
+	if (projectile->getLayer() == CollisionSprite::CollidesWithEnemies)
 	{
 		if (playerProjectiles[i] == projectile)
 		{

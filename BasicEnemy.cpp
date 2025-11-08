@@ -13,7 +13,7 @@ void BasicEnemy::Update(World* world, InputHandler& input)
 	switch (state)
 	{
 	case Chasing:
-		TryMove(world, Pathfind(world, input.GetDT()));
+		Move(Pathfind(world, input.GetDT()));
 		if (checkCollision(world->GetPlayer()))
 		{
 			timer = 0;
@@ -38,3 +38,23 @@ BasicEnemy::BasicEnemy() : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(1
 	SetScale(0.5);
 }
 
+void BasicEnemy::Deserialize(std::istream& stream)
+{
+	Enemy::Deserialize(stream);
+	stream.read(reinterpret_cast<char*>(&timer), sizeof(timer));
+	stream.read(reinterpret_cast<char*>(&state), sizeof(state));
+}
+
+Enemy::Enemies BasicEnemy::GetType()
+{
+	return Enemy::Basic;
+}
+
+void BasicEnemy::Serialize(std::ostream& stream)
+{
+	Enemy::Enemies type = Enemy::Basic;
+	stream.write(reinterpret_cast<char*>(&type), sizeof(type));
+	Enemy::Serialize(stream);
+	stream.write(reinterpret_cast<char*>(&timer), sizeof(timer));
+	stream.write(reinterpret_cast<char*>(&state), sizeof(state));
+}

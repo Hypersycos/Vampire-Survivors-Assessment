@@ -2,7 +2,6 @@
 
 #include "GamesEngineeringBase.h"
 #include "Vector.h"
-#include "Enums.h"
 //#define enableDrawBeyondBounds
 
 #pragma once
@@ -14,6 +13,15 @@ class Canvas
 	Vector<unsigned int> position;
 
 public:
+
+	enum RenderMethod
+	{
+		Integer,
+		NearestInteger,
+		Bilinear,
+		Blank
+	};
+
 	Canvas(GamesEngineeringBase::Window& canvas, unsigned int width, unsigned int height, unsigned int x, unsigned int y);
 
 	Canvas(GamesEngineeringBase::Window& canvas, Vector<unsigned int> size, Vector<unsigned int> position);
@@ -45,4 +53,6 @@ public:
 	void DrawInteger(GamesEngineeringBase::Image* image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
 
 	void DrawBilinear(GamesEngineeringBase::Image* image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
+
+	void DrawFont(std::string text, Vector<float> position, float scale = 1, RenderMethod render = Integer);
 };

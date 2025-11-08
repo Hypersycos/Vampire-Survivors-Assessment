@@ -2,6 +2,7 @@
 #include "World.h"
 #include "InputHandler.h"
 #include "Camera.h"
+#include "FollowCamera.h"
 #include "EnemyFactory.h"
 
 class TimedSurvivalManager
@@ -14,12 +15,22 @@ class TimedSurvivalManager
 	float nextPowerup{};
 	float timer{};
 
+	Camera camera;
+	FollowCamera target;
+	Canvas& canvas;
+
 public:
-	TimedSurvivalManager();
+	TimedSurvivalManager(Canvas& canvas);
 
 	void Setup(World* _world, unsigned int _duration);
 
-	bool RunTick(InputHandler& input, Camera& camera);
+	void Load(std::string path);
+
+	void Save(std::string path);
+
+	bool RunTick(InputHandler& input);
+
+	void Draw(InputHandler& input);
 
 	unsigned int GetScore();
 };

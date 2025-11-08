@@ -17,7 +17,6 @@ typedef float(*Comparer)(Enemy*);
 class World
 {
 protected:
-	unsigned int enemyCount{ 0 };
 	DynamicArray<Enemy*> enemies{};
 	DynamicArray<Projectile*> enemyProjectiles{};
 	DynamicArray<Projectile*> playerProjectiles{};
@@ -25,8 +24,28 @@ protected:
 	Player* player = nullptr;
 
 	World();
+	~World();
+
+	void Free();
+
+	void Load(std::istream& stream);
+
+	void Save(std::ostream& stream);
 
 public:
+
+	enum WorldType : char
+	{
+		Fixed,
+		FixedRepeating,
+		Infinite
+	};
+
+	virtual WorldType GetType() = 0;
+
+	virtual void LoadState(std::istream& stream) = 0;
+
+	virtual void SaveState(std::ostream& stream) = 0;
 
 	Tile* TileAt(Vector<int> position);
 

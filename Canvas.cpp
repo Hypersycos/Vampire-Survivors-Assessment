@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include "font.h"
 
 Canvas::Canvas(GamesEngineeringBase::Window& canvas, unsigned int width, unsigned int height, unsigned int x, unsigned int y) : canvas(canvas)
 {
@@ -157,8 +158,8 @@ void Canvas::GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>
 	xmin = round(imageOffset.x);
 	ymin = round(imageOffset.y);
 #else
-	xmax = min((int)round(imageSize.x), (int)size.x - (int)floor(position.x));
-	ymax = min((int)round(imageSize.y), (int)size.y - (int)floor(position.y));
+	xmax = min((int)round(imageSize.x + imageOffset.x), (int)size.x - (int)floor(position.x));
+	ymax = min((int)round(imageSize.y + imageOffset.y), (int)size.y - (int)floor(position.y));
 	xmin = (int)round(max(round(imageOffset.x), -position.x));
 	ymin = (int)round(max(round(imageOffset.y), -position.y));
 #endif // enableDrawBeyondBounds
@@ -173,11 +174,11 @@ void Canvas::DrawInteger(GamesEngineeringBase::Image* image, Vector<float> posit
 
 	for (int i = xmin; i < xmax; i++)
 	{
-		int x = intPos.x + i;
+		int x = intPos.x + i - round(imageOffset.x);
 
 		for (int j = ymin; j < ymax; j++)
 		{
-			int y = intPos.y + j;
+			int y = intPos.y + j - round(imageOffset.y);
 
 			int spriteX = (int)(i / scale);
 			int spriteY = (int)(j / scale);
@@ -222,6 +223,20 @@ void Canvas::DrawBilinear(GamesEngineeringBase::Image* image, Vector<float> posi
 	//		}
 	//	}
 	//}
+}
+
+void Canvas::DrawFont(std::string text, Vector<float> position, float scale, RenderMethod render)
+{
+	Vector<int> letterSize = Font::letterSize;
+	int xSize = letterSize.x + Font::xGap;
+	GamesEngineeringBase::Image* image = Font::GetImage();
+
+	for (char c : text)
+	{
+		Vector<int> offset = Font::GetLetterLocation(c);
+		Draw(image, position, letterSize, offset, scale, render);
+		position.x += xSize;
+	}
 }
 
 void Canvas::Draw(GamesEngineeringBase::Image* image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale, RenderMethod render)

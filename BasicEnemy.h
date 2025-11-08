@@ -17,4 +17,10 @@ class BasicEnemy : public Enemy
 public:
 	BasicEnemy(Vector<float> position);
 	BasicEnemy();
+
+	void Serialize(std::ostream& stream) override;
+	void Deserialize(std::istream& stream) override;
+
+	// Inherited via Enemy
+	Enemies GetType() override;
 };

@@ -1,6 +1,6 @@
 #include "Artillery.h"
 #include "World.h"
-#include "Projectile.h"
+#include "EnemyProjectile.h"
 
 #define maxHP 15
 #define baseSpeed 60
@@ -38,7 +38,7 @@ void Artillery::Update(World* world, InputHandler& input)
 		{
 			timer -= fireInterval;
 			//TODO: fire projectile
-			Projectile* p = new Projectile(damage, (world->GetPlayer()->GetPosition() - position).scaleTo(projectileSpeed), position, &Tile::GetTile(3)->image, Vector<float>(20, 20), CollidesWithPlayer, 10);
+			Projectile* p = new EnemyProjectile(damage, (world->GetPlayer()->GetPosition() - position).scaleTo(projectileSpeed), position, 5);
 			world->SpawnProjectile(p);
 		}
 		if ((world->GetPlayer()->GetPosition() - position).sqrMagnitude() > detransformDist * detransformDist)
@@ -66,5 +66,26 @@ Artillery::Artillery(Vector<float> position) : Enemy(maxHP, baseSpeed, Enemy::Im
 Artillery::Artillery() : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(0), collisionBox), state(Chasing), timer(0)
 {
 	SetScale(0.5);
+}
+
+void Artillery::Deserialize(std::istream& stream)
+{
+	Enemy::Deserialize(stream);
+	stream.read(reinterpret_cast<char*>(&timer), sizeof(timer));
+	stream.read(reinterpret_cast<char*>(&state), sizeof(state));
+}
+
+Enemy::Enemies Artillery::GetType()
+{
+	return Enemy::Artillery;
+}
+
+void Artillery::Serialize(std::ostream& stream)
+{
+	Enemy::Enemies type = Enemy::Artillery;
+	stream.write(reinterpret_cast<char*>(&type), sizeof(type));
+	Enemy::Serialize(stream);
+	stream.write(reinterpret_cast<char*>(&timer), sizeof(timer));
+	stream.write(reinterpret_cast<char*>(&state), sizeof(state));
 }
 

@@ -19,4 +19,10 @@ class Artillery : public Enemy
 public:
 	Artillery(Vector<float> position);
 	Artillery();
+
+	void Serialize(std::ostream& stream) override;
+	void Deserialize(std::istream& stream) override;
+
+	// Inherited via Enemy
+	Enemies GetType() override;
 };

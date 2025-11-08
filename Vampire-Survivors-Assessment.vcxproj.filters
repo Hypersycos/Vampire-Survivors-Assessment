@@ -45,12 +45,6 @@
     <ClInclude Include="GamesEngineeringBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Enums.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InputHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -129,6 +123,27 @@
     <ClInclude Include="Powerup.h">
       <Filter>Header Files\Sprites</Filter>
     </ClInclude>
+    <ClInclude Include="FixedWorld.h">
+      <Filter>Header Files\WorldHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="InfiniteWorld.h">
+      <Filter>Header Files\WorldHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Header Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyProjectile.h">
+      <Filter>Header Files\Sprites\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerProjectile.h">
+      <Filter>Header Files\Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="RepeatingFixedWorld.h">
+      <Filter>Header Files\WorldHandling</Filter>
+    </ClInclude>
+    <ClInclude Include="font.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -138,9 +153,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
@@ -202,6 +214,24 @@
     </ClCompile>
     <ClCompile Include="Powerup.cpp">
       <Filter>Source Files\Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="FixedWorld.cpp">
+      <Filter>Source Files\WorldHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="InfiniteWorld.cpp">
+      <Filter>Source Files\WorldHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyProjectile.cpp">
+      <Filter>Source Files\Sprites\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerProjectile.cpp">
+      <Filter>Source Files\Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="RepeatingFixedWorld.cpp">
+      <Filter>Source Files\WorldHandling</Filter>
+    </ClCompile>
+    <ClCompile Include="font.cpp">
+      <Filter>Source Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

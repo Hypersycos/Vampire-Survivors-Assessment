@@ -4,7 +4,6 @@
 #include "GamesEngineeringBase.h"
 #include "Sprite.h"
 #include "World.h"
-#include "Enums.h"
 #include "Canvas.h"
 #include "CameraTarget.h"
 
@@ -15,17 +14,20 @@ class Camera
 	CameraTarget* cameraTarget;
 	Vector<float> cameraTopLeft;
 	Vector<int> tileCentre;
-	RenderMethod renderMethod;
-	float zoom;
+	Canvas::RenderMethod renderMethod;
+	int zoomAccumulator{ 0 };
+	float zoom{ 1 };
 	Sprite** tiles;
-	Canvas canvas;
+	Canvas& canvas;
 	World* world;
 
 	void Retile();
 
 public:
-	Camera(World* world, Canvas canvas);
-	Camera(World* world, Canvas canvas, CameraTarget* target);
+	Camera(World* world, Canvas& canvas);
+	Camera(World* world, Canvas& canvas, CameraTarget* target);
+
+	void SetWorld(World* world);
 
 	void ChangeZoom(float direction);
 
