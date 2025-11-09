@@ -42,6 +42,10 @@ int main() {
 	StressTester gameManager{ canvas };
 	gameManager.Setup(world);
 
+	float accumulator = 0;
+	float timer = 0;
+	int fps = 0;
+
 	while (running)
 	{
 		// Check for input (key presses or window events)
@@ -65,8 +69,18 @@ int main() {
 
 		gameManager.RunTick(inputHandler);
 		gameManager.Draw(inputHandler);
+
+		accumulator += inputHandler.GetDT();
+		timer += inputHandler.GetDT();
+
+		if (timer > 1)
+		{
+			fps = round(accumulator / timer);
+			accumulator = 0;
+			timer = 0;
+		}
 		
-		canvas.DrawFont(std::to_string((int)round(1 / inputHandler.GetDT())), { 0, 0 });
+		canvas.DrawFont(std::to_string(fps), { 0, 0 });
 		window.present();
 	}
 	return 0;
