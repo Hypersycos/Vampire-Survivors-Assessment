@@ -42,7 +42,7 @@ int main() {
 	StressTester gameManager{ canvas };
 	gameManager.Setup(world);
 
-	float accumulator = 0;
+	int accumulator = 0;
 	float timer = 0;
 	int fps = 0;
 
@@ -70,7 +70,7 @@ int main() {
 		gameManager.RunTick(inputHandler);
 		gameManager.Draw(inputHandler);
 
-		accumulator += inputHandler.GetDT();
+		accumulator += 1;
 		timer += inputHandler.GetDT();
 
 		if (timer > 1)
