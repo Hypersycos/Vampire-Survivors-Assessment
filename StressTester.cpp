@@ -166,9 +166,7 @@ bool StressTester::RunTick(InputHandler& input)
 		}
 	}
 
-	int i = 0;
-
-	while (currentCount < intendedCount && (intendedCount == 1 || i < (intendedCount / 10)))
+	while (currentCount < intendedCount)
 	{
 		float cost;
 		Enemy* enemy = factory.SpawnEnemy(&cost);
@@ -178,7 +176,6 @@ bool StressTester::RunTick(InputHandler& input)
 		world->SpawnEnemy(enemy);
 
 		currentCount++;
-		i++;
 	}
 
 	return false;
@@ -205,7 +202,7 @@ void StressTester::Draw(InputHandler& input)
 
 	std::string scoreText = std::to_string(intendedCount);
 
-	std::string timerText = std::to_string(currentCount);
+	std::string timerText = std::to_string(world->GetEnemyProjectiles().GetCurrentSize());
 
 	int health = max(0, world->GetPlayer()->GetHealth());
 	int maxHP = world->GetPlayer()->GetMaxHealth();
@@ -232,8 +229,6 @@ void StressTester::Draw(InputHandler& input)
 	DrawBar(health / (float)maxHP, 200, Font::letterSize.y + 4, Vector<int>(x, 0), red, gray, alpha, canvas);
 
 	int x5 = canvas.getWidth() - timerWidth;
-
-	DrawBar(currentCount / (float)intendedCount, timerWidth, Font::letterSize.y + 4, Vector<int>(x5, Font::letterSize.y + 6), green, gray, alpha, canvas);
 
 	canvas.DrawFont(timerText, Vector<float>{ x3, y1 });
 
