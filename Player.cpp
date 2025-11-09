@@ -147,6 +147,13 @@ void Player::Powerup()
 	autoAttack.cooldown *= 0.9;
 }
 
+#ifdef GodMode
+bool Player::Damage(int amount)
+{
+	return false;
+}
+#endif
+
 float Player::GetAoeCooldownPercent()
 {
 	return aoeAttack.currentCooldown / aoeAttack.cooldown;

@@ -2,7 +2,7 @@
 
 #include "GamesEngineeringBase.h"
 #include "Vector.h"
-//#define enableDrawBeyondBounds
+#define enableDrawBeyondBounds
 
 #pragma once
 

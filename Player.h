@@ -1,6 +1,8 @@
 #pragma once
 #include "Character.h"
 
+#define GodMode
+
 struct AttackData
 {
 	float cooldown;
@@ -51,6 +53,10 @@ public:
 	void Deserialize(std::istream& stream) override;
 
 	void Powerup();
+
+#ifdef GodMode
+	bool Damage(int amount) override;
+#endif
 
 	float GetAoeCooldownPercent();
 };

@@ -160,10 +160,10 @@ void Canvas::GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>
 	//calculates range of x and y values inside image to draw 
 	position -= imageOffset * scale;
 #ifdef enableDrawBeyondBounds
-	xmax = round(imageSize.x);
-	ymax = round(imageSize.y);
-	xmin = round(imageOffset.x);
-	ymin = round(imageOffset.y);
+	xmax = min((int)round(imageSize.x + imageOffset.x), (int)canvas.getWidth() - (int)this->position.x - (int)floor(position.x));
+	ymax = min((int)round(imageSize.y + imageOffset.y), (int)canvas.getHeight() - (int)this->position.x - (int)floor(position.y));
+	xmin = (int)round(max(round(imageOffset.x), -(int)(this->position.x) - position.x));
+	ymin = (int)round(max(round(imageOffset.y), -(int)(this->position.y) - position.y));
 #else
 	xmax = min((int)round(imageSize.x + imageOffset.x), (int)size.x - (int)floor(position.x));
 	ymax = min((int)round(imageSize.y + imageOffset.y), (int)size.y - (int)floor(position.y));

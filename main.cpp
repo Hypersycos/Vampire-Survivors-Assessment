@@ -21,7 +21,7 @@ int main() {
 	world->SaveWorld("Saves/World1.dat");
 
 	InputHandler inputHandler = InputHandler(window);
-	Canvas canvas = Canvas(window, window.getWidth(), window.getHeight(), 0, 0);
+	Canvas canvas = Canvas(window, window.getWidth() / 2, window.getHeight() / 2, window.getWidth() / 4 , window.getHeight() / 4);
 
 	//Button start = Button(std::string("Start"), (Vector<int>)canvas.GetSize() / 2, Vector<int>(300, 60), Colour(150, 150, 150), Colour(50, 50, 50), UIElement::Centre);
 
