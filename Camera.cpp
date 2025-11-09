@@ -77,7 +77,7 @@ void Camera::Rescale(float newZoom)
 	unsigned int zoomedTilesize = (unsigned int)(zoom * tilesize);
 
 	//number of tiles required to cover entire screen
-	//+1 deals with offset
+	//+1 deals with extra tile required for camera positions which aren't multiples of tileSize
 	//(x + (y - 1)) / y is a ceil without needing floats
 	tileDimensions = Vector<unsigned int>((canvasDimensions.x + zoomedTilesize - 1) / zoomedTilesize + 1,
 									(canvasDimensions.y + zoomedTilesize - 1) / zoomedTilesize + 1);

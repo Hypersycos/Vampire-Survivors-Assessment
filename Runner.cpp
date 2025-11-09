@@ -7,8 +7,7 @@
 #define collisionBox Vector<float>{ 40, 40 }
 
 #define damagePer10 0.5
-#define turningRecovery 1
-#define attackRecovery 1
+#define attackRecovery 2
 
 void Runner::Update(World* world, InputHandler& input)
 {
@@ -25,12 +24,6 @@ void Runner::Update(World* world, InputHandler& input)
 
 		baseSpeed += input.GetDT() * dot * acceleration;
 
-		if (dot < -0.5)
-		{
-			timer = 0;
-			state = Turning;
-		}
-
 		TryMove(world, direction * currentSpeed * input.GetDT());
 
 		if (checkCollision(world->GetPlayer()))
@@ -41,27 +34,23 @@ void Runner::Update(World* world, InputHandler& input)
 		}
 		break;
 	}
-	case Turning:
-		if ((timer += input.GetDT()) > turningRecovery)
-		{
-			direction = Pathfind(world, 1).scaleTo(1);
-			baseSpeed = startingSpeed + acceleration * turningRecovery * 2;
-			state = Chasing;
-		}
-		break;
 	case Recovering:
 		if ((timer += input.GetDT()) > attackRecovery)
-			state = Turning;
+		{
+			direction = Pathfind(world, 1).scaleTo(1);
+			baseSpeed = startingSpeed + acceleration * attackRecovery * 2;
+			state = Chasing;
+		}
 		break;
 	}
 }
 
-Runner::Runner(Vector<float> position) : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(2), position, collisionBox), state(Turning), timer(turningRecovery)
+Runner::Runner(Vector<float> position) : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(2), position, collisionBox), state(Recovering), timer(attackRecovery)
 {
 	SetScale(0.5);
 }
 
-Runner::Runner() : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(2), collisionBox), state(Turning), timer(turningRecovery)
+Runner::Runner() : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(2), collisionBox), state(Recovering), timer(attackRecovery)
 {
 	SetScale(0.5);
 }

@@ -6,7 +6,6 @@ class Runner : public Enemy
 	enum CharacterState
 	{
 		Chasing,
-		Turning,
 		Recovering
 	};
 
