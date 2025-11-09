@@ -168,6 +168,9 @@
     <ClInclude Include="Text.h">
       <Filter>Header Files\Sprites\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -267,6 +270,9 @@
       <Filter>Source Files\Sprites\UI</Filter>
     </ClCompile>
     <ClCompile Include="Canvas.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>

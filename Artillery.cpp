@@ -57,11 +57,11 @@ void Artillery::Update(World* world, InputHandler& input)
 	}
 }
 
-Artillery::Artillery(Vector<float> position) : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(0), position, collisionBox), state(Chasing), timer(0)
+Artillery::Artillery(Vector<float> position) : Enemy(maxHP, baseSpeed, { Enemy::ImageHolder.GetImage(0) }, position, collisionBox), state(Chasing), timer(0)
 {
 }
 
-Artillery::Artillery() : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(0), collisionBox), state(Chasing), timer(0)
+Artillery::Artillery() : Enemy(maxHP, baseSpeed, { Enemy::ImageHolder.GetImage(0) }, collisionBox), state(Chasing), timer(0)
 {
 }
 

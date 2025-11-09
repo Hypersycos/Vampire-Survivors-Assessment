@@ -1,17 +1,20 @@
 #pragma once
 #include "GamesEngineeringBase.h"
 #include "Vector.h"
+#include "Image.h"
 
 class Font
 {
 	static inline GamesEngineeringBase::Image fontImage{};
+
+	static inline Image img{};
 
 	static inline bool imageLoaded = false;
 
 	inline const static int yGap{ 8 };
 
 public:
-	static GamesEngineeringBase::Image* GetImage();
+	static Image& GetImage();
 
 	inline const static Vector<int> letterSize{ 14,20 };
 

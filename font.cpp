@@ -1,13 +1,14 @@
 #include "font.h"
 
-GamesEngineeringBase::Image* Font::GetImage()
+Image& Font::GetImage()
 {
 	if (!imageLoaded)
 	{
 		fontImage.load("Resources/font.png");
+		img.SetImage(&fontImage);
 		imageLoaded = true;
 	}
-	return &fontImage;
+	return img;
 }
 
 Vector<int> Font::GetLetterLocation(char l)

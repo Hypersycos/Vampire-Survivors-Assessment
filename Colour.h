@@ -2,13 +2,18 @@
 
 struct Colour
 {
-	unsigned char color[3];
+	unsigned char colour[3];
 	unsigned char alpha;
 
 	Colour(unsigned char r, unsigned char g, unsigned char b, unsigned char alpha = 255) : alpha(alpha)
 	{
-		color[0] = r;
-		color[1] = g;
-		color[2] = b;
+		colour[0] = r;
+		colour[1] = g;
+		colour[2] = b;
+	}
+
+	Colour() : Colour(0, 0, 0, 255)
+	{
+
 	}
 };

@@ -29,6 +29,11 @@ public:
 	{
 	}
 
+	DynamicArray(const std::initializer_list<T> items) : BaseArray<T>(items)
+	{
+		firstFree = this->size;
+	}
+
 	void Add(T item)
 	{
 		if (firstFree >= this->size)

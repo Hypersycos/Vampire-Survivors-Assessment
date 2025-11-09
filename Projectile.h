@@ -10,7 +10,7 @@ protected:
 	float lifetime;
 
 public:
-	Projectile(unsigned int damage, Vector<float> movement, Vector<float> position, GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer, float lifetime);
+	Projectile(unsigned int damage, Vector<float> movement, Vector<float> position, ImageSet img, Vector<float> collisionBox, CollisionLayer layer, float lifetime);
 
 	void Update(World* world, InputHandler& input) override;
 

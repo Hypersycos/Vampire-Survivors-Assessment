@@ -42,7 +42,7 @@ AoEAttack::AoEAttack() : AoEAttack{ 4, 25, 256, 3 }
 {
 }
 
-Player::Player() : Character(100, 200, GetPlayerImage(), Vector<float>(0, 0), Vector<float>(30, 30), CollidesWithEnemyProjectiles)
+Player::Player() : Character(100, 200, { GetPlayerImage() }, Vector<float>(0, 0), Vector<float>(30, 30), CollidesWithEnemyProjectiles)
 {
 	enabled = true;
 	SetScale(0.375f);
@@ -89,10 +89,11 @@ void Player::Update(World* world, InputHandler& input)
 	Enemy* nearest = world->GetNearestEnemyToPlayer(autoAttack.range);
 	bool doAttack = autoAttack.ApplyCooldown(input.GetDT(), nearest != nullptr);
 
-	if (doAttack)
-	{
+	while (doAttack)
+	{ //allows multiple fires if both FPS and attack cooldown are very low
 		Projectile* p = new PlayerProjectile(autoAttack.damage, (nearest->GetPosition() - position).scaleTo(autoAttack.baseSpeed), position, 5);
 		world->SpawnProjectile(p);
+		doAttack = autoAttack.ApplyCooldown(input.GetDT(), nearest != nullptr);
 	}
  
 	if (doAoE)

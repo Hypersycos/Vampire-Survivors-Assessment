@@ -1,27 +1,38 @@
 #include "Sprite.h"
 #include "World.h"
 
-Sprite::Sprite() : scale(1), enabled(false), image(NULL)
+Sprite::Sprite() : scale(1), enabled(false), image()
 {
 }
 
-Sprite::Sprite(GamesEngineeringBase::Image* img) : image(img), enabled(false), scale(1)
+Sprite::Sprite(ImageSet img) : image(img), enabled(false), scale(1)
 {
 	SetScale(1);
 }
 
-Sprite::Sprite(GamesEngineeringBase::Image* img, Vector<float> position) : image(img), position(position), scale(1)
+Sprite::Sprite(ImageSet img, Vector<float> position) : image(img), position(position), scale(1)
 {
 	SetScale(1);
 }
 
-void Sprite::SetImage(GamesEngineeringBase::Image* img)
+void Sprite::SetImage(unsigned int i)
 {
-	image = img;
+	image.SetImage(i);
 	SetScale(scale);
 }
 
-GamesEngineeringBase::Image* Sprite::GetImage()
+void Sprite::SetImageSet(ImageSet set)
+{
+	image = set;
+	SetScale(scale);
+}
+
+void Sprite::AddImage(GamesEngineeringBase::Image* img)
+{
+	image.AddImage(img);
+}
+
+ImageSet& Sprite::GetImage()
 {
 	return image;
 }
@@ -29,8 +40,7 @@ GamesEngineeringBase::Image* Sprite::GetImage()
 void Sprite::SetScale(float s)
 {
 	scale = s;
-	if (image != nullptr)
-		size = Vector<float>((float)image->width, (float)image->height) * s;
+	size = Vector<float>((float)image.GetWidth(), (float)image.GetHeight()) * s;
 }
 
 Vector<float> Sprite::GetSize()
@@ -82,7 +92,7 @@ void Sprite::Draw(Canvas& canvas, Vector<float> offset, float zoom, Canvas::Rend
 			renderMethod = Canvas::Blank;
 	}
 	Vector<float> adjustedPosition = (GetTopLeft() - offset) * zoom;
-	canvas.Draw(image, adjustedPosition, size * zoom, Vector<float>(0, 0), zoom * scale, renderMethod);
+	canvas.Draw(image.GetImage(), adjustedPosition, size * zoom, Vector<float>(0, 0), zoom * scale, renderMethod);
 };
 
 void Sprite::Update(World* world, InputHandler& input)

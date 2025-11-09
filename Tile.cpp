@@ -4,9 +4,21 @@
 
 DynamicArray<Tile*> Tile::tiles{ 4 };
 bool Tile::tilesLoaded = false;
+std::string Tile::currentPath = "";
 
-void Tile::LoadTiles()
+void Tile::LoadTiles(std::string path)
 {
+	if (!std::filesystem::exists(path) && tiles.GetCurrentSize() == 0)
+	{ //defaults
+		tiles.Add(new Tile({ false, false, false, false }, { 1, 1 }, "Resources/0.png"));
+		tiles.Add(new Tile({ false, false, false, false }, { 1, 1.2 }, "Resources/13.png"));
+		tiles.Add(new Tile({ false, false, false, false }, { 0.75, 0.75 }, "Resources/14.png"));
+		tiles.Add(new Tile({ false, false, false, true }, { 1, 1 }, "Resources/24.png"));
+		SaveTiles(path);
+		tilesLoaded = true;
+		return;
+	}
+
 	if (tiles.GetCurrentSize() != 0)
 	{
 		while (tiles.GetCurrentSize() > 0)
@@ -16,18 +28,7 @@ void Tile::LoadTiles()
 		}
 	}
 
-	if (!std::filesystem::exists("Resources/tiles.dat"))
-	{
-		tiles.Add(new Tile({ false, false, false, false }, { 1, 1 }, "Resources/0.png"));
-		tiles.Add(new Tile({ false, false, false, false }, { 1, 1.2 }, "Resources/13.png"));
-		tiles.Add(new Tile({ false, false, false, false }, { 0.75, 0.75 }, "Resources/14.png"));
-		tiles.Add(new Tile({ false, false, false, true }, { 1, 1 }, "Resources/24.png"));
-		SaveTiles();
-		tilesLoaded = true;
-		return;
-	}
-
-	std::ifstream tileFile{ "Resources/tiles.dat", std::ios::binary };
+	std::ifstream tileFile{ path, std::ios::binary };
 
 	int count;
 	tileFile.read(reinterpret_cast<char*>(&count), sizeof(count));
@@ -60,13 +61,15 @@ void Tile::LoadTiles()
 
 		tiles.Add(new Tile(collMatrix, speedMatrix, imagePath));
 	}
-	tilesLoaded = true;
+	tilesLoaded = tiles.GetCurrentSize() > 0;
 	tileFile.close();
+
+	currentPath = path;
 }
 
-void Tile::SaveTiles()
+void Tile::SaveTiles(std::string path)
 {
-	std::ofstream tileFile{ "Resources/tiles.dat", std::ios::binary | std::ios::trunc };
+	std::ofstream tileFile{ path, std::ios::binary | std::ios::trunc };
 
 	int size = tiles.GetCurrentSize();
 	tileFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
@@ -92,6 +95,18 @@ void Tile::SaveTiles()
 		tileFile.write(tile->imagePath.c_str(), pathLength);
 	}
 	tileFile.close();
+
+	currentPath = path;
+}
+
+std::string Tile::GetCurrentPath()
+{
+	return currentPath;
+}
+
+unsigned int Tile::GetTileCount()
+{
+	return tileCount;
 }
 
 Tile* Tile::GetTile(unsigned int i)
@@ -106,11 +121,18 @@ Tile* Tile::GetTile(unsigned int i)
 Tile::Tile(FixedArray<bool, 4>& collisionMatrix, FixedArray<float, 2>& speedMatrix, std::string imagePath) : imagePath(imagePath), collisionMatrix(collisionMatrix), speedMatrix(speedMatrix)
 {
 	image.load(imagePath);
+	index = tileCount++;
 }
 
 Tile::Tile(std::initializer_list<bool> collisionMatrix, std::initializer_list<float> speedMatrix, std::string imagePath) : imagePath(imagePath), collisionMatrix(collisionMatrix), speedMatrix(speedMatrix)
 {
 	image.load(imagePath);
+	index = tileCount++;
+}
+
+Tile::~Tile()
+{
+	tileCount--;
 }
 
 void Tile::Apply(Character* character)
@@ -121,4 +143,9 @@ void Tile::Apply(Character* character)
 void Tile::Unapply(Character* character)
 {
 	character->SetSpeedScalar(1);
+}
+
+unsigned int Tile::GetIndex()
+{
+	return index;
 }

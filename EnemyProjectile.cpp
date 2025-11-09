@@ -1,12 +1,12 @@
 #include "EnemyProjectile.h"
 #include "Tile.h"
 
-EnemyProjectile::EnemyProjectile(unsigned int damage, Vector<float> movement, Vector<float> position, float lifetime) : Projectile(damage, movement, position, GetImage(), Vector<float>(12, 12), CollidesWithPlayer, lifetime)
+EnemyProjectile::EnemyProjectile(unsigned int damage, Vector<float> movement, Vector<float> position, float lifetime) : Projectile(damage, movement, position, {GetImage()}, Vector<float>(12, 12), CollidesWithPlayer, lifetime)
 {
 	SetScale(0.15);
 }
 
-EnemyProjectile::EnemyProjectile(std::istream& stream) : Projectile(0, Vector<float>(), Vector<float>(), GetImage(), Vector<float>(12, 12), CollidesWithPlayer, 0)
+EnemyProjectile::EnemyProjectile(std::istream& stream) : Projectile(0, Vector<float>(), Vector<float>(), {GetImage()}, Vector<float>(12, 12), CollidesWithPlayer, 0)
 {
 	Deserialize(stream);
 }

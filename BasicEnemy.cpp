@@ -28,12 +28,12 @@ void BasicEnemy::Update(World* world, InputHandler& input)
 	}
 }
 
-BasicEnemy::BasicEnemy(Vector<float> position) : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(1), position, collisionBox), state(Chasing), timer(0)
+BasicEnemy::BasicEnemy(Vector<float> position) : Enemy(maxHP, baseSpeed, { Enemy::ImageHolder.GetImage(1) }, position, collisionBox), state(Chasing), timer(0)
 {
 	SetScale(0.25);
 }
 
-BasicEnemy::BasicEnemy() : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(1), collisionBox), state(Chasing), timer(0)
+BasicEnemy::BasicEnemy() : Enemy(maxHP, baseSpeed, {Enemy::ImageHolder.GetImage(1)}, collisionBox), state(Chasing), timer(0)
 {
 	SetScale(0.25);
 }

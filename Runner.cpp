@@ -45,12 +45,12 @@ void Runner::Update(World* world, InputHandler& input)
 	}
 }
 
-Runner::Runner(Vector<float> position) : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(2), position, collisionBox), state(Recovering), timer(attackRecovery)
+Runner::Runner(Vector<float> position) : Enemy(maxHP, startingSpeed, {Enemy::ImageHolder.GetImage(2)}, position, collisionBox), state(Recovering), timer(attackRecovery)
 {
 	SetScale(0.5);
 }
 
-Runner::Runner() : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(2), collisionBox), state(Recovering), timer(attackRecovery)
+Runner::Runner() : Enemy(maxHP, startingSpeed, {Enemy::ImageHolder.GetImage(2)}, collisionBox), state(Recovering), timer(attackRecovery)
 {
 	SetScale(0.5);
 }

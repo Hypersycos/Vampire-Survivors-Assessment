@@ -17,6 +17,9 @@ int main() {
 
 	RepeatingFixedWorld* world = new RepeatingFixedWorld(50, 50, 0);
 
+	Tile::LoadTiles();
+	world->SaveWorld("Saves/World1.dat");
+
 	InputHandler inputHandler = InputHandler(window);
 	Canvas canvas = Canvas(window, window.getWidth(), window.getHeight(), 0, 0);
 
@@ -46,13 +49,13 @@ int main() {
 			break; // Exits the game loop
 		}
 
-		if (inputHandler.KeyHeld('P'))
+		if (inputHandler.KeyDown('P'))
 		{
-			gameManager.Save("Saves/test.dat");
+			gameManager.Save("Saves/temp.dat");
 		}
-		else if (inputHandler.KeyHeld('L'))
+		else if (inputHandler.KeyDown('L'))
 		{
-			gameManager.Load("Saves/test.dat");
+			gameManager.Load("Saves/temp.dat");
 		}
 
 		gameManager.RunTick(inputHandler);

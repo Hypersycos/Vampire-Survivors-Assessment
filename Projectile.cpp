@@ -30,6 +30,6 @@ unsigned int Projectile::GetDamage()
 	return damage;
 }
 
-Projectile::Projectile(unsigned int damage, Vector<float> movement, Vector<float> position, GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer, float lifetime) : damage(damage), movement(movement), CollisionSprite(img, position, collisionBox, layer), lifetime(lifetime)
+Projectile::Projectile(unsigned int damage, Vector<float> movement, Vector<float> position, ImageSet img, Vector<float> collisionBox, CollisionLayer layer, float lifetime) : damage(damage), movement(movement), CollisionSprite(img, position, collisionBox, layer), lifetime(lifetime)
 {
 }

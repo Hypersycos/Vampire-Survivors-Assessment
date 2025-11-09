@@ -36,9 +36,9 @@ void Button::Draw(Canvas& canvas, Vector<int> offset)
 		for (int j = 0; j < size.y; j++)
 		{
 			if (hovering)
-				canvas.DrawPixelSafe(drawPos.x + i, drawPos.y + j, c->alpha, c->color);
+				canvas.DrawPixelSafe(drawPos.x + i, drawPos.y + j, c->alpha, c->colour);
 			else
-				canvas.DrawPixelSafe(drawPos.x + i, drawPos.y + j, c->alpha, c->color);
+				canvas.DrawPixelSafe(drawPos.x + i, drawPos.y + j, c->alpha, c->colour);
 		}
 	}
 	text.DrawChild(canvas, this);

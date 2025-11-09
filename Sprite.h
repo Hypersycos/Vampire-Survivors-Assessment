@@ -2,7 +2,7 @@
 
 class World;
 
-#include "GamesEngineeringBase.h"
+#include "Image.h"
 #include "Vector.h"
 #include "Canvas.h"
 #include "InputHandler.h"
@@ -14,20 +14,24 @@ protected:
 	Vector<float> position;
 	Vector<float> size;
 	float scale;
-	GamesEngineeringBase::Image* image;
+	ImageSet image;
 
 public:
 	bool enabled;
 
 	Sprite();
 
-	Sprite(GamesEngineeringBase::Image* img);
+	Sprite(ImageSet img);
 
-	Sprite(GamesEngineeringBase::Image* img, Vector<float> position);
+	Sprite(ImageSet img, Vector<float> position);
 
-	void SetImage(GamesEngineeringBase::Image* img);
+	void SetImage(unsigned int i);
 
-	GamesEngineeringBase::Image* GetImage();
+	void SetImageSet(ImageSet set);
+
+	void AddImage(GamesEngineeringBase::Image* img);
+
+	ImageSet& GetImage();
 
 	void SetScale(float s);
 

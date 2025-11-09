@@ -5,11 +5,11 @@ CollisionSprite::CollisionSprite() : Sprite(), collisionBox(Vector<float>{}), la
 
 }
 
-CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer) : Sprite(img), collisionBox(collisionBox), layer(layer)
+CollisionSprite::CollisionSprite(ImageSet img, Vector<float> collisionBox, CollisionLayer layer) : Sprite(img), collisionBox(collisionBox), layer(layer)
 {
 }
 
-CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer) : Sprite(img, position), collisionBox(collisionBox), layer(layer)
+CollisionSprite::CollisionSprite(ImageSet img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer) : Sprite(img, position), collisionBox(collisionBox), layer(layer)
 {
 }
 

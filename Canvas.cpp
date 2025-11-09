@@ -113,11 +113,9 @@ void Canvas::DrawBoxSafe(Vector<unsigned int> topLeft, Vector<unsigned int> botR
 	DrawBoxUnsafe(topLeft, botRight, r, g, b);
 }
 
-#define getIntPos(position) Vector<int>(position)
-
 void Canvas::DrawFilledBoxUnsafe(unsigned char* rgb, unsigned char alpha, Vector<float> position, Vector<float> size)
 {
-	Vector<int> intPos = getIntPos(position);
+	Vector<int> intPos = position;
 
 	for (int i = 0; i < round(size.x); i++)
 	{
@@ -172,9 +170,9 @@ void Canvas::GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>
 #endif // enableDrawBeyondBounds
 }
 
-void Canvas::DrawInteger(GamesEngineeringBase::Image* image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale)
+void Canvas::DrawInteger(Image& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale)
 {
-	Vector<int> intPos = getIntPos(position);
+	Vector<int> intPos = position;
 
 	int xmin, xmax, ymin, ymax;
 	GetValues(xmin, xmax, ymin, ymax, position, imageOffset, imageSize, scale);
@@ -190,8 +188,9 @@ void Canvas::DrawInteger(GamesEngineeringBase::Image* image, Vector<float> posit
 			int spriteX = (int)(i / scale);
 			int spriteY = (int)(j / scale);
 
-			unsigned char alpha = image->alphaAtUnchecked(spriteX, spriteY);
-			unsigned char* rgb = image->atUnchecked(spriteX, spriteY);
+			Colour c = img.atUnchecked(spriteX, spriteY);
+			unsigned char alpha = c.alpha;
+			unsigned char* rgb = c.colour;
 
 			DrawPixelUnsafe(x, y, alpha, rgb);
 		}
@@ -199,7 +198,7 @@ void Canvas::DrawInteger(GamesEngineeringBase::Image* image, Vector<float> posit
 }
 
 //TODO: Implement bilinear
-void Canvas::DrawBilinear(GamesEngineeringBase::Image* image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale)
+void Canvas::DrawBilinear(Image& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale)
 {
 	//int xmax = min((int)round(image->width * scale), (int)size.x - (int)floor(position.x));
 	//int ymax = min((int)round(image->height * scale), (int)size.y - (int)floor(position.y));
@@ -236,7 +235,7 @@ void Canvas::DrawFont(std::string text, Vector<float> position, float scale, Ren
 {
 	Vector<int> letterSize = Font::letterSize;
 	int xSize = letterSize.x + Font::xGap;
-	GamesEngineeringBase::Image* image = Font::GetImage();
+	Image& image = Font::GetImage();
 
 	for (char c : text)
 	{
@@ -246,7 +245,7 @@ void Canvas::DrawFont(std::string text, Vector<float> position, float scale, Ren
 	}
 }
 
-void Canvas::Draw(GamesEngineeringBase::Image* image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale, RenderMethod render)
+void Canvas::Draw(Image& image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale, RenderMethod render)
 {
 	switch (render)
 	{

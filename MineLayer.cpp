@@ -42,12 +42,12 @@ void MineLayer::Update(World* world, InputHandler& input)
 	}
 }
 
-MineLayer::MineLayer(Vector<float> position) : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(3), position, collisionBox), state(Chasing), timer(0)
+MineLayer::MineLayer(Vector<float> position) : Enemy(maxHP, baseSpeed, {Enemy::ImageHolder.GetImage(3)}, position, collisionBox), state(Chasing), timer(0)
 {
 	SetScale(0.75);
 }
 
-MineLayer::MineLayer() : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(3), collisionBox), state(Chasing), timer(0)
+MineLayer::MineLayer() : Enemy(maxHP, baseSpeed, {Enemy::ImageHolder.GetImage(3)}, collisionBox), state(Chasing), timer(0)
 {
 	SetScale(0.75);
 }

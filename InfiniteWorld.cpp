@@ -55,6 +55,15 @@ Tile* InfiniteWorld::TileAt(int x, int y)
 void InfiniteWorld::LoadState(std::istream& worldState)
 {
 	worldState.read(reinterpret_cast<char*>(&seed), sizeof(seed));
+
+	int length;
+	worldState.read(reinterpret_cast<char*>(&length), sizeof(length));
+	char* tilePath = new char[length];
+	worldState.read(tilePath, length);
+	Tile::LoadTiles(tilePath);
+
+	delete[] tilePath;
+
 	Generate();
 	World::Load(worldState);
 }
@@ -62,6 +71,11 @@ void InfiniteWorld::LoadState(std::istream& worldState)
 void InfiniteWorld::SaveState(std::ostream& worldState)
 {
 	worldState.write(reinterpret_cast<char*>(&seed), sizeof(seed));
+
+	int length = Tile::GetCurrentPath().length() + 1;
+	worldState.write(reinterpret_cast<char*>(&length), sizeof(length));
+	worldState.write(Tile::GetCurrentPath().c_str(), length);
+
 	World::Save(worldState);
 }
 

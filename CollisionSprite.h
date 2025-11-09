@@ -21,9 +21,9 @@ private:
 public:
 	CollisionSprite();
 
-	CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer);
+	CollisionSprite(ImageSet img, Vector<float> collisionBox, CollisionLayer layer);
 
-	CollisionSprite(GamesEngineeringBase::Image* img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer);
+	CollisionSprite(ImageSet img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer);
 
 	bool checkCollision(CollisionSprite* other);
 	CollisionLayer getLayer() const;

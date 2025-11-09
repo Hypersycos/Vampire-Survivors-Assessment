@@ -1,7 +1,7 @@
 #include "Powerup.h"
 #include "World.h"
 
-Powerup::Powerup(Vector<float> position) : CollisionSprite(GetImage(), Vector<float>(70, 68), CollidesWithPlayer)
+Powerup::Powerup(Vector<float> position) : CollisionSprite({ GetImage() }, Vector<float>(70, 68), CollidesWithPlayer)
 {
 }
 

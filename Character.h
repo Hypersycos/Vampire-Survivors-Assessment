@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CollisionSprite.h"
 
 class Character : public CollisionSprite
@@ -14,8 +13,8 @@ protected:
 	float currentSpeed;
 public:
 	Character();
-	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer);
-	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer);
+	Character(unsigned int maxHP, float baseSpeed, ImageSet img, Vector<float> position, Vector<float> collisionBox, CollisionLayer layer);
+	Character(unsigned int maxHP, float baseSpeed, ImageSet img, Vector<float> collisionBox, CollisionLayer layer);
 	int GetHealth() const;
 	int GetMaxHealth() const;
 	virtual bool Damage(int amount);

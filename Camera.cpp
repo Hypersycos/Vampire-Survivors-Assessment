@@ -24,7 +24,7 @@ void Camera::Retile()
 			if (tileType != nullptr)
 			{
 				tiles[i][j].enabled = true;
-				tiles[i][j].SetImage(&tileType->image);
+				tiles[i][j].SetImage(tileType->GetIndex());
 			}
 			else
 			{
@@ -82,15 +82,17 @@ void Camera::Rescale(float newZoom)
 	tileDimensions = Vector<unsigned int>((canvasDimensions.x + zoomedTilesize - 1) / zoomedTilesize + 1,
 									(canvasDimensions.y + zoomedTilesize - 1) / zoomedTilesize + 1);
 
+	ImageSet tileImages = {};
+	for (unsigned int i = 0; i < Tile::GetTileCount(); i++)
+		tileImages.AddImage(&Tile::GetTile(i)->image);
+
 	tiles = new Sprite * [tileDimensions.x];
 	for (unsigned int i = 0; i < tileDimensions.x; i++)
 	{
 		tiles[i] = new Sprite[tileDimensions.y];
 		for (unsigned int j = 0; j < tileDimensions.y; j++)
 		{
-			tiles[i][j] = Sprite();
-			tiles[i][j].SetImage(&Tile::GetTile(0)->image);
-			//set image, so that invalid (off-world) tiles still have the correct dimensions when rendered as blank
+			tiles[i][j].SetImageSet(tileImages);
 		}
 	}
 

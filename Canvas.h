@@ -2,6 +2,8 @@
 
 #include "GamesEngineeringBase.h"
 #include "Vector.h"
+
+#include "Image.h"
 //#define enableDrawBeyondBounds
 
 #pragma once
@@ -54,11 +56,11 @@ public:
 
 	void GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>& position, Vector<float>& imageOffset, Vector<float>& imageSize, float& scale) const;
 
-	void Draw(GamesEngineeringBase::Image* image, Vector<float> canvasPosition, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1, RenderMethod render = Integer);
+	void Draw(Image& img, Vector<float> canvasPosition, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1, RenderMethod render = Integer);
 
-	void DrawInteger(GamesEngineeringBase::Image* image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
+	void DrawInteger(Image& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
 
-	void DrawBilinear(GamesEngineeringBase::Image* image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
+	void DrawBilinear(Image& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
 
 	void DrawFont(std::string text, Vector<float> position, float scale = 1, RenderMethod render = Integer);
 };
