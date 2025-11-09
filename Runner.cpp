@@ -31,14 +31,18 @@ void Runner::Update(World* world, InputHandler& input)
 			timer = 0;
 			state = Recovering;
 			world->GetPlayer()->Damage(currentSpeed / 10 * damagePer10);
+			direction = (position - world->GetPlayer()->GetPosition()).scaleTo(1);
 		}
 		break;
 	}
 	case Recovering:
+		baseSpeed -= input.GetDT() * acceleration * 2;
+		baseSpeed = max(baseSpeed, 1);
+		TryMove(world, direction * baseSpeed * input.GetDT());
 		if ((timer += input.GetDT()) > attackRecovery)
 		{
 			direction = Pathfind(world, 1).scaleTo(1);
-			baseSpeed = startingSpeed + acceleration * attackRecovery * 2;
+			baseSpeed = startingSpeed;
 			state = Chasing;
 		}
 		break;
