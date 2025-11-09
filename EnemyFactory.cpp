@@ -4,23 +4,6 @@
 #include "Artillery.h"
 #include "MineLayer.h"
 
-Enemy* SpawnHelper(int i)
-{
-	switch (i)
-	{
-	case 0:
-		return new BasicEnemy();
-	case 1:
-		return new Runner();
-	case 2:
-		return new Artillery();
-	case 3:
-		return new MineLayer();
-	default:
-		return new BasicEnemy();
-	}
-}
-
 EnemyFactory::EnemyFactory() : EnemyFactory({ 5, 1, 1, 1 }, {1, 4, 2, 2})
 {
 }
@@ -40,10 +23,42 @@ Enemy* EnemyFactory::SpawnEnemy(float* cost)
 		if (choice < spawnWeights[i])
 		{
 			*cost = 1;// spawnCosts[i];
-			return SpawnHelper(i);
+			return CreateEnemy(i);
 		}
 		choice -= spawnWeights[i];
 	}
 	*cost = 1;
-	return SpawnHelper(0);
+	return CreateEnemy(0);
+}
+
+Enemy* EnemyFactory::CreateEnemy(Enemy::Enemies type)
+{
+	switch (type)
+	{
+	case Enemy::Artillery:
+		return new Artillery();
+	case Enemy::Runner:
+		return new Runner();
+	case Enemy::MineLayer:
+		return new MineLayer();
+	case Enemy::Basic:
+	default:
+		return new BasicEnemy();
+	}
+}
+
+Enemy* EnemyFactory::CreateEnemy(unsigned char type)
+{
+	switch (type)
+	{
+	case 1:
+		return new Runner();
+	case 2:
+		return new Artillery();
+	case 3:
+		return new MineLayer();
+	case 0:
+	default:
+		return new BasicEnemy();
+	}
 }

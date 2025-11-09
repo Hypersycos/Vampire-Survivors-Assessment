@@ -1,20 +1,21 @@
 #pragma once
 #include "World.h"
 #include <string>
+#include "Vector.h"
 
 class InfiniteWorld : public World
 {
 	char** tiles;
 	char** xLoops;
 	char** yLoops;
-	long seed;
+	Vector<double> seed;
 
 public:
 	WorldType GetType() override;
 
 	InfiniteWorld();
 
-	InfiniteWorld(long seed);
+	InfiniteWorld(Vector<double> seed);
 
 	void LoadState(std::istream& stream) override;
 

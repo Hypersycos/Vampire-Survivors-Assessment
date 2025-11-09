@@ -1,4 +1,5 @@
 #include "InfiniteWorld.h"
+#include <cmath>
 
 #define widthLoop 4096
 #define heightLoop 4096
@@ -8,7 +9,7 @@ World::WorldType InfiniteWorld::GetType()
 	return WorldType::Infinite;
 }
 
-InfiniteWorld::InfiniteWorld() : seed(0)
+InfiniteWorld::InfiniteWorld() : seed({ 0, 0 })
 {
 	//caches tiles
 	//not needed with current terrible generator, but would be useful with a more expensive one
@@ -23,15 +24,15 @@ InfiniteWorld::InfiniteWorld() : seed(0)
 	}
 }
 
-InfiniteWorld::InfiniteWorld(long seed) : InfiniteWorld()
+InfiniteWorld::InfiniteWorld(Vector<double> seed) : InfiniteWorld()
 {
 	this->seed = seed;
 	Generate();
 }
 
-inline int RealModulo(int i, int n)
+inline int RealModulo(int number, int divisor)
 { //standard C++ modulo can return negatives
-	return (i % n + n) % n;
+	return (number % divisor + divisor) % divisor;
 }
 
 Tile* InfiniteWorld::TileAt(int x, int y)
@@ -103,7 +104,10 @@ void InfiniteWorld::Generate()
 char InfiniteWorld::GenerateTile(int x, int y)
 {
 	//generator should be stateless
-	int ran = RealModulo(((x * 10 + y) * (abs(seed) + 1) + seed), 64);
+	Vector<double> pos = { (double)x, (double)y};
+	double rng = std::sin(pos.Dot<double>(seed)) * 43758.5453;
+	double ran = rng - floor(rng);
+	ran = abs(ran) * 64;
 	if (ran < 40)
 		return 0;
 	else if (ran < 60)

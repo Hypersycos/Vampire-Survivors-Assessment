@@ -7,6 +7,7 @@
 #include "FollowCamera.h"
 #include <iostream>
 #include "TimedSurvivalManager.h"
+#include "StressTester.h"
 
 #include "Button.h"
 
@@ -15,13 +16,17 @@ int main() {
 	window.create(1024, 768, "Game");
 	bool running = true;
 
-	RepeatingFixedWorld* world = new RepeatingFixedWorld(50, 50, 0);
+	InfiniteWorld* world = new InfiniteWorld({ 384497, 1235 });
 
 	Tile::LoadTiles();
-	world->SaveWorld("Saves/World1.dat");
+	//world->SaveWorld("Saves/World1.dat");
 
 	InputHandler inputHandler = InputHandler(window);
-	Canvas canvas = Canvas(window, window.getWidth() / 2, window.getHeight() / 2, window.getWidth() / 4 , window.getHeight() / 4);
+#ifdef enableDrawOutsideBounds
+	Canvas canvas = Canvas(window, window.getWidth() / 2, window.getHeight() / 2, window.getWidth() / 4, window.getHeight() / 4);
+#else
+	Canvas canvas = Canvas(window, window.getWidth(), window.getHeight(), 0, 0);
+#endif
 
 	//Button start = Button(std::string("Start"), (Vector<int>)canvas.GetSize() / 2, Vector<int>(300, 60), Colour(150, 150, 150), Colour(50, 50, 50), UIElement::Centre);
 
@@ -34,8 +39,8 @@ int main() {
 	//	window.present();
 	//}
 
-	TimedSurvivalManager gameManager{ canvas };
-	gameManager.Setup(world, 120);
+	StressTester gameManager{ canvas };
+	gameManager.Setup(world);
 
 	while (running)
 	{

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -164,6 +164,7 @@
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="World.h" />
+    <ClInclude Include="StressTester.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Artillery.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="RepeatingFixedWorld.cpp" />
     <ClCompile Include="Runner.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="StressTester.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TimedSurvivalManager.cpp" />

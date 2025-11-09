@@ -6,6 +6,7 @@
 #include "EnemyProjectile.h"
 #include "EnemyMine.h"
 #include "PlayerProjectile.h"
+#include "EnemyFactory.h"
 
 #define tileSize Tile::tileSize
 
@@ -71,23 +72,7 @@ void World::Load(std::istream& stream)
 	for (int i = 0; i < count; i++)
 	{
 		stream.read(reinterpret_cast<char*>(&enemyType), sizeof(enemyType));
-		Enemy* e;
-		switch (enemyType)
-		{
-		case Enemy::Artillery:
-			e = new Artillery();
-			break;
-		case Enemy::Runner:
-			e = new Runner();
-			break;
-		case Enemy::MineLayer:
-			e = new MineLayer();
-			break;
-		case Enemy::Basic:
-		default:
-			e = new BasicEnemy();
-			break;
-		}
+		Enemy* e = EnemyFactory::CreateEnemy(enemyType);
 		e->Deserialize(stream);
 		SpawnEnemy(e);
 	}

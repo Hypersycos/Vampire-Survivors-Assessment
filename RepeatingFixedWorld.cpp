@@ -20,9 +20,9 @@ RepeatingFixedWorld::RepeatingFixedWorld(int x, int y, char fill) : FixedWorld(x
 
 }
 
-inline int RealModulo(int i, int n)
+inline int RealModulo(int number, int divisor)
 {
-	return (i % n + n) % n;
+	return (number % divisor + divisor) % divisor;
 }
 
 Tile* RepeatingFixedWorld::TileAt(int x, int y)
