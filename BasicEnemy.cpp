@@ -3,7 +3,7 @@
 
 #define maxHP 1
 #define baseSpeed 160
-#define collisionBox Vector<float>{ 30, 30 }
+#define collisionBox Vector<float>{ 20, 20 }
 
 #define damage 4
 #define attackInterval 1
@@ -30,12 +30,12 @@ void BasicEnemy::Update(World* world, InputHandler& input)
 
 BasicEnemy::BasicEnemy(Vector<float> position) : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(1), position, collisionBox), state(Chasing), timer(0)
 {
-	SetScale(0.5);
+	SetScale(0.25);
 }
 
 BasicEnemy::BasicEnemy() : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(1), collisionBox), state(Chasing), timer(0)
 {
-	SetScale(0.5);
+	SetScale(0.25);
 }
 
 void BasicEnemy::Deserialize(std::istream& stream)
@@ -52,8 +52,6 @@ Enemy::Enemies BasicEnemy::GetType()
 
 void BasicEnemy::Serialize(std::ostream& stream)
 {
-	Enemy::Enemies type = Enemy::Basic;
-	stream.write(reinterpret_cast<char*>(&type), sizeof(type));
 	Enemy::Serialize(stream);
 	stream.write(reinterpret_cast<char*>(&timer), sizeof(timer));
 	stream.write(reinterpret_cast<char*>(&state), sizeof(state));

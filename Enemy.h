@@ -14,7 +14,8 @@ public:
 	{
 		Basic = 0,
 		Artillery = 1,
-		Runner = 2
+		Runner = 2,
+		MineLayer = 3,
 	};
 
 	virtual Enemies GetType() = 0;
@@ -25,4 +26,6 @@ public:
 	Enemy(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer = CollidesWithPlayerProjectiles);
 
 	void Update(World* world, InputHandler& input) override;
+
+	void Serialize(std::ostream& stream) override;
 };

@@ -2,7 +2,9 @@
 #include "BasicEnemy.h"
 #include "Artillery.h"
 #include "Runner.h"
+#include "MineLayer.h"
 #include "EnemyProjectile.h"
+#include "EnemyMine.h"
 #include "PlayerProjectile.h"
 
 #define tileSize Tile::tileSize
@@ -78,6 +80,9 @@ void World::Load(std::istream& stream)
 		case Enemy::Runner:
 			e = new Runner();
 			break;
+		case Enemy::MineLayer:
+			e = new MineLayer();
+			break;
 		case Enemy::Basic:
 		default:
 			e = new BasicEnemy();
@@ -88,9 +93,23 @@ void World::Load(std::istream& stream)
 	}
 
 	stream.read(reinterpret_cast<char*>(&count), sizeof(count));
+	char projectileType;
 	for (int i = 0; i < count; i++)
 	{
-		Projectile* p = new EnemyProjectile(stream);
+		stream.read(&projectileType, 1);
+		Projectile* p;
+		switch (projectileType)
+		{
+		case 0:
+			p = new EnemyProjectile(stream);
+			break;
+		case 1:
+			p = new EnemyMine(stream);
+			break;
+		default:
+			p = nullptr;
+			break;
+		}
 		SpawnProjectile(p);
 	}
 
@@ -270,7 +289,7 @@ void World::Update(InputHandler& inputHandler)
 		Enemy* e = enemies[i];
 		e->Update(this, inputHandler);
 		for (int j = 0; j < playerProjectiles.GetCurrentSize(); j++)
-		{
+		{ //check enemy collisions with player projectiles
 			Projectile* p = playerProjectiles[j];
 			if (p->checkCollision(e))
 			{
@@ -435,10 +454,15 @@ void World::TryMove(CollisionSprite* sprite, Vector<float> change)
 	Vector<float> yPos = sprite->GetPosition();
 	yPos.y += change.y;
 
+	//check x and y separately, to allow movement in one axis to continue even if the other is blocked
+
 	int intTileSize = (int)tileSize;
 
+	//reduce collision box size slightly, so that something of size x can fit in a space of size x
 	Vector<float> collBox = sprite->GetCollisionSize() - Vector<float>(0.2, 0.2);
 
+	//number of tiles we need to check
+	//get by the indexes of tiles at both edges
 	int xCheck = round((xPos.y + collBox.y / 2) / intTileSize) - round((xPos.y - collBox.y / 2) / intTileSize) + 1;
 	int yCheck = round((yPos.x + collBox.x / 2) / intTileSize) - round((yPos.x - collBox.x / 2) / intTileSize) + 1;
 
@@ -453,7 +477,7 @@ void World::TryMove(CollisionSprite* sprite, Vector<float> change)
 		Vector<int> topRightTile = (topRight / intTileSize).Round<int>();
 
 		if (CheckLine(this, sprite, topRightTile, Vector<int>(0, 1), xCheck))
-		{
+		{ //move us to be (almost) next to the thing blocking us
 			change.x = (topRightTile.x * intTileSize - intTileSize / 2) - (topRight.x - change.x) - 0.1f;
 		}
 	}

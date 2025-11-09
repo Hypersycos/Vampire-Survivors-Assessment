@@ -10,6 +10,8 @@ World::WorldType InfiniteWorld::GetType()
 
 InfiniteWorld::InfiniteWorld() : seed(0)
 {
+	//caches tiles
+	//not needed with current terrible generator, but would be useful with a more expensive one
 	tiles = new char* [widthLoop];
 	xLoops = new char* [widthLoop];
 	yLoops = new char* [widthLoop];
@@ -28,7 +30,7 @@ InfiniteWorld::InfiniteWorld(long seed) : InfiniteWorld()
 }
 
 inline int RealModulo(int i, int n)
-{
+{ //standard C++ modulo can return negatives
 	return (i % n + n) % n;
 }
 
@@ -41,7 +43,7 @@ Tile* InfiniteWorld::TileAt(int x, int y)
 	int boundedY = RealModulo(y, heightLoop);
 
 	if (xLoops[boundedX][boundedY] != xLoop || yLoops[boundedX][boundedY] != yLoop)
-	{
+	{ //generate new tile if our cached one is from wrong area
 		tiles[boundedX][boundedY] = GenerateTile(x, y);
 		xLoops[boundedX][boundedY] = xLoop;
 		yLoops[boundedX][boundedY] = yLoop;
@@ -86,6 +88,7 @@ void InfiniteWorld::Generate()
 
 char InfiniteWorld::GenerateTile(int x, int y)
 {
+	//generator should be stateless
 	int ran = RealModulo(((x * 10 + y) * (abs(seed) + 1) + seed), 64);
 	if (ran < 40)
 		return 0;

@@ -37,9 +37,9 @@ public:
 
 	void UpdatePosition(InputHandler& inputHandler);
 
-	Vector<float> GetCameraTopLeft();
+	Vector<float> GetCameraTopLeftWithoutZoom();
 
-	Vector<unsigned int> GetCameraViewSize();
+	Vector<unsigned int> GetCameraViewSizeWithoutZoom();
 
 	~Camera();
 };

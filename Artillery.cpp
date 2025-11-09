@@ -4,7 +4,7 @@
 
 #define maxHP 15
 #define baseSpeed 60
-#define collisionBox Vector<float>{ 30, 30 }
+#define collisionBox Vector<float>{ 80, 80 }
 
 #define transformDist 320
 #define transformTime 1
@@ -37,7 +37,6 @@ void Artillery::Update(World* world, InputHandler& input)
 		if ((timer += input.GetDT()) >= fireInterval)
 		{
 			timer -= fireInterval;
-			//TODO: fire projectile
 			Projectile* p = new EnemyProjectile(damage, (world->GetPlayer()->GetPosition() - position).scaleTo(projectileSpeed), position, 5);
 			world->SpawnProjectile(p);
 		}
@@ -60,12 +59,10 @@ void Artillery::Update(World* world, InputHandler& input)
 
 Artillery::Artillery(Vector<float> position) : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(0), position, collisionBox), state(Chasing), timer(0)
 {
-	SetScale(0.5);
 }
 
 Artillery::Artillery() : Enemy(maxHP, baseSpeed, Enemy::ImageHolder.GetImage(0), collisionBox), state(Chasing), timer(0)
 {
-	SetScale(0.5);
 }
 
 void Artillery::Deserialize(std::istream& stream)
@@ -82,8 +79,6 @@ Enemy::Enemies Artillery::GetType()
 
 void Artillery::Serialize(std::ostream& stream)
 {
-	Enemy::Enemies type = Enemy::Artillery;
-	stream.write(reinterpret_cast<char*>(&type), sizeof(type));
 	Enemy::Serialize(stream);
 	stream.write(reinterpret_cast<char*>(&timer), sizeof(timer));
 	stream.write(reinterpret_cast<char*>(&state), sizeof(state));

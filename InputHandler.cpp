@@ -9,6 +9,7 @@ void InputHandler::Update()
 	window.checkInput();
 	altIndex = index;
 	index = (index + 1) % 2;
+	//alternates index to access past values, since annoyingly keyPressed updates even if you don't call window.checkInput()...
 	for (int i = 0; i < 256; i++)
 	{
 		keysLastState[i][index] = window.keyPressed(i);
@@ -69,4 +70,14 @@ int InputHandler::MouseX() const
 int InputHandler::MouseY() const
 {
 	return window.getMouseY();
+}
+
+int InputHandler::MouseX(Canvas& canvas) const
+{
+	return window.getMouseX() - canvas.getXPos();
+}
+
+int InputHandler::MouseY(Canvas& canvas) const
+{
+	return window.getMouseY() - canvas.getYPos();
 }

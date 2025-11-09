@@ -32,6 +32,12 @@ public:
 
 	unsigned int getHeight() const;
 
+	Vector<unsigned int> GetPosition();
+
+	unsigned int getXPos() const;
+
+	unsigned int getYPos() const;
+
 	void clear();
 
 	void DrawPixelUnsafe(unsigned int x, unsigned int y, unsigned char alpha, unsigned char* rgb);

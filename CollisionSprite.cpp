@@ -14,7 +14,7 @@ CollisionSprite::CollisionSprite(GamesEngineeringBase::Image* img, Vector<float>
 }
 
 bool CollisionSprite::checkCollision(CollisionSprite* other)
-{
+{ //intersection of two squares
 	Vector<float> distance = (other->GetPosition() - GetPosition()).Abs();
 	return distance.x < (other->collisionBox.x + collisionBox.x) / 2 && distance.y < (other->collisionBox.y + collisionBox.y) / 2;
 }

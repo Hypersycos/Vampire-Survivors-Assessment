@@ -1,6 +1,7 @@
 #include "TimedSurvivalManager.h"
 #include "FixedWorld.h"
 #include "InfiniteWorld.h"
+#include "RepeatingFixedWorld.h"
 #include "font.h"
 
 TimedSurvivalManager::TimedSurvivalManager(Canvas& canvas) : canvas(canvas), camera{nullptr, canvas, &target}
@@ -43,12 +44,15 @@ void TimedSurvivalManager::Load(std::string path)
 		case World::Infinite:
 			world = new InfiniteWorld();
 			break;
+		case World::FixedRepeating:
+			world = new RepeatingFixedWorld();
+			break;
 		}
 	}
 	else
 	{
 		if (world->GetType() != type)
-		{
+		{ //shouldn't ever happen, but don't allow loading a different type of world
 			return;
 		}
 	}
@@ -79,8 +83,8 @@ unsigned int TimedSurvivalManager::GetScore()
 
 static Vector<float> GetOffscreenPos(Camera& camera, World* world, Sprite* sprite)
 {
-	Vector<float> topLeft = camera.GetCameraTopLeft();
-	Vector<int> cameraSize = (Vector<int>)camera.GetCameraViewSize();
+	Vector<float> topLeft = camera.GetCameraTopLeftWithoutZoom();
+	Vector<int> cameraSize = (Vector<int>)camera.GetCameraViewSizeWithoutZoom();
 
 	Vector<int> pos;
 
@@ -91,6 +95,7 @@ static Vector<float> GetOffscreenPos(Camera& camera, World* world, Sprite* sprit
 
 	bool valid = false;
 
+	//pick random edge, and keep trying until position is valid
 	while (!valid)
 	{
 		int edge = rand() % 4;
@@ -144,7 +149,7 @@ bool TimedSurvivalManager::RunTick(InputHandler& input)
 	{
 		Enemy* e = enemies[i];
 		if (e->GetHealth() <= 0)
-		{
+		{ //clean up enemies here instead of world, so we can add score
 			world->DespawnEnemy(i--, e);
 			switch (e->GetType())
 			{
@@ -156,6 +161,9 @@ bool TimedSurvivalManager::RunTick(InputHandler& input)
 					break;
 				case Enemy::Runner:
 					score += 10;
+					break;
+				case Enemy::MineLayer:
+					score += 5;
 					break;
 			}
 			delete e;
@@ -190,6 +198,20 @@ bool TimedSurvivalManager::RunTick(InputHandler& input)
 	return false;
 }
 
+void DrawBar(float threshold, int width, int height, Vector<int> position, unsigned char* color1, unsigned char* color2, unsigned char& alpha, Canvas& canvas)
+{
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			if (i / (float)width < threshold)
+				canvas.DrawPixelUnsafe(i + position.x, j + position.y, alpha, color1);
+			else
+				canvas.DrawPixelUnsafe(i + position.x, j + position.y, alpha, color2);
+		}
+	}
+}
+
 void TimedSurvivalManager::Draw(InputHandler& input)
 {
 	camera.UpdatePosition(input);
@@ -217,41 +239,26 @@ void TimedSurvivalManager::Draw(InputHandler& input)
 	float x3 = canvas.getWidth() - timerWidth / 2 - fontSpacing * timerText.length() / 2;
 
 	float y1 = Font::letterSize.y + 8;
-	float y2 = Font::letterSize.y * 2 + 10;
 
 	canvas.DrawFont(scoreText, Vector<float>{ x2, y1 });
 
 	unsigned char* red = new unsigned char[3] {255, 0, 0};
 	unsigned char* green = new unsigned char[3] {0, 255, 0};
 	unsigned char* gray = new unsigned char[3] {100, 100, 100};
+	unsigned char* white = new unsigned char[3] {255, 255, 255};
 	unsigned char alpha = 180;
 
-	for (int i = 0; i < 200; i++)
-	{
-		for (int j = 0; j < Font::letterSize.y + 4; j++)
-		{
-			if (health / (float)maxHP * 200 > i)
-				canvas.DrawPixelUnsafe(i + x, j, alpha, red);
-			else
-				canvas.DrawPixelUnsafe(i + x, j, alpha, gray);
-		}
-	}
+	DrawBar(health / (float)maxHP, 200, Font::letterSize.y + 4, Vector<int>(x, 0), red, gray, alpha, canvas);
 
 	int x5 = canvas.getWidth() - timerWidth;
-	for (int i = 0; i < timerWidth; i++)
-	{
-		for (int j = Font::letterSize.y + 6; j < y2; j++)
-		{
-			if (timer / duration * timerWidth > i)
-				canvas.DrawPixelUnsafe(i + x5, j, alpha, green);
-			else
-				canvas.DrawPixelUnsafe(i + x5, j, alpha, gray);
-		}
-	}
+
+	DrawBar(timer / duration, timerWidth, Font::letterSize.y + 4, Vector<int>(x5, Font::letterSize.y + 6), green, gray, alpha, canvas);
 
 	canvas.DrawFont(timerText, Vector<float>{ x3, y1 });
 
 	int x4 = x + 100 - healthText.length() * fontSpacing / 2;
 
 	canvas.DrawFont(healthText, Vector<float>{ (float)x4, 2});
+
+	DrawBar(1 - world->GetPlayer()->GetAoeCooldownPercent(), 200, Font::letterSize.y + 4, Vector<int>(x, canvas.getHeight() - Font::letterSize.y - 4), white, gray, alpha, canvas);
 }

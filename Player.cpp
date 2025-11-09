@@ -42,15 +42,10 @@ AoEAttack::AoEAttack() : AoEAttack{ 4, 25, 256, 3 }
 {
 }
 
-static float GetEnemyHealth(Enemy* enemy)
-{
-	return (float)enemy->GetHealth();
-}
-
-Player::Player() : Character(100, 200, GetPlayerImage(), Vector<float>(0, 0), Vector<float>(32, 32), CollidesWithEnemyProjectiles)
+Player::Player() : Character(100, 200, GetPlayerImage(), Vector<float>(0, 0), Vector<float>(30, 30), CollidesWithEnemyProjectiles)
 {
 	enabled = true;
-	SetScale(0.5f);
+	SetScale(0.375f);
 }
 
 void Player::Serialize(std::ostream& stream)
@@ -75,10 +70,15 @@ GamesEngineeringBase::Image* Player::GetPlayerImage()
 {
 	if (!imageLoaded)
 	{
-		playerImage.load("Resources/L.png");
+		playerImage.load("Resources/yellow_body_square.png");
 		imageLoaded = true;
 	}
 	return &playerImage;
+}
+
+static float GetEnemyHealth(Enemy* enemy)
+{
+	return -(float)enemy->GetHealth();
 }
 
 void Player::Update(World* world, InputHandler& input)
@@ -130,6 +130,7 @@ void Player::Update(World* world, InputHandler& input)
 	if (movement.x != 0 || movement.y != 0)
 	{
 		movement *= input.GetDT() * currentSpeed;
+		//prevent diagonal movement being faster
 		if (movement.x != 0 && movement.y != 0)
 			movement *= 0.7071;
 
@@ -144,4 +145,9 @@ void Player::Powerup()
 	aoeAttack.maxCount += 1;
 	
 	autoAttack.cooldown *= 0.9;
+}
+
+float Player::GetAoeCooldownPercent()
+{
+	return aoeAttack.currentCooldown / aoeAttack.cooldown;
 }

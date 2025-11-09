@@ -4,7 +4,7 @@
 #define maxHP 25
 #define startingSpeed 30
 #define acceleration 75
-#define collisionBox Vector<float>{ 30, 30 }
+#define collisionBox Vector<float>{ 40, 40 }
 
 #define damagePer10 0.5
 #define turningRecovery 1
@@ -18,21 +18,20 @@ void Runner::Update(World* world, InputHandler& input)
 	{
 		Vector<float> TargetDir = Pathfind(world, input.GetDT()).scaleTo(1);
 
-		float turnRate = startingSpeed / baseSpeed;
+		float turnRate = startingSpeed / (baseSpeed * baseSpeed / 50);
 		direction = direction * (1 - turnRate) + TargetDir * turnRate;
 
 		float dot = TargetDir.Dot<float>(direction);
 
-		baseSpeed += input.GetDT() * acceleration;
-		baseSpeed = baseSpeed * dot * dot;
+		baseSpeed += input.GetDT() * dot * acceleration;
 
-		if (baseSpeed < startingSpeed + acceleration)
+		if (dot < -0.5)
 		{
 			timer = 0;
 			state = Turning;
 		}
 
-		TryMove(world, TargetDir * currentSpeed * input.GetDT());
+		TryMove(world, direction * currentSpeed * input.GetDT());
 
 		if (checkCollision(world->GetPlayer()))
 		{
@@ -57,12 +56,12 @@ void Runner::Update(World* world, InputHandler& input)
 	}
 }
 
-Runner::Runner(Vector<float> position) : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(1), position, collisionBox), state(Turning), timer(turningRecovery)
+Runner::Runner(Vector<float> position) : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(2), position, collisionBox), state(Turning), timer(turningRecovery)
 {
 	SetScale(0.5);
 }
 
-Runner::Runner() : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(1), collisionBox), state(Turning), timer(turningRecovery)
+Runner::Runner() : Enemy(maxHP, startingSpeed, Enemy::ImageHolder.GetImage(2), collisionBox), state(Turning), timer(turningRecovery)
 {
 	SetScale(0.5);
 }
@@ -73,6 +72,7 @@ void Runner::Deserialize(std::istream& stream)
 	stream.read(reinterpret_cast<char*>(&timer), sizeof(timer));
 	stream.read(reinterpret_cast<char*>(&state), sizeof(state));
 	stream.read(reinterpret_cast<char*>(&baseSpeed), sizeof(baseSpeed));
+	stream.read(reinterpret_cast<char*>(&direction), sizeof(direction));
 }
 
 Enemy::Enemies Runner::GetType()
@@ -82,10 +82,9 @@ Enemy::Enemies Runner::GetType()
 
 void Runner::Serialize(std::ostream& stream)
 {
-	Enemy::Enemies type = Enemy::Runner;
-	stream.write(reinterpret_cast<char*>(&type), sizeof(type));
 	Enemy::Serialize(stream);
 	stream.write(reinterpret_cast<char*>(&timer), sizeof(timer));
 	stream.write(reinterpret_cast<char*>(&state), sizeof(state));
 	stream.write(reinterpret_cast<char*>(&baseSpeed), sizeof(baseSpeed));
+	stream.write(reinterpret_cast<char*>(&direction), sizeof(direction));
 }

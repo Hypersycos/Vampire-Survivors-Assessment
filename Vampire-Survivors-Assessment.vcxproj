@@ -129,14 +129,17 @@
     <ClInclude Include="Artillery.h" />
     <ClInclude Include="BasicEnemy.h" />
     <ClInclude Include="BaseArray.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraTarget.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Colour.h" />
     <ClInclude Include="DynamicArray.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="EnemyImageHolder.h" />
+    <ClInclude Include="EnemyMine.h" />
     <ClInclude Include="EnemyProjectile.h" />
     <ClInclude Include="FixedArray.h" />
     <ClInclude Include="FixedWorld.h" />
@@ -146,6 +149,7 @@
     <ClInclude Include="GamesEngineeringBase.h" />
     <ClInclude Include="InfiniteWorld.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="MineLayer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerProjectile.h" />
     <ClInclude Include="Powerup.h" />
@@ -154,14 +158,17 @@
     <ClInclude Include="Runner.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="ImageHolder.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TimedSurvivalManager.h" />
+    <ClInclude Include="UIElement.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Artillery.cpp" />
     <ClCompile Include="BasicEnemy.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -170,6 +177,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="EnemyImageHolder.cpp" />
+    <ClCompile Include="EnemyMine.cpp" />
     <ClCompile Include="EnemyProjectile.cpp" />
     <ClCompile Include="FixedWorld.cpp" />
     <ClCompile Include="FollowCamera.cpp" />
@@ -178,6 +186,7 @@
     <ClCompile Include="InfiniteWorld.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MineLayer.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerProjectile.cpp" />
     <ClCompile Include="Powerup.cpp" />
@@ -185,6 +194,7 @@
     <ClCompile Include="RepeatingFixedWorld.cpp" />
     <ClCompile Include="Runner.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TimedSurvivalManager.cpp" />
     <ClCompile Include="World.cpp" />

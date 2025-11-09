@@ -56,9 +56,9 @@ void Character::ChangeHealth(int amount)
 }
 
 void Character::TryMove(World* world, Vector<float> move)
-{
+{ //applies debuffs/buffs from tiles, and prevents moving into invalid positions
 	if (move.x != 0 || move.y != 0)
-	{
+	{ 
 		Tile* tile = world->TileAt(position);
 		if (tile != nullptr)
 			tile->Unapply(this);

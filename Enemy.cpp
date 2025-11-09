@@ -15,7 +15,14 @@ void Enemy::Update(World* world, InputHandler& input)
 	Move(Pathfind(world, input.GetDT()));
 }
 
-Vector<float> Enemy::Pathfind(World* world, float dt)
+void Enemy::Serialize(std::ostream& stream)
 {
+	Enemy::Enemies type = GetType();
+	stream.write(reinterpret_cast<char*>(&type), sizeof(type));
+	Character::Serialize(stream);
+}
+
+Vector<float> Enemy::Pathfind(World* world, float dt)
+{ //shortest path (straight line)
 	return (world->GetPlayer()->GetPosition() - position).clamped(currentSpeed * dt);
 }

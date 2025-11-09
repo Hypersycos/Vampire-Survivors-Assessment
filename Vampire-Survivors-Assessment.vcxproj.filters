@@ -40,6 +40,12 @@
     <Filter Include="Source Files\Sprites\Enemies">
       <UniqueIdentifier>{11c45398-484b-4742-88fb-977675076e57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Sprites\UI">
+      <UniqueIdentifier>{b108c6dc-b9c3-4e2c-aa28-2dec6d3ec09a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Sprites\UI">
+      <UniqueIdentifier>{0f191d6a-957c-48b4-a5e8-2797f27add29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GamesEngineeringBase.h">
@@ -85,9 +91,6 @@
       <Filter>Header Files\Sprites</Filter>
     </ClInclude>
     <ClInclude Include="ImageHolder.h">
-      <Filter>Header Files\Sprites</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
       <Filter>Header Files\Sprites</Filter>
     </ClInclude>
     <ClInclude Include="CollisionSprite.h">
@@ -144,6 +147,27 @@
     <ClInclude Include="font.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="MineLayer.h">
+      <Filter>Header Files\Sprites\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyMine.h">
+      <Filter>Header Files\Sprites\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files\Sprites\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\Sprites\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>Header Files\Sprites\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Colour.h">
+      <Filter>Header Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\Sprites\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -171,12 +195,6 @@
       <Filter>Source Files\Sprites</Filter>
     </ClCompile>
     <ClCompile Include="CollisionSprite.cpp">
-      <Filter>Source Files\Sprites</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Source Files\Sprites</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyImageHolder.cpp">
       <Filter>Source Files\Sprites</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
@@ -232,6 +250,24 @@
     </ClCompile>
     <ClCompile Include="font.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="MineLayer.cpp">
+      <Filter>Source Files\Sprites\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyMine.cpp">
+      <Filter>Source Files\Sprites\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files\Sprites\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyImageHolder.cpp">
+      <Filter>Source Files\Sprites\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files\Sprites\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source Files\Sprites\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

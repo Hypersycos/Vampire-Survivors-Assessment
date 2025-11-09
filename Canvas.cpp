@@ -27,6 +27,21 @@ unsigned int Canvas::getHeight() const
 	return size.y;
 }
 
+unsigned int Canvas::getXPos() const
+{
+	return position.x;
+}
+
+unsigned int Canvas::getYPos() const
+{
+	return position.y;
+}
+
+Vector<unsigned int> Canvas::GetPosition()
+{
+	return position;
+}
+
 void Canvas::clear()
 {
 #ifdef enableDrawBeyondBounds
@@ -36,15 +51,6 @@ void Canvas::clear()
 	{
 		memset(canvas.backBuffer() + (position.x + canvas.getWidth() * i) * 3, 0, size.x * 3 * sizeof(unsigned char));
 	}
-
-	//unsigned char rgb[3]{ 0, 0, 0 };
-	//for (unsigned int i = 0; i < size.x; i++)
-	//{
-	//	for (unsigned int j = 0; j < size.y; j++)
-	//	{
-	//		DrawPixelUnsafe(i, j, 255, rgb);
-	//	}
-	//}
 #endif
 }
 
@@ -151,6 +157,7 @@ void Canvas::DrawFilledBoxSafe(unsigned char* rgb, unsigned char alpha, Vector<f
 
 void Canvas::GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>& position, Vector<float>& imageOffset, Vector<float>& imageSize, float& scale) const
 {
+	//calculates range of x and y values inside image to draw 
 	position -= imageOffset * scale;
 #ifdef enableDrawBeyondBounds
 	xmax = round(imageSize.x);

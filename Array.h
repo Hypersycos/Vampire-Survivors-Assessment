@@ -18,7 +18,7 @@ public:
 	}
 
 	T& operator[](unsigned int i)
-	{
+	{ //allows assignment
 		return BaseArray<T>::internal[i];
 	}
 };

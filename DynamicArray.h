@@ -7,7 +7,7 @@ template <typename T> class DynamicArray : public BaseArray<T>
 	unsigned int firstFree{ 0 };
 
 	void Reallocate(unsigned int s)
-	{
+	{ //copies current array contents into new array of size s
 		T* newArr = new T[s];
 		std::memcpy(newArr, this->internal, this->size * sizeof(T));
 		delete[] this->internal;
@@ -16,7 +16,7 @@ template <typename T> class DynamicArray : public BaseArray<T>
 	}
 
 	void Reallocate()
-	{
+	{ //default reallocate doubles in size
 		Reallocate(this->size << 1);
 	}
 
@@ -38,6 +38,7 @@ public:
 
 	bool Set(unsigned int i, T item)
 	{
+		//Set allows assignment with better guarantees than operator[]
 		if (item == nullptr)
 			return Remove(i);
 

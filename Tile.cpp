@@ -18,7 +18,6 @@ void Tile::LoadTiles()
 
 	if (!std::filesystem::exists("Resources/tiles.dat"))
 	{
-
 		tiles.Add(new Tile({ false, false, false, false }, { 1, 1 }, "Resources/0.png"));
 		tiles.Add(new Tile({ false, false, false, false }, { 1, 1.2 }, "Resources/13.png"));
 		tiles.Add(new Tile({ false, false, false, false }, { 0.75, 0.75 }, "Resources/14.png"));
@@ -39,7 +38,7 @@ void Tile::LoadTiles()
 		char bools;
 		tileFile.read(&bools, 1);
 		for (int j = 0; j < 4; j++)
-		{
+		{ //stores all 4 bools in a single byte
 			collMatrix[j] = bools & (1 << 3);
 			bools <<= 1;
 		}
@@ -76,7 +75,7 @@ void Tile::SaveTiles()
 	{
 		char bools = 0;
 		for (bool coll : tile->collisionMatrix)
-		{
+		{ //separate bools out
 			bools <<= 1;
 			bools |= coll;
 		}

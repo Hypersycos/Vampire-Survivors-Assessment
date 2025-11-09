@@ -2,6 +2,7 @@
 #include "BasicEnemy.h"
 #include "Runner.h"
 #include "Artillery.h"
+#include "MineLayer.h"
 
 Enemy* SpawnHelper(int i)
 {
@@ -14,13 +15,13 @@ Enemy* SpawnHelper(int i)
 	case 2:
 		return new Artillery();
 	case 3:
-		return new BasicEnemy();
+		return new MineLayer();
 	default:
 		return new BasicEnemy();
 	}
 }
 
-EnemyFactory::EnemyFactory() : EnemyFactory({ 5, 1, 1, 0 }, {1, 4, 2, 1})
+EnemyFactory::EnemyFactory() : EnemyFactory({ 5, 1, 1, 1 }, {1, 4, 2, 2})
 {
 }
 

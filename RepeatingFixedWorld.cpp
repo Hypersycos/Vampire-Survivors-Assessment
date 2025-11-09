@@ -26,6 +26,6 @@ inline int RealModulo(int i, int n)
 }
 
 Tile* RepeatingFixedWorld::TileAt(int x, int y)
-{
+{ //allows same terrain to loop
 	return FixedWorld::TileAt(RealModulo(x, width), RealModulo(y, height));
 }

@@ -51,4 +51,6 @@ public:
 	void Deserialize(std::istream& stream) override;
 
 	void Powerup();
+
+	float GetAoeCooldownPercent();
 };

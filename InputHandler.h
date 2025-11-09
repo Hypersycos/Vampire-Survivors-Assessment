@@ -1,4 +1,5 @@
 #include "GamesEngineeringBase.h"
+#include "Canvas.h"
 
 #pragma once
 
@@ -38,4 +39,8 @@ public:
 	int MouseX() const;
 
 	int MouseY() const;
+
+	int MouseX(Canvas& canvas) const;
+
+	int MouseY(Canvas& canvas) const;
 };

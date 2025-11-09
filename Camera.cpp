@@ -8,10 +8,14 @@ void Camera::Retile()
 	if (world == nullptr)
 		return;
 
+	//top left visible tile
 	Vector<int> cameraOffset = Vector<int>((int)round(cameraTopLeft.x / tilesize),
 											(int)round(cameraTopLeft.y / tilesize));
+
+	//sets new central tile, so we know when to retile again
 	tileCentre.x = cameraOffset.x * tilesize;
 	tileCentre.y = cameraOffset.y * tilesize;
+
 	for (unsigned int i = 0; i < tileDimensions.x; i++)
 	{
 		for (unsigned int j = 0; j < tileDimensions.y; j++)
@@ -20,13 +24,12 @@ void Camera::Retile()
 			if (tileType != nullptr)
 			{
 				tiles[i][j].enabled = true;
+				tiles[i][j].SetImage(&tileType->image);
 			}
 			else
 			{
-				tileType = Tile::GetTile(0);
 				tiles[i][j].enabled = false;
 			}
-			tiles[i][j].SetImage(&tileType->image);
 			tiles[i][j].SetPosition((cameraOffset + Vector<int>(i, j)) * tilesize);
 		}
 	}
@@ -73,6 +76,9 @@ void Camera::Rescale(float newZoom)
 	zoom = newZoom;
 	unsigned int zoomedTilesize = (unsigned int)(zoom * tilesize);
 
+	//number of tiles required to cover entire screen
+	//+1 deals with offset
+	//(x + (y - 1)) / y is a ceil without needing floats
 	tileDimensions = Vector<unsigned int>((canvasDimensions.x + zoomedTilesize - 1) / zoomedTilesize + 1,
 									(canvasDimensions.y + zoomedTilesize - 1) / zoomedTilesize + 1);
 
@@ -83,6 +89,8 @@ void Camera::Rescale(float newZoom)
 		for (unsigned int j = 0; j < tileDimensions.y; j++)
 		{
 			tiles[i][j] = Sprite();
+			tiles[i][j].SetImage(&Tile::GetTile(0)->image);
+			//set image, so that invalid (off-world) tiles still have the correct dimensions when rendered as blank
 		}
 	}
 
@@ -97,10 +105,11 @@ void Camera::Rescale(float newZoom)
 void Camera::UpdatePosition(InputHandler& inputHandler)
 {
 	if (inputHandler.MouseWheel() != 0)
-	{
+	{ //allows handling of both smooth and discrete scroll wheels
 		if (inputHandler.MouseWheel() > 0 && zoomAccumulator < 0 ||
 			inputHandler.MouseWheel() < 0 && zoomAccumulator > 0)
 			zoomAccumulator = 0;
+
 		zoomAccumulator += inputHandler.MouseWheel();
 		if (abs(zoomAccumulator) > 100)
 		{
@@ -122,13 +131,13 @@ void Camera::UpdatePosition(InputHandler& inputHandler)
 		cameraTopLeft.y = round(cameraTopLeft.y);
 	}
 	if (abs(tileCentre.x - cameraPosition.x) >= tilesize / 2 || abs(tileCentre.y - cameraPosition.y) >= tilesize / 2)
-	{
+	{ //if our camera is over half a tile away, then we need to shift our tiles
 		Retile();
 	}
 #pragma warning( pop )
 }
 
-Vector<float> Camera::GetCameraTopLeft()
+Vector<float> Camera::GetCameraTopLeftWithoutZoom()
 {
 	if (zoom == 1)
 		return cameraTopLeft;
@@ -136,7 +145,7 @@ Vector<float> Camera::GetCameraTopLeft()
 		return cameraTarget->GetPosition() - Vector<float>(canvas.getWidth() / 2, canvas.getHeight() / 2);
 }
 
-Vector<unsigned int> Camera::GetCameraViewSize()
+Vector<unsigned int> Camera::GetCameraViewSizeWithoutZoom()
 {
 	return canvasDimensions;
 }
@@ -146,13 +155,17 @@ void Camera::Redraw()
 #ifdef enableDrawBeyondBounds
 	canvas.clear();
 #endif
-	//canvas.clear();
 	for (unsigned int i = 0; i < tileDimensions.x; i++)
 	{
 		for (unsigned int j = 0; j < tileDimensions.y; j++)
-		{
+		{ //draws all tiles, blanking out invalid ones
 			tiles[i][j].Draw(canvas, cameraTopLeft, zoom, renderMethod, true);
 		}
+	}
+
+	for (Powerup* p : world->GetPowerups())
+	{
+		p->Draw(canvas, cameraTopLeft, zoom, renderMethod);
 	}
 
 	for (Enemy* e : world->GetEnemies())
@@ -166,11 +179,6 @@ void Camera::Redraw()
 	}
 
 	for (Projectile* p : world->GetEnemyProjectiles())
-	{
-		p->Draw(canvas, cameraTopLeft, zoom, renderMethod);
-	}
-
-	for (Powerup* p : world->GetPowerups())
 	{
 		p->Draw(canvas, cameraTopLeft, zoom, renderMethod);
 	}

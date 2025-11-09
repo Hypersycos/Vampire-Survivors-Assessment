@@ -18,7 +18,7 @@ public:
 	Character(unsigned int maxHP, float baseSpeed, GamesEngineeringBase::Image* img, Vector<float> collisionBox, CollisionLayer layer);
 	int GetHealth() const;
 	int GetMaxHealth() const;
-	bool Damage(int amount);
+	virtual bool Damage(int amount);
 	bool Heal(int amount);
 	void ChangeHealth(int amount);
 	void TryMove(World* world, Vector<float> move);

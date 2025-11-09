@@ -4,6 +4,7 @@
 
 class Projectile : public CollisionSprite
 {
+protected:
 	unsigned int damage;
 	Vector<float> movement;
 	float lifetime;
