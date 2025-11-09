@@ -11,6 +11,7 @@
 
 void Runner::Update(World* world, InputHandler& input)
 {
+	Enemy::Update(world, input);
 	switch (state)
 	{
 	case Chasing:

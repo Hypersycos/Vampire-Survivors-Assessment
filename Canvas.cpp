@@ -170,7 +170,7 @@ void Canvas::GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>
 #endif // enableDrawBeyondBounds
 }
 
-void Canvas::DrawInteger(Image& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale)
+void Canvas::DrawInteger(ImageSet& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale)
 {
 	Vector<int> intPos = position;
 
@@ -198,7 +198,7 @@ void Canvas::DrawInteger(Image& img, Vector<float> position, Vector<float> image
 }
 
 //TODO: Implement bilinear
-void Canvas::DrawBilinear(Image& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale)
+void Canvas::DrawBilinear(ImageSet& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale)
 {
 	//int xmax = min((int)round(image->width * scale), (int)size.x - (int)floor(position.x));
 	//int ymax = min((int)round(image->height * scale), (int)size.y - (int)floor(position.y));
@@ -231,11 +231,12 @@ void Canvas::DrawBilinear(Image& img, Vector<float> position, Vector<float> imag
 	//}
 }
 
-void Canvas::DrawFont(std::string text, Vector<float> position, float scale, RenderMethod render)
+void Canvas::DrawFont(std::string text, Vector<float> position, float scale, RenderMethod render, Colour c)
 {
 	Vector<int> letterSize = Font::letterSize;
 	int xSize = letterSize.x + Font::xGap;
-	Image& image = Font::GetImage();
+	ImageSet image = ImageSet{ Font::GetImage()};
+	image.colourMult = c;
 
 	for (char c : text)
 	{
@@ -245,7 +246,7 @@ void Canvas::DrawFont(std::string text, Vector<float> position, float scale, Ren
 	}
 }
 
-void Canvas::Draw(Image& image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale, RenderMethod render)
+void Canvas::Draw(ImageSet& image, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale, RenderMethod render)
 {
 	switch (render)
 	{

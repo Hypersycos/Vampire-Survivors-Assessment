@@ -7,6 +7,7 @@ class Enemy : public Character
 {
 protected:
 	Vector<float> Pathfind(World* world, float dt);
+	float flashTime{ 0 };
 
 public:
 
@@ -26,6 +27,8 @@ public:
 	Enemy(unsigned int maxHP, float baseSpeed, ImageSet img, Vector<float> collisionBox, CollisionLayer layer = CollidesWithPlayerProjectiles);
 
 	void Update(World* world, InputHandler& input) override;
+
+	bool Damage(int amount) override;
 
 	void Serialize(std::ostream& stream) override;
 };

@@ -92,7 +92,7 @@ void Sprite::Draw(Canvas& canvas, Vector<float> offset, float zoom, Canvas::Rend
 			renderMethod = Canvas::Blank;
 	}
 	Vector<float> adjustedPosition = (GetTopLeft() - offset) * zoom;
-	canvas.Draw(image.GetImage(), adjustedPosition, size * zoom, Vector<float>(0, 0), zoom * scale, renderMethod);
+	canvas.Draw(image, adjustedPosition, size * zoom, Vector<float>(0, 0), zoom * scale, renderMethod);
 };
 
 void Sprite::Update(World* world, InputHandler& input)

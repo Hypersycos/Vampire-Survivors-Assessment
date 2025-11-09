@@ -56,11 +56,11 @@ public:
 
 	void GetValues(int& xmin, int& xmax, int& ymin, int& ymax, Vector<float>& position, Vector<float>& imageOffset, Vector<float>& imageSize, float& scale) const;
 
-	void Draw(Image& img, Vector<float> canvasPosition, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1, RenderMethod render = Integer);
+	void Draw(ImageSet& img, Vector<float> canvasPosition, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1, RenderMethod render = Integer);
 
-	void DrawInteger(Image& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
+	void DrawInteger(ImageSet& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
 
-	void DrawBilinear(Image& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
+	void DrawBilinear(ImageSet& img, Vector<float> position, Vector<float> imageSize, Vector<float> imageOffset, float scale = 1);
 
-	void DrawFont(std::string text, Vector<float> position, float scale = 1, RenderMethod render = Integer);
+	void DrawFont(std::string text, Vector<float> position, float scale = 1, RenderMethod render = Integer, Colour c = {255, 255, 255, 255});
 };

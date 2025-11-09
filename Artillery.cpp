@@ -16,6 +16,7 @@
 
 void Artillery::Update(World* world, InputHandler& input)
 {
+	Enemy::Update(world, input);
 	switch (state)
 	{
 	case Artillery::Chasing:

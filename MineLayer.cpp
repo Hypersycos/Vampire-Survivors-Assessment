@@ -14,6 +14,7 @@
 
 void MineLayer::Update(World* world, InputHandler& input)
 {
+	Enemy::Update(world, input);
 	switch (state)
 	{
 	case MineLayer::Chasing:

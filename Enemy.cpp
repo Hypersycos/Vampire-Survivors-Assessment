@@ -12,7 +12,25 @@ Enemy::Enemy(unsigned int maxHP, float baseSpeed, ImageSet img, Vector<float> co
 
 void Enemy::Update(World* world, InputHandler& input)
 {
-	Move(Pathfind(world, input.GetDT()));
+	if (flashTime > 0)
+	{
+		flashTime -= input.GetDT();
+		if (flashTime < 0)
+		{
+			image.colourMult.colour[0] = 255;
+			image.colourMult.colour[1] = 255;
+			image.colourMult.colour[2] = 255;
+		}
+	}
+}
+
+bool Enemy::Damage(int amount)
+{
+	flashTime = 0.25f;
+	image.colourMult.colour[0] = 160;
+	image.colourMult.colour[1] = 160;
+	image.colourMult.colour[2] = 160;
+	return Character::Damage(amount);
 }
 
 void Enemy::Serialize(std::ostream& stream)
