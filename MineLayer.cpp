@@ -18,7 +18,13 @@ void MineLayer::Update(World* world, InputHandler& input)
 	{
 	case MineLayer::Chasing:
 		TryMove(world, Pathfind(world, input.GetDT()));
-		if ((timer += input.GetDT()) >= mineInterval)
+		if (checkCollision(world->GetPlayer()))
+		{
+			timer = 0;
+			state = Mining;
+			world->GetPlayer()->Damage(5);
+		}
+		else if ((timer += input.GetDT()) >= mineInterval)
 		{
 			timer = 0;
 			state = Mining;

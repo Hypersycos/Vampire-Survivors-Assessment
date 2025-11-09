@@ -16,6 +16,8 @@ class Artillery : public Enemy
 
 	void Update(World* world, InputHandler& input) override;
 
+	void SetState(CharacterState newState);
+
 public:
 	Artillery(Vector<float> position);
 	Artillery();

@@ -11,6 +11,7 @@ class MineLayer : public Enemy
 
 	float timer;
 	CharacterState state;
+	float contactDebounce;
 
 	void Update(World* world, InputHandler& input) override;
 
