@@ -17,6 +17,9 @@ int main() {
 
 	RepeatingFixedWorld* world = new RepeatingFixedWorld(50, 50, 0);
 
+	Tile::LoadTiles();
+	world->SaveWorld("Saves/World1.dat");
+
 	InputHandler inputHandler = InputHandler(window);
 	Canvas canvas = Canvas(window, window.getWidth(), window.getHeight(), 0, 0);
 

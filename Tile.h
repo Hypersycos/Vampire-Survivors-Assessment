@@ -9,14 +9,16 @@ class Tile
 {
 	static DynamicArray<Tile*> tiles;
 	static bool tilesLoaded;
-
-	static void LoadTiles();
-	static void SaveTiles();
+	static std::string currentPath;
 
 public:
 	inline static const unsigned int tileSize{ 32 };
 
 	static Tile* GetTile(unsigned int i);
+
+	static void LoadTiles(std::string path = "Resources/Tiles.dat");
+	static void SaveTiles(std::string path = "Resources/Tiles.dat");
+	static std::string GetCurrentPath();
 
 	FixedArray<bool, 4> collisionMatrix;
 	FixedArray<float, 2> speedMatrix;

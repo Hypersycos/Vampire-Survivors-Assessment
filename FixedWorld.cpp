@@ -47,6 +47,14 @@ void FixedWorld::LoadMap(std::string path)
 		delete[] tiles;
 	}
 
+	int length;
+	tileFile.read(reinterpret_cast<char*>(&length), sizeof(length));
+	char* tilePath = new char[length];
+	tileFile.read(tilePath, length);
+	Tile::LoadTiles(tilePath);
+
+	delete[] tilePath;
+
 	tileFile.read(reinterpret_cast<char*>(&width), sizeof(width));
 	tileFile.read(reinterpret_cast<char*>(&height), sizeof(height));
 
@@ -76,9 +84,11 @@ void FixedWorld::LoadState(std::istream& worldState)
 	char* path = new char[length];
 	worldState.read(path, length);
 
-	LoadMap(path);
-	myPath = path;
-	
+	myPath = std::string{ path };
+	LoadMap(myPath);
+
+	delete[] path;
+
 	World::Load(worldState);
 }
 
@@ -87,6 +97,10 @@ void FixedWorld::SaveWorld(std::string path)
 	myPath = path;
 
 	std::ofstream tileFile{ path, std::ios::binary };
+
+	int length = Tile::GetCurrentPath().length() + 1;
+	tileFile.write(reinterpret_cast<char*>(&length), sizeof(length));
+	tileFile.write(Tile::GetCurrentPath().c_str(), length);
 
 	tileFile.write(reinterpret_cast<char*>(&width), sizeof(width));
 	tileFile.write(reinterpret_cast<char*>(&height), sizeof(height));
