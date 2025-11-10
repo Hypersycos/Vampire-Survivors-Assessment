@@ -168,6 +168,12 @@
     <ClInclude Include="Text.h">
       <Filter>Header Files\Sprites\UI</Filter>
     </ClInclude>
+    <ClInclude Include="StressTester.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\Sprites\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -204,9 +210,6 @@
       <Filter>Source Files\Sprites</Filter>
     </ClCompile>
     <ClCompile Include="Tile.cpp">
-      <Filter>Source Files\WorldHandling</Filter>
-    </ClCompile>
-    <ClCompile Include="TestWorld.cpp">
       <Filter>Source Files\WorldHandling</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
@@ -268,6 +271,12 @@
     </ClCompile>
     <ClCompile Include="Canvas.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="StressTester.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\Sprites\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

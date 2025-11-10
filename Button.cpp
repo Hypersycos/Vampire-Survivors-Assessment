@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Button::Button(std::string text, Vector<int> pos, Vector<int> size, Colour background, Colour hover, PositionAnchor anchor) : text{size / 2, text, Centre}, background(background), hover(hover), UIElement(pos, size, anchor)
+Button::Button(std::string text, Vector<int> pos, Vector<int> size, Colour background, Colour hover, std::function<void()> onClick, PositionAnchor anchor) : text{size / 2, text, Centre}, background(background), hover(hover), UIElement(pos, size, anchor), onClick{onClick}
 {
 }
 
@@ -15,7 +15,7 @@ void Button::Update(InputHandler& input, Canvas& canvas)
 		{
 			if (input.MouseDown(GamesEngineeringBase::MouseLeft))
 			{
-				//clicked on us!
+				onClick();
 			}
 			else
 			{

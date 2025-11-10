@@ -149,6 +149,7 @@
     <ClInclude Include="GamesEngineeringBase.h" />
     <ClInclude Include="InfiniteWorld.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MineLayer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerProjectile.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="InfiniteWorld.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MineLayer.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerProjectile.cpp" />
