@@ -53,10 +53,16 @@ int main() {
 	float timer = 0;
 	int fps = 0;
 
+	//UNCOMMENT FOR NORMAL GAME. P AND L TO SAVE & LOAD
 	TimedSurvivalManager gameManager{ canvas };
 
 	//CHANGE 120 TO DESIRED GAME DURATION
 	gameManager.Setup(world, 120);
+
+	//UNCOMMENT FOR STRESS TESTER. T AND G TO MODIFY SPRITE COUNT
+
+	//StressTester gameManager{ canvas };
+	//gameManager.Setup(world);
 
 	while (running)
 	{
