@@ -12,7 +12,7 @@ void Projectile::Update(World* world, InputHandler& input)
 void Projectile::Serialize(std::ostream& stream)
 {
 	CollisionSprite::Serialize(stream);
-	stream.write(reinterpret_cast<char*>(&damage), sizeof(position));
+	stream.write(reinterpret_cast<char*>(&damage), sizeof(damage));
 	stream.write(reinterpret_cast<char*>(&movement), sizeof(movement));
 	stream.write(reinterpret_cast<char*>(&lifetime), sizeof(lifetime));
 }
@@ -20,7 +20,7 @@ void Projectile::Serialize(std::ostream& stream)
 void Projectile::Deserialize(std::istream& stream)
 {
 	CollisionSprite::Deserialize(stream);
-	stream.read(reinterpret_cast<char*>(&damage), sizeof(position));
+	stream.read(reinterpret_cast<char*>(&damage), sizeof(damage));
 	stream.read(reinterpret_cast<char*>(&movement), sizeof(movement));
 	stream.read(reinterpret_cast<char*>(&lifetime), sizeof(lifetime));
 }
