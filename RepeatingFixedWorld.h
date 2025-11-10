@@ -14,4 +14,6 @@ public:
 	RepeatingFixedWorld(int x, int y, char fill);
 
 	Tile* TileAt(int x, int y) override;
+
+	void SetTile(int x, int y, char tile) override;
 };

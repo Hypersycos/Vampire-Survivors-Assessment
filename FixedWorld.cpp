@@ -162,6 +162,13 @@ Tile* FixedWorld::TileAt(int x, int y)
 		return nullptr;
 }
 
+void FixedWorld::SetTile(int x, int y, char tile)
+{
+	if (x < 0 || x >= width || y < 0 || y >= height)
+		return;
+	tiles[x][y] = tile;
+}
+
 FixedWorld::~FixedWorld()
 {
 	for (int i = 0; i < width; i++)

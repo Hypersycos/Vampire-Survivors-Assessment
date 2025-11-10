@@ -29,3 +29,10 @@ Tile* RepeatingFixedWorld::TileAt(int x, int y)
 { //allows same terrain to loop
 	return FixedWorld::TileAt(RealModulo(x, width), RealModulo(y, height));
 }
+
+void RepeatingFixedWorld::SetTile(int x, int y, char tile)
+{
+	x = RealModulo(x, width);
+	y = RealModulo(y, height);
+	tiles[x][y] = tile;
+}

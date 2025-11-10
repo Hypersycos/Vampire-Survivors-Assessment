@@ -31,5 +31,7 @@ public:
 
 	Tile* TileAt(int x, int y) override;
 
+	virtual void SetTile(int x, int y, char tile);
+
 	~FixedWorld();
 };
