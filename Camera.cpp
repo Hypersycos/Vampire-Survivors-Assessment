@@ -62,6 +62,11 @@ void Camera::ChangeZoom(float direction)
 		Rescale(direction + zoom);
 }
 
+float Camera::GetZoom()
+{
+	return zoom;
+}
+
 void Camera::Rescale(float newZoom)
 {
 	if (world == nullptr)
@@ -145,9 +150,25 @@ Vector<float> Camera::GetCameraTopLeftWithoutZoom()
 		return cameraTarget->GetPosition() - Vector<float>(canvas.getWidth() / 2, canvas.getHeight() / 2);
 }
 
+Vector<float> Camera::GetCameraTopLeft()
+{
+	return cameraTopLeft;
+}
+
+Vector<float> Camera::GetCameraPosition()
+{
+	return cameraTarget->GetPosition();
+}
+
 Vector<unsigned int> Camera::GetCameraViewSizeWithoutZoom()
 {
 	return canvasDimensions;
+}
+
+Vector<int> Camera::GetTileAt(Vector<int> mousePos)
+{
+	mousePos -= canvas.GetPosition();
+	return ((cameraTopLeft + mousePos / zoom) / (tilesize)).Round<int>();
 }
 
 void Camera::Redraw()

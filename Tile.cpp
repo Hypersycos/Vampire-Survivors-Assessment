@@ -113,6 +113,11 @@ Tile* Tile::GetTile(unsigned int i)
 	return tiles[i];
 }
 
+unsigned int Tile::GetTileCount()
+{
+	return tiles.GetCurrentSize();
+}
+
 Tile::Tile(FixedArray<bool, 4>& collisionMatrix, FixedArray<float, 2>& speedMatrix, std::string imagePath) : imagePath(imagePath), collisionMatrix(collisionMatrix), speedMatrix(speedMatrix)
 {
 	image.load(imagePath);

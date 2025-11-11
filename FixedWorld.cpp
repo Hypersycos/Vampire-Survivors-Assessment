@@ -6,16 +6,16 @@ World::WorldType FixedWorld::GetType()
 	return WorldType::Fixed;
 }
 
-FixedWorld::FixedWorld() : width(0), height(0), tiles(nullptr), myPath("Saves/Temp.dat")
+FixedWorld::FixedWorld() : width(0), height(0), tiles(nullptr), myPath("Saves/TempWorld.dat")
 {
 }
 
-FixedWorld::FixedWorld(int x, int y, int seed) : myPath("Saves/Temp.dat")
+FixedWorld::FixedWorld(int x, int y, int seed) : myPath("Saves/TempWorld.dat")
 {
 	Generate(x, y, seed);
 }
 
-FixedWorld::FixedWorld(int x, int y, char fill) : width(x), height(x), myPath("Saves/Temp.dat")
+FixedWorld::FixedWorld(int x, int y, char fill) : width(x), height(x), myPath("Saves/TempWorld.dat")
 {
 	tiles = new char* [x];
 	for (int i = 0; i < x; i++)
@@ -90,6 +90,11 @@ void FixedWorld::LoadState(std::istream& worldState)
 	delete[] path;
 
 	World::Load(worldState);
+}
+
+void FixedWorld::SaveWorld()
+{
+	SaveWorld(myPath);
 }
 
 void FixedWorld::SaveWorld(std::string path)

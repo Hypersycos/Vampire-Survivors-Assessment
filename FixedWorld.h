@@ -23,6 +23,8 @@ public:
 
 	void LoadState(std::istream& stream) override;
 
+	void SaveWorld();
+
 	void SaveWorld(std::string path);
 
 	void SaveState(std::ostream& stream) override;

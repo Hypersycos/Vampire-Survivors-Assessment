@@ -31,6 +31,8 @@ public:
 
 	void ChangeZoom(float direction);
 
+	float GetZoom();
+
 	void Rescale(float newZoom);
 
 	void Redraw();
@@ -38,6 +40,9 @@ public:
 	void UpdatePosition(InputHandler& inputHandler);
 
 	Vector<float> GetCameraTopLeftWithoutZoom();
+	Vector<float> GetCameraTopLeft();
+	Vector<float> GetCameraPosition();
+	Vector<int> GetTileAt(Vector<int> mousePos);
 
 	Vector<unsigned int> GetCameraViewSizeWithoutZoom();
 

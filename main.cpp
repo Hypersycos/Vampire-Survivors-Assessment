@@ -14,10 +14,13 @@ World* LoadWorld(std::string path)
 	return nullptr;
 }
 
-World* Create()
+World* Create(bool allowInf)
 {
 	char in;
-	std::cout << "(F)ixed, (I)nfinite, (R)epeatingFixed" << std::endl;
+	if (allowInf)
+		std::cout << "(F)ixed, (I)nfinite, (R)epeatingFixed" << std::endl;
+	else
+		std::cout << "(F)ixed, (R)epeatingFixed" << std::endl;
 	std::cin >> in;
 	World* world = nullptr;
 	switch (in)
@@ -87,20 +90,16 @@ World* Create()
 	return world;
 }
 
-void LoadGame(std::string path, Canvas& canvas, InputHandler& inputHandler, GamesEngineeringBase::Window& window)
+void RunGame(Canvas& canvas, InputHandler& inputHandler, GamesEngineeringBase::Window& window, TimedSurvivalManager& gameManager)
 {
 	int accumulator = 0;
 	float timer = 0;
 	int fps = 0;
 
-	TimedSurvivalManager gameManager{ canvas };
-
-	gameManager.Load(path);
-
 	bool running = true;
 	inputHandler.Update();
 
-	while (running)
+	while (true)
 	{
 		// Check for input (key presses or window events)
 		inputHandler.Update();
@@ -108,20 +107,28 @@ void LoadGame(std::string path, Canvas& canvas, InputHandler& inputHandler, Game
 		// If the Escape key is pressed, exit the loop and close the window
 		if (inputHandler.KeyHeld(VK_ESCAPE))
 		{
-			running = false;
 			break; // Exits the game loop
 		}
 
-		if (inputHandler.KeyHeld('P'))
+		if (inputHandler.KeyDown(VK_BACK))
 		{
-			gameManager.Save("Saves/temp.dat");
-		}
-		else if (inputHandler.KeyHeld('L'))
-		{
-			gameManager.Load("Saves/temp.dat");
+			running = !running;
 		}
 
-		gameManager.RunTick(inputHandler);
+		if (running == false)
+		{
+			if (inputHandler.KeyHeld('P'))
+			{
+				gameManager.Save("Saves/tempsave.dat");
+			}
+			else if (inputHandler.KeyHeld('L'))
+			{
+				gameManager.Load("Saves/tempsave.dat");
+			}
+		}
+
+		if (running)
+			gameManager.RunTick(inputHandler);
 		gameManager.Draw(inputHandler);
 
 		accumulator += 1;
@@ -139,20 +146,23 @@ void LoadGame(std::string path, Canvas& canvas, InputHandler& inputHandler, Game
 	}
 }
 
-void Play(World* world, float duration, Canvas& canvas, InputHandler& inputHandler, GamesEngineeringBase::Window& window)
+void Edit(FixedWorld* world, Canvas& canvas, InputHandler& inputHandler, GamesEngineeringBase::Window& window)
 {
 	int accumulator = 0;
 	float timer = 0;
 	int fps = 0;
 
-	TimedSurvivalManager gameManager{ canvas };
+	Camera camera = Camera(world, canvas);
 
-	gameManager.Setup(world, duration);
-
-	bool running = true;
 	inputHandler.Update();
 
-	while (running)
+	Sprite hoverSprite;
+
+	int currentTile = 0;
+	hoverSprite.SetImage(&Tile::GetTile(0)->image);
+	hoverSprite.enabled = true;
+
+	while (true)
 	{
 		// Check for input (key presses or window events)
 		inputHandler.Update();
@@ -160,21 +170,44 @@ void Play(World* world, float duration, Canvas& canvas, InputHandler& inputHandl
 		// If the Escape key is pressed, exit the loop and close the window
 		if (inputHandler.KeyHeld(VK_ESCAPE))
 		{
-			running = false;
 			break; // Exits the game loop
 		}
-
-		if (inputHandler.KeyHeld('P'))
+		if (inputHandler.KeyDown(VK_UP))
 		{
-			gameManager.Save("Saves/tempsave.dat");
+			currentTile++;
+			if (currentTile == Tile::GetTileCount())
+				currentTile = -1;
+			if (currentTile != -1)
+			{
+				hoverSprite.SetImage(&Tile::GetTile(currentTile)->image);
+				hoverSprite.enabled = true;
+			}
+			else
+				hoverSprite.enabled = false;
 		}
-		else if (inputHandler.KeyHeld('L'))
+		else if (inputHandler.KeyDown(VK_DOWN))
 		{
-			gameManager.Load("Saves/tempsave.dat");
+			currentTile--;
+			if (currentTile == -2)
+				currentTile = Tile::GetTileCount() - 1;
+			if (currentTile != -1)
+			{
+				hoverSprite.SetImage(&Tile::GetTile(currentTile)->image);
+				hoverSprite.enabled = true;
+			}
+			else
+				hoverSprite.enabled = false;
 		}
 
-		gameManager.RunTick(inputHandler);
-		gameManager.Draw(inputHandler);
+		camera.UpdatePosition(inputHandler);
+		hoverSprite.SetPosition(Vector<float>{(float)inputHandler.MouseX(), (float)inputHandler.MouseY() });
+
+		if (inputHandler.MouseHeld(GamesEngineeringBase::MouseLeft))
+		{
+			Vector<float> mousePos = { (float)inputHandler.MouseX(), (float)inputHandler.MouseY() };
+			Vector<int> tilePos = camera.GetTileAt(mousePos);
+			world->SetTile(tilePos.x, tilePos.y, currentTile);
+		}
 
 		accumulator += 1;
 		timer += inputHandler.GetDT();
@@ -186,9 +219,29 @@ void Play(World* world, float duration, Canvas& canvas, InputHandler& inputHandl
 			timer = 0;
 		}
 
+		camera.Redraw();
+		hoverSprite.SetScale(camera.GetZoom());
+		hoverSprite.Draw(canvas, Vector<float>{0, 0}, 1, Canvas::Integer, true);
+
 		canvas.DrawFont(std::to_string(fps), { 0, 0 });
 		window.present();
 	}
+}
+
+void LoadGame(std::string path, Canvas& canvas, InputHandler& inputHandler, GamesEngineeringBase::Window& window)
+{
+	TimedSurvivalManager gameManager{ canvas };
+
+	gameManager.Load(path);
+	RunGame(canvas, inputHandler, window, gameManager);
+}
+
+void Play(World* world, float duration, Canvas& canvas, InputHandler& inputHandler, GamesEngineeringBase::Window& window)
+{
+	TimedSurvivalManager gameManager{ canvas };
+	gameManager.Setup(world, duration);
+
+	RunGame(canvas, inputHandler, window, gameManager);
 }
 
 void MainMenu(Canvas& canvas, InputHandler& input, GamesEngineeringBase::Window& window)
@@ -198,17 +251,24 @@ void MainMenu(Canvas& canvas, InputHandler& input, GamesEngineeringBase::Window&
 	std::cin >> in;
 
 	World* world = nullptr;
+	char loadOrC;
 
 	if (in != 'L')
 	{
-		std::cout << "(L)oad, (C)reate";
-		char loadOrC;
+		std::cout << "(L)oad, (C)reate" << std::endl;
 		std::cin >> loadOrC;
 
 		switch (loadOrC)
 		{
 		case 'C':
-			world = Create();
+			world = Create(in != 'E');
+			if (in == 'E')
+			{
+				std::string path;
+				std::cout << "Path: Saves/";
+				std::cin >> path;
+				reinterpret_cast<FixedWorld*>(world)->SaveWorld("Saves/"+path);
+			}
 			break;
 		case 'L':
 		{
@@ -219,20 +279,22 @@ void MainMenu(Canvas& canvas, InputHandler& input, GamesEngineeringBase::Window&
 			{
 			case 'E':
 			{
-				world = LoadWorld("Saves/" + path);
+				FixedWorld* w = new FixedWorld();
+				w->LoadMap("Saves/" + path);
+				world = w;
 				break;
 			}
 			case 'P':
 			{
 				char type;
-				std::cout << "(R)epeating, (F)ixed";
+				std::cout << "(R)epeating, (F)ixed" << std::endl;
 				std::cin >> type;
 				FixedWorld* w;
 				if (type == 'R')
 					w = new RepeatingFixedWorld();
 				else
 					w = new FixedWorld();
-				w->LoadMap(path);
+				w->LoadMap("Saves/" + path);
 				world = w;
 				break;
 			}
@@ -250,7 +312,8 @@ void MainMenu(Canvas& canvas, InputHandler& input, GamesEngineeringBase::Window&
 		Play(world, duration, canvas, input, window);
 		break;
 	case 'E':
-		//Edit(world);
+		Edit(reinterpret_cast<FixedWorld*>(world), canvas, input, window);
+		reinterpret_cast<FixedWorld*>(world)->SaveWorld();
 		break;
 	case 'L':
 	{

@@ -16,6 +16,8 @@ public:
 
 	static Tile* GetTile(unsigned int i);
 
+	static unsigned int GetTileCount();
+
 	static void LoadTiles(std::string path = "Resources/Tiles.dat");
 	static void SaveTiles(std::string path = "Resources/Tiles.dat");
 	static std::string GetCurrentPath();
