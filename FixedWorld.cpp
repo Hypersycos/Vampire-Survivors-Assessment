@@ -131,7 +131,7 @@ void FixedWorld::SaveState(std::ostream& worldState)
 
 	Save(worldState);
 
-	if (!std::filesystem::exists(myPath))
+	if (!std::filesystem::exists(myPath) || myPath == "Saves/TempWorld.dat")
 		SaveWorld(myPath);
 }
 

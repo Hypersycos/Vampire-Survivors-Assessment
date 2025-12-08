@@ -1,7 +1,7 @@
 #pragma once
 #include "Character.h"
 
-//#define GodMode
+#define GodMode
 
 struct AttackData
 {

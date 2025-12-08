@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "World.h"
-
 #include "PlayerProjectile.h"
 
 AttackData::AttackData(float cooldown, int damage, float range) : cooldown(cooldown), damage(damage), range(range), currentCooldown(0)
